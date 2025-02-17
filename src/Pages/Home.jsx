@@ -11,8 +11,8 @@ function Home() {
     return (
         <React.Fragment>
             <Helmet>
-                <title>Home | Decor Hub</title>
-                <meta name="description" content="Discover premium home decor products at Decor Hub." />
+                <title>Home | Party Decor Hub</title>
+                <meta name="description" content="Discover premium home decor products at Party Decor Hub." />
                 <meta name="keywords" content="home decor, party supplies, disposable items" />
             </Helmet>
             <HeroSection />

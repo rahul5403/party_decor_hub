@@ -57,8 +57,8 @@ const ProductDetails = () => {
     return (
         <div className="product-details-section">
                         <Helmet>
-                <title>{product.name} | Decor Hub</title>
-                <meta name="description" content={`Buy ${product.name} at an affordable price on Decor Hub.`} />
+                <title>Party Decor Hub</title>
+                <meta name="description" content={`Buy ${product.name} at an affordable price on Party Decor Hub.`} />
             </Helmet>
             <div className="product-details-container">
                 <div className="product-image">

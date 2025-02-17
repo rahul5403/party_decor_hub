@@ -31,14 +31,14 @@ const Login2 = () => {
           <div className="login-left">
             <h2>Luxury & Comfort Redefined</h2>
             <p>
-              Discover elegantly designed spaces, top-tier amenities, and an unforgettable stay at Decor Hub. Your perfect getaway starts here.
+              Discover elegantly designed spaces, top-tier amenities, and an unforgettable stay at Party Decor Hub. Your perfect getaway starts here.
             </p>
           </div>
 
           {/* Right Section - Login Form */}
           <div className="login-right">
             <div>
-              <h3 className="wlcm">Welcome to Decor Hub</h3>
+              <h3 className="wlcm">Welcome to Party Decor Hub</h3>
             </div>
 
             <div className="form-container">
@@ -75,7 +75,7 @@ const Login2 = () => {
                 </div>
 
                 <p className="signup-link">
-                  New to Decor Hub? <a href="/signup">Create Account</a>
+                  New to Party Decor Hub? <a href="/signup">Create Account</a>
                 </p>
               </form>
             </div>
