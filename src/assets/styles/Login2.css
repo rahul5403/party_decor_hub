@@ -1,0 +1,206 @@
+/* Container Fixes */
+.login-container {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 5rem 7rem; /* Increased padding */
+    overflow: hidden;
+}
+
+/* Left Side - Image & Text */
+.login-left {
+    /* position: relative; */
+    width: 40%;
+    background: #b5d4c3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    background-image: url("../images/header_bg.png");
+    box-shadow: -5px 0px 10px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+
+.login-left h2 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.login-left p {
+    font-size: 1rem;
+    max-width: 90%;
+    word-break: break-word;
+}
+
+
+/* Right Side - Login Form */
+.login-right {
+    width: 60%;
+    /* background: #e3fff4; */
+    background: rgba(250, 243, 224, 0.5);
+    color: #4e342e;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: -5px 0px 10px  rgba(0, 0, 0, 0.5);
+
+    /* backdrop-filter: blur(10px); */
+}
+
+/* Form */
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(250, 243, 224, 0.3);
+    padding-left: 2rem;
+    border-radius: 8px;
+}
+
+.wlcm {
+    margin-bottom: 1rem;
+    margin-top: 1rem; /* Increased gap */
+}
+
+form {
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Reduced gap */
+}
+
+label {
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0rem; /* Reduced gap between label and input */
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ffe8e8;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+
+input:focus {
+    background-color: rgb(255, 255, 255);
+  }
+
+.forgot-password {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #777;
+    cursor: pointer;
+}
+
+/* Login Button */
+.login-btn {
+    background: #245743;
+    color: white;
+    padding: 0.4rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.login-btn:hover {
+    background: #1a4e3a;
+    transform: scale(1.02);
+}
+
+/* Divider */
+.divider {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* Google Login Button */
+.google-login {
+    background: #fff;
+    color: #333333;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.google-login img {
+    width: 20px;
+}
+
+.google-login:hover {
+    background: #f8f8f8;
+}
+
+.signup-link {
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.signup-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Fixes */
+@media (max-width: 1024px) {
+    .login-container {
+        flex-direction: column;
+        padding: 3rem;
+    }
+
+    .login-left, .login-right {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        padding: 1.5rem; /* Slightly increased padding */
+    }
+
+    .form-container {
+        max-width: 350px;
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 0rem;
+    }
+
+    .login-left h2 {
+        font-size: 1.3rem;
+    }
+
+    .login-left p {
+        font-size: 0.85rem;
+    }
+
+    .form-container {
+        max-width: 95%;
+    }
+}

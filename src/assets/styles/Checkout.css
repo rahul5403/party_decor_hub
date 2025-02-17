@@ -1,0 +1,123 @@
+.checkout-container {
+    display: flex;
+    flex-direction: row;
+    max-width: 80%;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: "Poppins", sans-serif;
+  }
+  
+  /* Left Section - Form */
+  .checkout-form-section {
+    flex: 1;
+    padding: 20px;
+    text-align: left;
+  }
+  
+  .checkout-form-section h2, .checkout-form-section h3 {
+    margin-bottom: 10px;
+  }
+  
+  .checkout-form-section form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .checkout-form-section label {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .checkout-form-section input {
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .checkout-row {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .checkout-button {
+    background-color: #01634f;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+  }
+  
+  .checkout-button:hover {
+    background-color: #023128;
+  }
+  
+  /* Right Section - Cart Summary */
+  .checkout-cart-summary {
+    flex: 1;
+    padding: 20px;
+    background: #f9f9f9;
+    border-left: 1px solid #ddd;
+  }
+  
+  .checkout-cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .checkout-cart-item img {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+    border-radius: 5px;
+  }
+  
+  .checkout-discount-price {
+    font-weight: bold;
+    color: #e44d26;
+  }
+  
+  .checkout-original-price {
+    text-decoration: line-through;
+    color: #999;
+    margin-left: 5px;
+  }
+  
+  .checkout-summary {
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  
+  .checkout-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+  }
+  
+  /* Unique Input Field */
+  .checkout-quantity-input {
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .checkout-container {
+      flex-direction: column;
+    }
+    .checkout-cart-summary {
+      border-left: none;
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+    }
+  }

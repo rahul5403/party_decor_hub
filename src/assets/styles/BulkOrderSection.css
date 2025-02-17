@@ -1,0 +1,96 @@
+/* Bulk Order Section */
+.bulk-order-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent; /* Light background color */
+    padding: 2rem 8rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+    gap: 2rem;
+  }
+  
+  /* Left Content */
+  .bulk-order-content {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .bulk-order-heading {
+    font-size: 2rem;
+    color: #01634f;
+    margin-bottom: 1rem;
+  }
+  
+  .bulk-order-subtext {
+    font-size: 1.2rem;
+    color: #01634f;
+    margin-bottom: 1.5rem;
+  }
+  
+  .bulk-order-button {
+    display: flex;
+    align-items: center;
+    background-color: #000;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    gap: 0.5rem;
+
+    
+  }
+
+  /* .bulk-order-button {
+    display: flex;
+    align-items: center;
+    background-color: #25d366;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    gap: 8px;
+  } */
+
+  
+  .bulk-order-button:hover {
+    background-color: #333;
+  }
+  
+  /* Right Image */
+  .bulk-order-image {
+    flex: 1;
+    text-align: right;
+  }
+  
+  .bulk-order-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .bulk-order-section {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .bulk-order-content,
+    .bulk-order-image {
+      flex: none;
+    }
+  
+    .bulk-order-image {
+      margin-top: 1.5rem;
+    }
+  }
+  .whatsapp-icon {
+    width: 20px; /* Adjust size */
+    height: 20px; /* Adjust size */
+  }

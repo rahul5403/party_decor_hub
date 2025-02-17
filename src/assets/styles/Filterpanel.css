@@ -1,0 +1,29 @@
+.filter-panel {
+    padding: 1rem;
+    background: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filter-category {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .checkbox {
+    margin-right: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .filter-panel {
+      width: 100%;  /* Full width on small screens */
+      padding: 1rem;  /* Adjust padding for smaller screens */
+    }
+  
+    .filter-category {
+      flex-direction: column;  /* Stack filter options vertically */
+      align-items: flex-start;
+    }
+  }
+  

@@ -1,0 +1,95 @@
+/* Best Seller Section */
+.best-seller {
+    padding: 2rem 4rem;
+    background-color: transparent; /* Transparent background */
+    text-align: center;
+  }
+  
+  .best-seller-title {
+    font-size: 2rem;
+    color: #01634f;
+    margin-bottom: 2rem;
+  }
+  
+  /* Product Grid */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  /* Product Card */
+  .product-card {
+    background-color: rgba(255, 255, 255, 0.2); /* Transparent card with light background */
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Slightly visible border */
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 1rem;
+    text-align: center;
+    color: #fff; /* White text for readability */
+  }
+  
+  .product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Slightly darker shadow on hover */
+  }
+  
+  /* Product Image */
+  .product-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for images */
+  }
+  
+  /* Product Title */
+  .product-title {
+    font-size: 1rem;
+    color: #01634f; /* White text */
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Product Rating */
+  .product-rating {
+    color: #01634f; /* Yellow stars */
+    margin-bottom: 0.5rem;
+  }
+  
+  .star {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.5); /* Transparent default star */
+  }
+  
+  .star.filled {
+    color: #01634f; /* Filled star color */
+  }
+  
+  /* Product Prices */
+  .product-prices {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .old-price {
+    text-decoration: line-through;
+    color: #01634f;/* Slightly visible old price */
+    font-size: 0.9rem;
+  }
+  
+  .new-price {
+    color: #e53935;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .product-grid {
+      grid-template-columns: 1fr; /* Single column layout on smaller screens */
+    }
+  }
+  

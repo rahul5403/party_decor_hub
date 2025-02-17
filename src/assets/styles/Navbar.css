@@ -1,0 +1,76 @@
+.navbar {
+  background-image: url("../images/header_bg.png");
+  background-size: contain;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+.navbar-brand img {
+  height: 40px;
+}
+
+
+.navbar-nav .nav-link {
+  color: #fff;
+  margin-right: 1rem;
+  font-weight: 600;
+}
+
+.navbar-nav .nav-link:last-child {
+  margin-right: 0;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.button-login {
+  padding: 0.2rem 1rem !important;
+  background: #f56565 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+  font-size: 1rem !important;
+}
+
+.button-login:hover {
+  background: #c53030 !important;
+}
+
+.cart-icon {
+  margin-left: 20px !important;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #f56565;
+}
+
+.cart-icon {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
