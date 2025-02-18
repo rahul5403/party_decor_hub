@@ -22,13 +22,7 @@ const HeroSection = () => {
   return (
     <div className="carousel-container">
       <Slider {...settings}>
-        <div onClick={() =>  navigate("/party")} className="carousel-slide slide1">
-          <div className="overlay"></div>
-          <div className="carousel-text">
-            <h1>Cheers to <span>2025</span></h1>
-            <p>Grab Ecosoul Products up to 70% Off!</p>
-          </div>
-        </div>
+
         <div onClick={() =>  navigate("/decoration")} className="carousel-slide slide2">
           <div className="overlay"></div>
           <div className="carousel-text">
@@ -41,6 +35,13 @@ const HeroSection = () => {
           <div className="carousel-text">
             <h1>Go Green</h1>
             <p>Make a difference with sustainable choices.</p>
+          </div>
+        </div>
+        <div onClick={() =>  navigate("/party")} className="carousel-slide slide1">
+          <div className="overlay"></div>
+          <div className="carousel-text">
+            <h1>Cheers to <span>2025</span></h1>
+            <p>Grab Ecosoul Products up to 70% Off!</p>
           </div>
         </div>
       </Slider>
