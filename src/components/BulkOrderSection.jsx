@@ -1,5 +1,7 @@
+
 import React from "react";
 import "../assets/styles/BulkOrderSection.css";
+import bulk_image from "../assets/images/bulk_b.jpg";
 
 const BulkOrderSection = () => {
   const openWatsApp =() =>{
@@ -25,7 +27,7 @@ const BulkOrderSection = () => {
       </div>
       <div className="bulk-order-image">
         <img
-          src="https://placehold.co/600x400" // Replace with actual image URL
+          src={bulk_image} 
           alt="Eco Soul Products"
         />
       </div>

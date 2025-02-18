@@ -15,26 +15,12 @@ const Footer = () => {
     return (
         <footer className="footer">
             <Container>
-                {/* Subscribe Section */}
-                <Row className="text-center mb-5">
-                    <Col>
-                        <h4>Subscribe to our emails</h4>
-                        <div className="subscribe-form d-flex justify-content-center align-items-center">
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                className="form-control"
-                            />
-                            <button className="btn btn-dark ml-2">→</button>
-                        </div>
-                    </Col>
-                </Row>
 
                 {/* Main Footer Section */}
-                <Row className="mb-5">
+                <Row >
                     {/* Company Info */}
                     <Col md={4} className="mb-4">
-                        <div className="logo">DECOR <span>HUB</span></div>
+                        <div className="logo"><span>PARTY</span> DECOR <span>HUB</span></div>
                         <p>Made from plants, Made for all</p>
                         <div className="contact-info">
                             <p>
@@ -91,7 +77,13 @@ const Footer = () => {
                     </Col>
 
                     <Col md={4} className="text-center mb-3 mb-md-0">
-                        <p>2025 Copyright <div className="logo">DECOR <span>HUB</span></div></p>
+                        <p>2025 Copyright <div className="logo"> <span>PARTY</span> DECOR <span>HUB</span></div></p>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className="text-center">
+                        <p className="made-with-love">Made with ❤️ by <a href="https://pixeladsmedia.com" target="_blank" rel="noopener noreferrer">Pixel AI Media</a> </p>
+                        
                     </Col>
                 </Row>
             </Container>
