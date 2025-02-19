@@ -1,8 +1,10 @@
 import React from "react";
 import Slider from "react-slick";
 import "../assets/styles/HeroSection.css";
+import { useNavigate } from "react-router-dom";
 
 const ServiceBanner = () => {
+    const navigate = useNavigate()
     const settings = {
         dots: true,
         infinite: true,
@@ -22,20 +24,31 @@ const ServiceBanner = () => {
 
     return (
         <div className="carousel-container">
-            <Slider {...settings}>
-                <div className="carousel-slide">
-                    <img src="https://placehold.co/600x300" />
+      <Slider {...settings}>
 
-                </div>
-                <div className="carousel-slide">
-                    <img src="https://placehold.co/600x300" />
-
-                </div>
-                <div className="carousel-slide">
-                    <img src="https://placehold.co/600x300" />
-                </div>
-            </Slider>
+        <div onClick={() =>  navigate("/decoration")} className="carousel-slide slide2">
+          <div className="overlay"></div>
+          <div className="carousel-text">
+            <h1>Sustainable Living</h1>
+            <p>Eco-friendly products for your daily needs.</p>
+          </div>
         </div>
+        <div onClick={() =>  navigate("/disposable")} className="carousel-slide slide3">
+          <div className="overlay"></div>
+          <div className="carousel-text">
+            <h1>Go Green</h1>
+            <p>Make a difference with sustainable choices.</p>
+          </div>
+        </div>
+        <div onClick={() =>  navigate("/party")} className="carousel-slide slide1">
+          <div className="overlay"></div>
+          <div className="carousel-text">
+            <h1>Cheers to <span>2025</span></h1>
+            <p>Grab Ecosoul Products up to 70% Off!</p>
+          </div>
+        </div>
+      </Slider>
+    </div>
     );
 };
 

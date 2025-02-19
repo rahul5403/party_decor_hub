@@ -1,4 +1,64 @@
 .filter-panel {
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 250px;
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+  font-weight: 600;
+}
+
+.filter-category {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.filter-category:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.filter-name {
+  font-size: 1rem;
+  color: #444;
+  flex-grow: 1;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .filter-panel {
+      width: 100%;
+      padding: 1rem;
+  }
+
+  .filter-category {
+      flex-direction: row;
+      align-items: center;
+  }
+
+  .filter-name {
+      font-size: 0.9rem;
+  }
+}
+
+
+/* .filter-panel {
     padding: 1rem;
     background: #f4f4f4;
     border-radius: 8px;
@@ -17,13 +77,13 @@
   
   @media (max-width: 768px) {
     .filter-panel {
-      width: 100%;  /* Full width on small screens */
-      padding: 1rem;  /* Adjust padding for smaller screens */
+      width: 100%; 
+      padding: 1rem;  
     }
   
     .filter-category {
-      flex-direction: column;  /* Stack filter options vertically */
+      flex-direction: column;  
       align-items: flex-start;
     }
   }
-  
+   */
