@@ -53,11 +53,13 @@
 
 .bulk-order-image img {
   width: 100%;
+  max-width: 400px; /* Adjust as needed */
   height: auto;
   border-radius: 8px;
   background: rgba(0, 98, 28, 0.3);
+  display: block;
+  margin: 0 auto; /* Centers the image */
 }
-
 /* Responsive Design */
 @media (max-width: 1024px) {
   .bulk-order-section {

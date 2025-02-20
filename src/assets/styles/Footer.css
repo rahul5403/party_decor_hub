@@ -196,12 +196,13 @@
 }
 
 .made-with-love {
-
+    padding: 0rem;
+    margin: 0rem;  
     font-size: 1rem;
 
 }
 .made-with-love a {
-
+    color: #ff6f61;
     font-size: 1rem;
 
 
@@ -209,6 +210,7 @@
 
 .made-with-love a:hover {
 
- color: #ff6f61;;
+ color: #ff8e84;
+ text-decoration: underline;
 
 }

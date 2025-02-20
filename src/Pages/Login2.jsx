@@ -24,7 +24,7 @@ const Login2 = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId="74027685761-uao4u2m2ibpo6j5t2ate76ebf6e1knur.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <div className="parent">
         <div className="login-container">
           {/* Left Section - Image & Text */}
@@ -37,10 +37,10 @@ const Login2 = () => {
 
           {/* Right Section - Login Form */}
           <div className="login-right">
-            <div>
-              <h3 className="wlcm">Welcome to Party Decor Hub</h3>
-            </div>
-
+                          <button className="back-btn-lg" onClick={() => navigate(-1)}>← Back</button>
+            
+            <h2 className="wlcm">Welcome to Party Decor Hub</h2>
+            
             <div className="form-container">
               <form onSubmit={handleLogin}>
                 <label>Email</label>
@@ -60,8 +60,6 @@ const Login2 = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-
-                <div className="forgot-password">Forgot password?</div>
 
                 <button type="submit" className="login-btn">Sign in</button>
 
