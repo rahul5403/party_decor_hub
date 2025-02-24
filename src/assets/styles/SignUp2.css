@@ -209,16 +209,16 @@ input:focus {
 
 .back-btn {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 1rem;
+  top: 10px;
+  left: 10px;
+  font-size: 0.9rem;
   color: #4e342e;
   cursor: pointer;
   background: #f2f2f2;
-  border: 1px solid #4e342e;
+  /* border: 1px solid #4e342e; */
+  border: none;
   color: #4e342e;
   border-radius: 8px;
-  font-weight: bold;
   align-items: center;
   transition: all 0.3s ease-in-out;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);

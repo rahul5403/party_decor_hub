@@ -58,7 +58,7 @@ const NavBar = () => {
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Link to="/signup" className="user-icon p-1">
+              <Link to="/login" className="user-icon p-1">
                 <FaUserCircle size={30} />
               </Link>
             )}
