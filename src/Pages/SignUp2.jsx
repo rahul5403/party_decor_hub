@@ -1,18 +1,53 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import toast from "react-hot-toast";
 import "../assets/styles/SignUp2.css";
+import axios from "axios";
 
 const SignUp2 = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    console.log("Signing up:", { username, email, password });
-    navigate("/login");
+
+    if (!username || !email || !password || !confirmPassword) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    setLoading(true);
+
+    const userData = { username, email, password };
+    try {
+      const response = await axios.post(
+        "https://partydecorhub.com/api/signup",
+        userData
+      );
+      console.log("Signup successful:", response.data);
+      toast.success("Signup successful! Redirecting to login...");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Signup failed");
+      console.error("Signup failed:", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleSuccess = (credentialResponse) => {
@@ -31,12 +66,15 @@ const SignUp2 = () => {
             <h2>Luxury & Comfort Redefined</h2>
             <p>
               Discover elegantly designed spaces, top-tier amenities, and an
-              unforgettable stay at Party Decor Hub. Your perfect getaway starts here.
+              unforgettable stay at Party Decor Hub. Your perfect getaway starts
+              here.
             </p>
           </div>
 
           <div className="signup-right">
-            <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
+            <button className="back-btn" onClick={() => navigate(-1)}>
+              ← Back
+            </button>
             <h2 className="wlcm">Welcome to Party Decor Hub</h2>
             <div className="form-container">
               <form onSubmit={handleSignup}>
@@ -67,11 +105,25 @@ const SignUp2 = () => {
                   required
                 />
 
-                <button type="submit" className="signup-btn">Sign Up</button>
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+
+                <button type="submit" className="signup-btn" disabled={loading}>
+                  {loading ? "Signing Up..." : "Sign Up"}
+                </button>
 
                 <div className="divider">or</div>
                 <div className="google-login-container">
-                  <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} />
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleFailure}
+                  />
                 </div>
 
                 <p className="signup-link">

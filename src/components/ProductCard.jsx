@@ -10,7 +10,7 @@ const ProductCard = ({ product }) => {
             <img src={product.image} alt={product.title} className="decoration-image" />
             <h3 className="decoration-card-title">{product.title}</h3>
             <p className="decoration-description">{product.description}</p>
-            <button className="bulk-order-button">View</button>
+            <button className="bulk-order-button vw">View</button>
         </div>
     );
 };

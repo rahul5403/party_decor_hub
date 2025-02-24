@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Router from "./routers/Router";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -13,7 +14,10 @@ function App() {
         <Routes>
           <Route path="/*" element={<Router />} />
         </Routes>
+        <Toaster />
       </BrowserRouter>
+      
+
     </div>
   );
 }

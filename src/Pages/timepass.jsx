@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { login } from "../redux/authSlice";
 import "../assets/styles/Login2.css";
 
 const Login2 = () => {
@@ -12,7 +10,6 @@ const Login2 = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,14 +22,14 @@ const Login2 = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://partydecorhub.com/api/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+        "https://partydecorhub.com/api/login",
+        { email, password }
       );
-      dispatch(login(response.data));
-
+      console.log("Login successful:", response.data);
       toast.success("Login successful! Redirecting...");
       navigate("/home");
     } catch (error) {
-      toast.error(error.response?.data?.error || "Invalid email or password");
+      toast.error(error.response?.data?.message || "Login failed");
       console.error("Login failed:", error.response?.data || error.message);
     } finally {
       setLoading(false);
@@ -41,12 +38,10 @@ const Login2 = () => {
 
   const handleGoogleSuccess = (credentialResponse) => {
     console.log("Google Token:", credentialResponse.credential);
-    toast.success("Google Login Successful!");
   };
 
   const handleGoogleFailure = (error) => {
     console.error("Google Login Failed:", error);
-    toast.error("Google Login Failed. Please try again.");
   };
 
   return (
@@ -56,16 +51,12 @@ const Login2 = () => {
           <div className="login-left">
             <h2>Luxury & Comfort Redefined</h2>
             <p>
-              Discover elegantly designed spaces, top-tier amenities, and an
-              unforgettable stay at Party Decor Hub. Your perfect getaway starts
-              here.
+              Discover elegantly designed spaces, top-tier amenities, and an unforgettable stay at Party Decor Hub. Your perfect getaway starts here.
             </p>
           </div>
 
           <div className="login-right">
-            <button className="back-btn-lg" onClick={() => navigate(-1)}>
-              ← Back
-            </button>
+            <button className="back-btn-lg" onClick={() => navigate(-1)}>← Back</button>
             <h2 className="wlcm">Welcome to Party Decor Hub</h2>
 
             <div className="form-container">
@@ -91,6 +82,7 @@ const Login2 = () => {
                 <button type="submit" className="login-btn" disabled={loading}>
                   {loading ? "Logging in..." : "Sign in"}
                 </button>
+
                 <div className="divider">or</div>
 
                 <div className="google-login-container">

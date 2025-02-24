@@ -4,7 +4,7 @@ import Services from "../components/Services";
 import BulkOrderSection from "../components/BulkOrderSection";
 import HomeProductSection from "../components/HomeProductSection";
 import { decorationData, disposalData, partyData } from "../data/data";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 
 function Home() {

@@ -33,15 +33,24 @@ const HomeProductSection = ({ products, section }) => {
   };
 
   return (
+    // <div className="decoration-section">
+    //   <h2 className="decoration-title">{section}</h2>
+    //   <Slider {...settings}>
+    //     {products.map((product) => (
+    //       <ProductCard key={product.id} product={product} />
+    //     ))}
+    //   </Slider>
+    // </div>
+
     <div className="decoration-section">
-      <h2 className="decoration-title">{section}</h2>
-      <Slider {...settings}>
-        {products.map((product) => (
-          <ProductCard product={product} />
-        ))}
-      </Slider>
+    <h2 className="decoration-title">{section}</h2>
+    <div className="decoration-scroll">
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
     </div>
-  );
+  </div>
+);
 };
 
 export default HomeProductSection;

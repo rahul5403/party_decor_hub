@@ -18,6 +18,7 @@ import WhatsAppButton from "../components/WhatsAppButton";
 import Login2 from "../Pages/Login2";
 import SignUp2 from "../Pages/SignUp2";
 import NotFound from "../Pages/Notfound";
+import Profile from "../Pages/Profile";
 
 const Router = () => {
     const location = useLocation()
@@ -93,7 +94,9 @@ const Router = () => {
                 <Route path="/about" element={<About />}></Route>
                 <Route path="/login" element={<Login2/>}></Route>
                 <Route path="/signup" element={<SignUp2/>}></Route>
+                <Route path="/profile" element={<Profile />} />
                 <Route path="*" element={<NotFound />} />
+
             </Routes>
             
             {!hideHeaderFooter && <WhatsAppButton />}

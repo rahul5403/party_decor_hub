@@ -81,21 +81,28 @@
   transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .service-blocks {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding: 0.8rem; /* Reduce padding for smaller screens */
   }
 
-  .service-left,
-  .service-right-top,
-  .service-right-bottom {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    height: 250px; /* Set a fixed height for mobile */
+  .service {
+    height: 150px; /* Further reduced height for mobile screens */
+  }
+
+  .service-content {
+    padding: 1rem; /* Reduce padding for smaller screens */
+  }
+
+  .service-content h2 {
+    font-size: 1.5rem; /* Reduce font size for smaller screens */
+  }
+
+  .service-content p {
+    font-size: 0.9rem; /* Reduce font size for smaller screens */
   }
 }
-

@@ -1,11 +1,17 @@
-/* Decoration Section */
-.decoration-section {
+/* .decoration-section {
     position: relative;
-    padding: 2rem 4rem;
     background-color: transparent;
     text-align: center;
-}
+} */
 
+.decoration-section {
+    position: relative;
+    background-color: #fff; /* Thoda contrast dene ke liye */
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* Mast shadow */
+}
 .decoration-section-similar {
     position: relative;
     background-color: transparent;
@@ -18,7 +24,7 @@
     color: #01634f;
 }
 
-.decoration-title-similar{
+.decoration-title-similar {
     font-size: 20px;
     color: #333;
     font-weight: bold;
@@ -26,24 +32,19 @@
     margin-top: 20px;
 }
 
-/* Scroll Container */
 .decoration-scroll {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     overflow-x: auto;
-    /* Enable horizontal scroll */
     scroll-behavior: smooth;
-    /* Smooth scrolling */
     padding: 1rem;
     scrollbar-width: thin;
-    /* For Firefox */
     scrollbar-color: #01634f transparent;
-    /* For Firefox */
+    white-space: nowrap;
 }
 
-/* Custom Scrollbar for Webkit Browsers */
 .decoration-scroll::-webkit-scrollbar {
-    height: 10px;
+    height: 6px;
 }
 
 .decoration-scroll::-webkit-scrollbar-thumb {
@@ -55,25 +56,18 @@
     background: transparent;
 }
 
-/* Decoration Card */
 .decoration-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 100%;
     flex: 0 0 250px;
-    /* Fixed width for cards */
     background-color: transparent;
-    /* Semi-transparent card */
-    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    padding: 2rem;
     text-align: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    padding: 15px 5px;
 }
 
 .decoration-card:hover {
@@ -81,74 +75,24 @@
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* Decoration Image */
 .decoration-image {
     width: 100%;
     height: auto;
-    margin-bottom: 1rem;
     border-radius: 6px;
 }
 
-/* Decoration Title */
 .decoration-card-title {
     font-size: 1rem;
     color: #01634f;
     margin-bottom: 0.5rem;
 }
 
-/* Decoration Description */
 .decoration-description {
     font-size: 0.9rem;
     color: #01634f;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .decoration-card {
-        flex: 0 0 200px;
-        /* Reduce card width on smaller screens */
-    }
-}
-
-/* Custom Arrow Styling */
-.slick-prev, .slick-next {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(45deg, #000000, #302e2e); /* Gradient background */
-    border: none;
-    border-radius: 50%; /* Circular shape */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-  }
-  
-  /* Hover effect */
-  .slick-prev:hover, .slick-next:hover {
-    background: linear-gradient(45deg, #000000, #302e2e);
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5); /* Deeper shadow on hover */
-  }
-  
-  /* Arrow icon styles */
-  .slick-prev:before, .slick-next:before {
-    font-size: 18px; /* Larger arrow icon */
-    color: white; /* White arrow for contrast */
-  }
-  
-  /* Positioning */
-  .slick-prev {
-    left: -50px; /* Adjust the left position */
-  }
-  
-  .slick-next {
-    right: -50px; /* Adjust the right position */
-  }
-  
-
-  .bulk-order-button {
+.bulk-order-button {
     background-color: #00362b;
     color: #fff;
     border: none;
@@ -158,11 +102,67 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: auto; /* Push it towards the bottom */
+    margin-top: auto;
 }
 
-/* Button hover effect */
 .bulk-order-button:hover {
     background-color: #002921;
     transform: scale(1.05);
 }
+
+@media (max-width: 1024px) {
+    .decoration-card {
+        flex: 0 0 200px;
+    }
+    .decoration-scroll {
+        gap: 0.8rem;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .decoration-card {
+        flex: 0 0 45%;
+    }
+    .decoration-scroll {
+        gap: 0.3rem;
+    }
+}
+
+.slick-prev, .slick-next {
+    display: none !important;
+}
+
+
+@media (max-width: 768px) {
+    .bulk-order-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bulk-order-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
+
+.vw {
+    padding: 0.5rem 1.2rem;
+
+}
+@media (max-width: 768px) {
+    .vw {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .vw {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
+
