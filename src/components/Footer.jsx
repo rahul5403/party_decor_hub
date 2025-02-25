@@ -13,13 +13,13 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
-        <footer className="footer">
+        <footer className="footer p-3">
             <Container>
 
                 {/* Main Footer Section */}
                 <Row >
                     {/* Company Info */}
-                    <Col md={4} className="mb-4">
+                    <Col md={4} >
                         <div className="logo"><span>PARTY</span> DECOR <span>HUB</span></div>
                         <div className="contact-info">
                             <p>

@@ -1,4 +1,217 @@
-/* Existing CSS */
+.navbar-custom {
+  background-image: url("../images/bg-with-doodle.png");
+  background-size: cover;
+  background-position: center;
+  color: #064420; 
+  font-family: Arial, sans-serif;
+  padding: 10px 12px;
+  position: relative;
+  z-index: 1050;
+}
+
+.container-fluid {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #064420; 
+}
+
+.logo span {
+  color: #e63946;
+}
+
+.cart-icon {
+  display: flex;
+  align-items: center;
+  color: #064420; 
+  transition: transform 0.2s;
+  position: relative;
+  margin-left: 10px;
+}
+
+.cart-icon:hover {
+  transform: scale(1.1);
+  color: #e63946;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: #e63946;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-nav .nav-link {
+  color: #064420 !important;
+  margin-right: 1rem;
+  font-weight: 600;
+  transition: color 0.3s;
+  padding: 0;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #e63946 !important;
+}
+
+.custom-toggler {
+  border: none;
+  background: transparent;
+}
+
+.custom-toggler:focus {
+  box-shadow: none;
+}
+
+.nav-user-icon {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  position: relative;
+}
+
+.user-icon {
+  color: #064420;
+  transition: transform 0.2s;
+}
+
+.user-icon:hover {
+  transform: scale(1.1);
+  color: #e63946;
+}
+
+.user-icon-dropdown {
+  background: none;
+  border: none;
+  color: #064420;
+  padding: 0;
+}
+
+.user-icon-dropdown:focus,
+.user-icon-dropdown:hover {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.user-dropdown-menu {
+  position: absolute !important;
+  right: 0;
+  left: auto;
+  min-width: 180px;
+  z-index: 9999;
+  background-color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  transform: translateX(-30%);
+}
+
+@media (max-width: 992px) {
+  .navbar-nav {
+    text-align: center;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 10px;
+    display: block;
+  }
+
+  .navbar-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .custom-toggler {
+    order: -1;
+    margin-right: auto;
+  }
+
+  .d-flex {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-image: url("../images/bg-with-doodle.png"); 
+    background-size: cover;
+    background-position: center;
+    z-index: 1000;
+  }
+
+  .user-dropdown-menu {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .cart-icon svg,
+  .user-icon svg,
+  .user-icon-dropdown svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .cart-icon {
+    margin-left: 10px;
+  }
+
+  .cart-badge {
+    top: -8px;
+    right: -12px;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-custom {
+    padding: 5px 4px;
+  }
+  .navbar-brand {
+    font-size: 1.4rem;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .cart-icon {
+    margin-left: 3px;
+  }
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
+
+
+
+/* 
+
+ 
 .navbar-custom {
   background-image: url("../images/header_bg.png");
   background-size: cover;
@@ -7,7 +220,7 @@
   font-family: Arial, sans-serif;
   padding: 10px 12px;
   position: relative;
-  z-index: 1050; /* Navbar should be above everything */
+  z-index: 1050;
 }
 
 .container-fluid {
@@ -107,13 +320,12 @@
   box-shadow: none !important;
 }
 
-/* Dropdown fix */
 .user-dropdown-menu {
   position: absolute !important;
   right: 0;
   left: auto;
   min-width: 180px;
-  z-index: 9999; /* Ensure dropdown is above all */
+  z-index: 9999;
   background-color: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
@@ -121,12 +333,11 @@
   transform: translateX(-30%);
 }
 
-/* Mobile View */
 @media (max-width: 992px) {
   .navbar-nav {
     text-align: center;
     flex-direction: column;
-    margin-top: 10px; /* Add some spacing between the toggle bar and nav links */
+    margin-top: 10px;
   }
 
   .navbar-nav .nav-link {
@@ -141,24 +352,24 @@
   }
 
   .custom-toggler {
-    order: -1; /* Toggle button on the left */
-    margin-right: auto; /* Push it to the left corner */
+    order: -1; 
+    margin-right: auto;
   }
 
   .d-flex {
-    order: 1; /* Icons on the right */
-    margin-left: auto; /* Push icons to the right corner */
+    order: 1; 
+    margin-left: auto;
   }
 
   .navbar-collapse {
     position: absolute;
-    top: 100%; /* Position the collapse below the navbar */
+    top: 100%;
     left: 0;
     right: 0;
-    background-image: url("../images/header_bg.png"); /* Same as navbar background */
+    background-image: url("../images/header_bg.png"); 
     background-size: cover;
     background-position: center;
-    z-index: 1000; /* Ensure it appears above other content */
+    z-index: 1000;
   }
 
   .user-dropdown-menu {
@@ -170,21 +381,20 @@
   .cart-icon svg,
   .user-icon svg,
   .user-icon-dropdown svg {
-    width: 24px; /* Adjust the size as needed */
-    height: 24px; /* Adjust the size as needed */
+    width: 24px; 
+    height: 24px; 
   }
 
   .cart-icon{
     margin-left: 10px;
   }
 
-  /* Adjust the cart badge position for the smaller icon */
   .cart-badge {
-    top: -8px; /* Adjust as needed */
-    right: -12px; /* Adjust as needed */
-    font-size: 10px; /* Adjust as needed */
-    width: 16px; /* Adjust as needed */
-    height: 16px; /* Adjust as needed */
+    top: -8px; 
+    right: -12px; 
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -200,10 +410,6 @@
     font-size: 1.2rem;
   }
 
-  .nav-user-icon {
-    /* margin-top: 5px; */
-  }
-
   .cart-icon{
     margin-left: 3px;
   }
@@ -213,4 +419,4 @@
 .d-flex {
   display: flex;
   align-items: center;
-}
+} */
