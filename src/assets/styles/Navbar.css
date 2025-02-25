@@ -1,3 +1,4 @@
+/* Existing CSS */
 .navbar-custom {
   background-image: url("../images/header_bg.png");
   background-size: cover;
@@ -25,17 +26,13 @@
   color: #f56565;
 }
 
-.cart-container {
-  margin-left: auto;
-  margin-right: 20px;
-}
-
 .cart-icon {
   display: flex;
   align-items: center;
   color: white;
   transition: transform 0.2s;
   position: relative;
+  margin-left: 10px;
 }
 
 .cart-icon:hover {
@@ -124,11 +121,12 @@
   transform: translateX(-30%);
 }
 
-/* Fix for small screens */
+/* Mobile View */
 @media (max-width: 992px) {
   .navbar-nav {
     text-align: center;
     flex-direction: column;
+    margin-top: 10px; /* Add some spacing between the toggle bar and nav links */
   }
 
   .navbar-nav .nav-link {
@@ -136,18 +134,31 @@
     display: block;
   }
 
-  .nav-buttons {
-    flex-direction: column;
-    width: 100%;
-    text-align: center;
+  .navbar-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  .cart-container {
-    margin-right: 10px;
+  .custom-toggler {
+    order: -1; /* Toggle button on the left */
+    margin-right: auto; /* Push it to the left corner */
   }
 
-  .nav-user-icon {
-    position: relative;
+  .d-flex {
+    order: 1; /* Icons on the right */
+    margin-left: auto; /* Push icons to the right corner */
+  }
+
+  .navbar-collapse {
+    position: absolute;
+    top: 100%; /* Position the collapse below the navbar */
+    left: 0;
+    right: 0;
+    background-image: url("../images/header_bg.png"); /* Same as navbar background */
+    background-size: cover;
+    background-position: center;
+    z-index: 1000; /* Ensure it appears above other content */
   }
 
   .user-dropdown-menu {
@@ -155,30 +166,51 @@
     left: 50%;
     transform: translateX(-50%);
   }
+
+  .cart-icon svg,
+  .user-icon svg,
+  .user-icon-dropdown svg {
+    width: 24px; /* Adjust the size as needed */
+    height: 24px; /* Adjust the size as needed */
+  }
+
+  .cart-icon{
+    margin-left: 10px;
+  }
+
+  /* Adjust the cart badge position for the smaller icon */
+  .cart-badge {
+    top: -8px; /* Adjust as needed */
+    right: -12px; /* Adjust as needed */
+    font-size: 10px; /* Adjust as needed */
+    width: 16px; /* Adjust as needed */
+    height: 16px; /* Adjust as needed */
+  }
 }
 
 @media (max-width: 576px) {
+  .navbar-custom {
+    padding: 5px 4px;
+  }
   .navbar-brand {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .logo {
     font-size: 1.2rem;
   }
 
-  .cart-container {
-    margin-right: 5px;
+  .nav-user-icon {
+    /* margin-top: 5px; */
   }
 
-  .nav-user-icon {
-    margin-top: 5px;
+  .cart-icon{
+    margin-left: 3px;
   }
+
 }
 
-.rt {
+.d-flex {
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-direction: row-reverse;
-  position: relative;
 }
