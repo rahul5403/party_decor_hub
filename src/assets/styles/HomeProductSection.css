@@ -1,16 +1,11 @@
-/* .decoration-section {
-    position: relative;
-    background-color: transparent;
-    text-align: center;
-} */
-
 .decoration-section {
     position: relative;
-    background-color: #fff; /* Thoda contrast dene ke liye */
+    background-color: #fff;
     text-align: center;
-    padding: 1.5rem;
+    padding: 1rem 2rem;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* Mast shadow */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); 
+    margin-top: 3rem;
 }
 .decoration-section-similar {
     position: relative;
@@ -37,14 +32,13 @@
     gap: 1rem;
     overflow-x: auto;
     scroll-behavior: smooth;
-    padding: 1rem;
-    scrollbar-width: thin;
-    scrollbar-color: #01634f transparent;
+    scrollbar-width:thin;
+    scrollbar-color: #0041345c transparent;
     white-space: nowrap;
 }
 
 .decoration-scroll::-webkit-scrollbar {
-    height: 6px;
+    height: 1px; 
 }
 
 .decoration-scroll::-webkit-scrollbar-thumb {
@@ -79,6 +73,7 @@
     width: 100%;
     height: auto;
     border-radius: 6px;
+    margin-bottom: 10px;
 }
 
 .decoration-card-title {
@@ -120,12 +115,20 @@
 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
+
+    .decoration-section {
+        padding: 0.8rem;
+    }
+
     .decoration-card {
         flex: 0 0 45%;
     }
     .decoration-scroll {
         gap: 0.3rem;
+    }
+    .decoration-image {
+        margin-bottom: 5px;
     }
 }
 
@@ -134,7 +137,7 @@
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
     .bulk-order-button {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
@@ -152,7 +155,7 @@
     padding: 0.5rem 1.2rem;
 
 }
-@media (max-width: 768px) {
+@media (max-width: 860px) {
     .vw {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;

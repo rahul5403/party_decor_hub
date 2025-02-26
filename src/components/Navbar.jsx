@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 
-const NavBar = () => {
+const NavBar = ({ onLoginClick}) => {
   const cartCount = useSelector((state) => state.cart.cartCount);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
@@ -18,6 +18,12 @@ const NavBar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+  };
+
+  const handleUserIconClick = () => {
+    if (!isAuthenticated) {
+      onLoginClick(); // Open Login2 popup
+    }
   };
 
   return (
@@ -44,21 +50,21 @@ const NavBar = () => {
               Home
             </Link>
             <Link to="/party" className="nav-link" onClick={handleNavLinkClick}>
-              Party
+              Decoration Items
             </Link>
             <Link
               to="/decoration"
               className="nav-link"
               onClick={handleNavLinkClick}
             >
-              Decoration
+              Decoration Services
             </Link>
             <Link
               to="/disposable"
               className="nav-link"
               onClick={handleNavLinkClick}
             >
-              Disposable
+              Disposable Items
             </Link>
             <Link to="/about" className="nav-link" onClick={handleNavLinkClick}>
               About Us
@@ -67,6 +73,7 @@ const NavBar = () => {
         </Navbar.Collapse>
 
         <div className="d-flex align-items-center">
+          {/* User Icon */}
           <div className="nav-user-icon">
             {isAuthenticated ? (
               <Dropdown>
@@ -88,11 +95,17 @@ const NavBar = () => {
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Link to="/login" className="user-icon p-1">
+              <div
+                className="user-icon p-1"
+                onClick={handleUserIconClick} // Open Login2 popup on click
+                style={{ cursor: "pointer" }} // Add pointer cursor
+              >
                 <FaUserCircle size={30} />
-              </Link>
+              </div>
             )}
           </div>
+
+          {/* Cart Icon */}
           <div>
             <Link to="/cart" className="nav-link cart-icon p-1">
               <FaShoppingCart size={30} />

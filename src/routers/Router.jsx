@@ -1,4 +1,3 @@
-// import { Navigation } from "mdi-material-ui";
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "../Pages/Home";
@@ -13,16 +12,16 @@ import { decorationData, disposalData, partyData } from "../data/data";
 import About from "../Pages/About";
 import Checkout from "../Pages/Checkout";
 import WhatsAppButton from "../components/WhatsAppButton";
-// import Login from "../Pages/Login";
-// import SignUp from "../Pages/SignUp";
 import Login2 from "../Pages/Login2";
 import SignUp2 from "../Pages/SignUp2";
 import NotFound from "../Pages/Notfound";
 import Profile from "../Pages/Profile";
 import Orders from "../Pages/Orders";
+import DecorBook from "../components/DecorBook";
+import PincodeModal from "../components/PincodeModal";
 
 const Router = () => {
-    const location = useLocation()
+    const location = useLocation();
     const [cart, setCart] = useState([
         {
             id: 7,
@@ -32,13 +31,13 @@ const Router = () => {
             price: 60,
             quantity: 1
         }
-    ])
+    ]);
+    const [showSignup, setShowSignup] = useState(false);
+    const [showLogin, setShowLogin] = useState(false); 
 
     useEffect(() => {
-        // Scroll to the top of the page whenever the route changes
         window.scrollTo(0, 0);
-      }, [location]);
-     
+    }, [location]);
 
     const addToCart = (product) => {
         setCart((prevCart) => {
@@ -73,7 +72,11 @@ const Router = () => {
 
     return (
         <div>
-            {!hideHeaderFooter && <Navbar />}
+            {!hideHeaderFooter && (
+                <Navbar
+                    onLoginClick={() => setShowLogin(true)}                    
+                    />
+            )}
             <Routes>
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/home" element={<Home />}></Route>
@@ -93,14 +96,34 @@ const Router = () => {
                 />
                 <Route path="/checkout" element={<Checkout />}></Route>
                 <Route path="/about" element={<About />}></Route>
-                <Route path="/login" element={<Login2/>}></Route>
-                <Route path="/signup" element={<SignUp2/>}></Route>
+                <Route path="/login" element={<Login2 />}></Route>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/orders" element={<Orders/>} />
+                <Route path="/decor" element={<DecorBook />} />
+                <Route path="/pincode" element={<PincodeModal/>}/>
                 <Route path="*" element={<NotFound />} />
-
             </Routes>
-            
+
+            {showSignup && (
+                <SignUp2
+                    onClose={() => setShowSignup(false)}
+                    onLoginClick={() => {
+                        setShowSignup(false); 
+                        setShowLogin(true); 
+                    }}
+                />
+            )}
+
+            {showLogin && (
+                <Login2
+                    onClose={() => setShowLogin(false)}
+                    onSignupClick={() => {
+                        setShowLogin(false); 
+                        setShowSignup(true); 
+                    }}
+                />
+            )}
+
             {!hideHeaderFooter && <WhatsAppButton />}
             {!hideHeaderFooter && <Footer />}
         </div>

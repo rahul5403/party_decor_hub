@@ -17,9 +17,9 @@ function Home() {
             </Helmet>
             <HeroSection />
             <Services />
-            <HomeProductSection  products={partyData} section={"Party"}/>
-            <HomeProductSection  products={decorationData} section={"Decoration"}/>
-            <HomeProductSection  products={disposalData} section={"Disposable"}/>
+            <HomeProductSection  products={partyData} section={"Decoration Items"}/>
+            <HomeProductSection  products={decorationData} section={"Decoration Services"}/>
+            <HomeProductSection  products={disposalData} section={"Disposable Items"}/>
             <BulkOrderSection />
         </React.Fragment>
     );

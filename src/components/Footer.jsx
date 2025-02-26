@@ -20,7 +20,7 @@ const Footer = () => {
                 <Row >
                     {/* Company Info */}
                     <Col md={4} >
-                        <div className="logo"><span>PARTY</span> DECOR <span>HUB</span></div>
+                        <div className="logo-f"><span>PARTY</span> DECOR <span>HUB</span></div>
                         <div className="contact-info">
                             <p>
                                 <FaMapMarkerAlt className="mr-2" />
@@ -44,13 +44,13 @@ const Footer = () => {
                         <h5>Services</h5>
                         <ul>
                             <li>
-                                <Link to="/party" className="nav-link">Party</Link>
+                                <Link to="/party" className="nav-link">Decoration Items</Link>
                             </li>
                             <li>
-                                <Link to="/decoration" className="nav-link">Decoration</Link>
+                                <Link to="/decoration" className="nav-link">Decoration Services</Link>
                             </li>
                             <li>
-                                <Link to="/disposable" className="nav-link">Disposable</Link>
+                                <Link to="/disposable" className="nav-link">Disposable Items</Link>
                             </li>
                         </ul>
                     </Col>
@@ -59,8 +59,8 @@ const Footer = () => {
                     <Col md={4}>
                         <h5>About Us</h5>
                         <ul>
-                            <li><a href="#">Our Mission</a></li>
-                            <li><a href="#">Impact</a></li>
+                            <li><a href="/about">Our Mission</a></li>
+                            <li><a href="/about">Impact</a></li>
                         </ul>
                     </Col>
                 </Row>
@@ -76,7 +76,7 @@ const Footer = () => {
                     </Col>
 
                     <Col md={4} className="text-center mb-3 mb-md-0">
-                         <div className="logo"> <span>PARTY</span> DECOR <span>HUB</span></div>
+                         <div className="logo-f"> <span>PARTY</span> DECOR <span>HUB</span></div>
                     </Col>
                 </Row>
                 <Row>

@@ -1,17 +1,33 @@
-/* Container Fixes */
-.signup-container {
+/* Overlay */
+.overlay-s {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Reduced opacity for more transparency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100000;
+  backdrop-filter: blur(5px); /* Optional: Adds a blur effect to the background */
+}
+
+/* Popup Container */
+.signup-popup {
   display: flex;
   flex-direction: row;
-  width: 100vw;
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding: 5rem 7rem; /* Increased padding */
+  width: 66.66%; /* 2/3 of the screen */
+  max-width: 800px; /* Maximum width */
+  height: auto; /* Height adjusts to content */
+  background: white;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Left Side - Image & Text */
 .signup-left {
-  /* position: relative; */
   width: 40%;
   background: #b5d4c3;
   display: flex;
@@ -19,53 +35,49 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem; /* Reduced padding */
   background-image: url("../images/header_bg.png");
-  box-shadow: -5px 0px 10px rgba(0, 0, 0, 0.5);
   color: white;
 }
 
-
 .signup-left h2 {
-  font-size: 2rem;
+  font-size: 1.5rem; /* Reduced font size */
   font-weight: bold;
+  margin-bottom: 1rem; /* Reduced margin */
 }
 
 .signup-left p {
-  font-size: 1rem;
+  font-size: 0.9rem; /* Reduced font size */
   max-width: 90%;
   word-break: break-word;
 }
 
-
 /* Right Side - signup Form */
 .signup-right {
   width: 60%;
-  /* background: #e3fff4; */
-  background: rgba(250, 243, 224, 0.5);
+  background: rgba(250, 243, 224, 0.9); /* Slightly opaque background */
   color: #4e342e;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: -5px 0px 10px  rgba(0, 0, 0, 0.5);
-
-  /* backdrop-filter: blur(10px); */
+  position: relative;
+  padding: 1.5rem 1rem 0.5rem 1rem; /* Reduced padding */
 }
 
 /* Form */
 .form-container {
   width: 100%;
-  max-width: 400px;
-  background: rgba(250, 243, 224, 0.3);
-  padding-left: 2rem;
-  border-radius: 8px;
+  max-width: 350px;
+  background: transparent; /* Remove background */
+  padding: 0; /* Remove padding */
 }
 
 .wlcm {
-  margin-bottom: 3rem;
-  margin-top: 1rem; /* Increased gap */
+  margin-bottom: 1.5rem; /* Reduced margin */
+  margin-top: 2rem; /* Removed margin */
+  font-size: 1.5rem; /* Adjusted font size */
 }
 
 form {
@@ -73,7 +85,7 @@ form {
   max-width: 350px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem; /* Reduced gap */
+  gap: 0.2rem;
 }
 
 label {
@@ -81,34 +93,28 @@ label {
   font-size: 0.9rem;
   font-weight: bold;
   color: #555;
-  margin-bottom: 0rem; /* Reduced gap between label and input */
+  margin-bottom: 0rem; /* Reduced margin */
 }
 
 input {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #ffe8e8;
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
   background-color: #ffffff;
 }
 
 input:focus {
-  background-color: rgb(255, 255, 255);
-}
-
-.forgot-password {
-  text-align: right;
-  font-size: 0.85rem;
-  color: #777;
-  cursor: pointer;
+  border-color: #245743;
+  outline: none;
 }
 
 /* signup Button */
 .signup-btn {
   background: #245743;
   color: white;
-  padding: 0.4rem;
+  padding: 0.5rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -126,34 +132,17 @@ input:focus {
 .divider {
   font-size: 0.9rem;
   color: #777;
+  margin: 0; /* Adjusted margin */
 }
 
 /* Google signup Button */
-.google-signup {
-  background: #fff;
-  color: #333333;
-  padding: 0.8rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.google-signup img {
-  width: 20px;
-}
-
-.google-signup:hover {
-  background: #f8f8f8;
+.google-login-container {
+  margin-top: 0rem;
 }
 
 .signup-link {
-  font-size: 0.9rem;
-  margin-top: 1rem;
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
 }
 
 .signup-link a {
@@ -165,87 +154,104 @@ input:focus {
   text-decoration: underline;
 }
 
-/* Responsive Fixes */
-@media (max-width: 1024px) {
-  .signup-container {
-      flex-direction: column;
-      padding: 3rem;
-  }
-
-  .signup-left, .signup-right {
-      width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .signup-container {
-      padding: 1.5rem; /* Slightly increased padding */
-  }
-
-  .form-container {
-      max-width: 350px;
-      width: 90%;
-  }
-}
-
-@media (max-width: 480px) {
-  .signup-container {
-      padding: 0rem;
-  }
-
-  .signup-left h2 {
-      font-size: 1.3rem;
-  }
-
-  .signup-left p {
-      font-size: 0.85rem;
-  }
-
-  .form-container {
-      max-width: 95%;
-  }
-}
-
-
+/* Back Button */
 .back-btn {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 1.5px;
+  left: 1.5px;
   font-size: 0.9rem;
   color: #4e342e;
   cursor: pointer;
-  background: #f2f2f2;
+  background: none;
   border: none;
-  color: #4e342e;
   border-radius: 8px;
-  align-items: center;
   transition: all 0.3s ease-in-out;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 0.2rem 0.5rem; /* Adjusted padding */
 }
 
 .back-btn:hover {
   color: #1a4e3a;
-  background: #dcdcdc;}
-
-/* Ensure proper positioning */
-.signup-right {
-  position: relative;
-  padding-top: 2rem; /* Ensures the back button doesn’t overlap */
+  background: #dcdcdc;
 }
 
-/* Responsive adjustments */
+/* Responsive Fixes */
+@media (max-width: 1024px) {
+  .signup-popup {
+    width: 80%;
+  }
+}
+
 @media (max-width: 768px) {
+  .signup-popup {
+    flex-direction: column;
+    width: 90%;
+    height: auto;
+  }
+
+  .signup-left, .signup-right {
+    width: 100%;
+  }
+
+  .signup-left {
+    padding: 1rem;
+  }
+
+  .signup-right {
+    padding: 0.5rem;
+  }
+
   .back-btn {
-    top: 15px;
-    left: 15px;
+    top: 10px;
+    left: 10px;
     font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
+  .signup-popup {
+    width: 95%;
+    height: auto;
+  }
+
+  .signup-left h2 {
+    font-size: 1.3rem;
+  }
+
+  .signup-left p {
+    font-size: 0.85rem;
+  }
+
   .back-btn {
     top: 10px;
     left: 10px;
     font-size: 0.85rem;
   }
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  color: #4e342e;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #1a4e3a;
+}
+
+.login-link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-link:hover {
+  color: #0056b3;
+  text-decoration: none;
 }

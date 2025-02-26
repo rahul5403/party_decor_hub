@@ -2,15 +2,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    padding: 20px 60px;
+    padding: 2rem;
 }
 
-/* Filter Panel */
+/* Desktop Filters */
 .filter-container {
     flex: 0 0 300px;
     max-width: 300px;
     border-right: 1px solid #ddd;
-    padding: 15px;
     background: #fff;
     color: black;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -26,115 +25,213 @@
     overflow: hidden;
 }
 
+/* Desktop Sorting Dropdown */
 .sort-bar {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     margin-bottom: 20px;
     gap: 20px;
     flex-wrap: wrap;
+    margin-right: 0px;
 }
 
-.sort-bar h2 {
-    flex: 1;
-    text-align: center;
+.sort-by-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.sort-bar select {
-    padding: 5px 10px;
-    border-radius: 4px;
+.sort-by-container label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
 }
 
-/* Updated Product Grid */
+.sort-by-container select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sort-by-container select:hover {
+    border-color: #01634f;
+}
+
+.sort-by-container select:focus {
+    outline: none;
+    border-color: #01634f;
+    box-shadow: 0 0 0 2px rgba(1, 99, 79, 0.2);
+}
+
+/* Product Grid */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
     width: 100%;
 }
 
 /* Product Card */
 .product-card {
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
+    border-radius: 6px;
+    padding: 10px;
     text-align: center;
     background: #fff;
 }
 
 .product-card h4 {
-    margin: 0 0 10px;
-    font-size: 18px;
+    margin: 0 0 5px;
+    font-size: 16px;
 }
 
 .product-card p {
     margin: 0;
     color: #007bff;
     font-weight: bold;
+    font-size: 14px;
 }
 
-/* Responsive Design */
+/* Hide elements in mobile */
 @media (max-width: 860px) {
+    .desktop-only {
+        display: none;
+    }
+
     .service-container {
         flex-direction: column;
         margin: auto;
-        padding: 10px 30px;
+        padding: 0.8rem;
     }
 
     .filter-container {
-        max-width: 400px;
         display: none;
-        width: 100%;
-        padding: 1rem;
-        position: relative;
-        margin: 0 auto;
-    }
-
-    .filter-container.show {
-        display: block;
-    }
-
-    .sort-bar {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .sort-bar select {
-        width: 100%;
-        max-width: 200px;
-    }
-
-    .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-
-    .product-container {
-        max-width: 100%;
     }
 }
 
-/* Filter Toggle */
-.filter-toggle {
+/* Mobile-Specific Styles */
+.mobile-only {
     display: none;
-    background: #01634f;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 4px;
-    margin-bottom: 10px;
 }
 
 @media (max-width: 860px) {
-    .filter-toggle {
+    .mobile-only {
         display: block;
-        margin-bottom: 5px;
-        margin: 0 auto;
-        max-width: 400px;
-        width: 100%;  
+    }
+
+    .bottom-controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        background: #fff;
+        padding: 10px 0;
+        border-top: 1px solid #ddd;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-controls button {
+        flex: 1;
+        background: #01634f;
+        color: white;
+        padding: 10px;
         text-align: center;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    /* overlay-f for Filters and Sorting */
+    .overlay-f {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100000000;
+    }
+
+    /* overlay-f Content */
+    .overlay-f-content {
+        position: relative;
+        background: white;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    /* Close Button */
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    /* Mobile Sorting Options */
+    .sort-options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .sort-options h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .sort-button {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background-color: #fff;
+        font-size: 16px;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    .sort-button:hover {
+        border-color: #01634f;
+        background-color: #f0faf8;
+    }
+
+    .sort-button.active {
+        border-color: #01634f;
+        background-color: #01634f;
+        color: #fff;
+    }
+
+    /* Slide Up Animation */
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
     }
 }
-
-
-

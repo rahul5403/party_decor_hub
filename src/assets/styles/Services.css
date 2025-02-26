@@ -4,7 +4,7 @@
   grid-template-columns: 1.2fr 1fr; /* Left section wider */
   grid-template-rows: 1fr 1fr; /* Two rows on the right */
   gap: 1.5rem; /* Space between sections */
-  padding: 2rem;
+  padding: 0.5rem 2rem;
   height: 100%;
 }
 
@@ -82,7 +82,7 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .service-blocks {
     display: flex;
     flex-direction: column;

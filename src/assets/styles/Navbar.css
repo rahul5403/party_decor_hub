@@ -4,7 +4,7 @@
   background-position: center;
   color: #064420; 
   font-family: Arial, sans-serif;
-  padding: 10px 12px;
+  padding: 5px 10px;
   position: relative;
   z-index: 1050;
 }
@@ -86,11 +86,27 @@
 .user-icon {
   color: #064420;
   transition: transform 0.2s;
+  position: relative;
 }
 
 .user-icon:hover {
   transform: scale(1.1);
   color: #e63946;
+  
+}
+
+.user-icon:hover::after {
+  content: "SignUp / Login"; /* Jo text dikhana hai */
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 136, 136, 0.8);
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .user-icon-dropdown {
@@ -99,6 +115,11 @@
   color: #064420;
   padding: 0;
 }
+
+.user-icon-dropdown:hover {
+  color: #e63946 !important;
+}
+
 
 .user-icon-dropdown:focus,
 .user-icon-dropdown:hover {
@@ -209,10 +230,10 @@
 
 
 
-/* 
+
 
  
-.navbar-custom {
+/* .navbar-custom {
   background-image: url("../images/header_bg.png");
   background-size: cover;
   background-position: center;

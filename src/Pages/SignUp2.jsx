@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import "../assets/styles/SignUp2.css";
 import axios from "axios";
 
-const SignUp2 = () => {
+const SignUp2 = ({ onClose, onLoginClick }) => { // Accept onLoginClick prop
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,8 +60,8 @@ const SignUp2 = () => {
 
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-      <div className="parent">
-        <div className="signup-container">
+      <div className="overlay-s">
+        <div className="signup-popup">
           <div className="signup-left">
             <h2>Luxury & Comfort Redefined</h2>
             <p>
@@ -72,9 +72,7 @@ const SignUp2 = () => {
           </div>
 
           <div className="signup-right">
-            <button className="back-btn" onClick={() => navigate(-1)}>
-              ← Back
-            </button>
+            <button className="close-btn" onClick={onClose}>×</button> {/* Close button */}
             <h2 className="wlcm">Welcome to Party Decor Hub</h2>
             <div className="form-container">
               <form onSubmit={handleSignup}>
@@ -127,7 +125,13 @@ const SignUp2 = () => {
                 </div>
 
                 <p className="signup-link">
-                  Already have an account? <a href="/login">Login here</a>
+                  Already have an account?{" "}
+                  <span
+                    className="login-link"
+                    onClick={onLoginClick} // Trigger Login modal
+                  >
+                    Login here
+                  </span>
                 </p>
               </form>
             </div>

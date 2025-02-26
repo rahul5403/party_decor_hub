@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice";
 import "../assets/styles/Login2.css";
 
-const Login2 = () => {
+const Login2 = ({ onClose, onSignupClick }) => { // Accept onSignupClick prop
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -51,8 +51,8 @@ const Login2 = () => {
 
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-      <div className="parent">
-        <div className="login-container">
+      <div className="overlay-s">
+        <div className="login-popup">
           <div className="login-left">
             <h2>Luxury & Comfort Redefined</h2>
             <p>
@@ -63,11 +63,8 @@ const Login2 = () => {
           </div>
 
           <div className="login-right">
-            <button className="back-btn-lg" onClick={() => navigate(-1)}>
-              ← Back
-            </button>
+            <button className="close-btn" onClick={onClose}>×</button> {/* Close button */}
             <h2 className="wlcm">Welcome to Party Decor Hub</h2>
-
             <div className="form-container">
               <form onSubmit={handleLogin}>
                 <label>Email</label>
@@ -91,6 +88,7 @@ const Login2 = () => {
                 <button type="submit" className="login-btn" disabled={loading}>
                   {loading ? "Logging in..." : "Sign in"}
                 </button>
+
                 <div className="divider">or</div>
 
                 <div className="google-login-container">
@@ -101,7 +99,13 @@ const Login2 = () => {
                 </div>
 
                 <p className="signup-link">
-                  New to Party Decor Hub? <a href="/signup">Create Account</a>
+                  New to Party Decor Hub?{" "}
+                  <span
+                    className="signup-link-text"
+                    onClick={onSignupClick} // Trigger Sign Up modal
+                  >
+                    Create Account
+                  </span>
                 </p>
               </form>
             </div>

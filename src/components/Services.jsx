@@ -1,7 +1,5 @@
 import React from "react";
 import "../assets/styles/Services.css";
-import image1 from "../assets/images/image1.jpg"
-import image2 from "../assets/images/image2.jpg"
 import { useNavigate } from "react-router-dom";
 
 const Services = () => {
@@ -12,16 +10,16 @@ const Services = () => {
     {/* Left Section */}
     <div className="service service-left" onClick={() =>  navigate("/party")}>
       <div className="service-content">
-        <h2>Party</h2>
-        <p>Details about the service on the left side. This block spans the full height on the left.</p>
+        <h2>Decoration Items</h2>
+        <p>Elegant and stylish decoration items to enhance your space with charm and beauty.</p>
       </div>
     </div>
 
     {/* Top Right Section */}
     <div className="service service-right-top" onClick={() =>  navigate("/decoration")}>
       <div className="service-content">
-        <h2>Decor</h2>
-        <p>Details about the top-right service.</p>
+        <h2>Decoration Services</h2>
+        <p>Transform your space with our expert decoration services, creating a personalized and stunning atmosphere.</p>
       </div>
     </div>
 
@@ -29,7 +27,7 @@ const Services = () => {
     <div className="service service-right-bottom" onClick={() =>  navigate("/disposable")}>
       <div className="service-content">
         <h2>Disposal Items</h2>
-        <p>Details about the bottom-right service.</p>
+        <p>Convenient and eco-friendly disposable items for easy cleanup and sustainable everyday use.</p>
       </div>
     </div>
   </div>
