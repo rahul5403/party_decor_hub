@@ -24,7 +24,7 @@
     font-size: 20px;
     color: #333;
     font-weight: bold;
-    text-align: left;
+    text-align: center;
     margin-top: 20px;
 }
 
@@ -64,7 +64,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     text-align: center;
     padding: 15px 5px;
-    width: 80%;
+    width: 100%;
 }
 
 .decoration-card:hover {
@@ -111,6 +111,7 @@
 @media (max-width: 1024px) {
     .decoration-card {
         flex: 0 0 200px;
+        width: 90%;
         
     }
     .decoration-scroll {
@@ -128,6 +129,7 @@
 
     .decoration-card {
         flex: 0 0 45%;
+        width: 80%;
     }
     .decoration-scroll {
         gap: 0.3rem;

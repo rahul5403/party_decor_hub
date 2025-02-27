@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../assets/styles/DecorBook.css";
-import { Helmet } from "react-helmet-async";
 import { decorationData, similarProductData } from "../data/data";
 import decorimage from "../assets/images/decoration_c.jpg";
 import SimilarProductSection from "./SimilarProductSection";
@@ -16,6 +15,22 @@ const DecorBook = () => {
     const [time, setTime] = useState("");
     const [expandedSection, setExpandedSection] = useState(null);
     const [showPincodeModal, setShowPincodeModal] = useState(true);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isAutoPlay, setIsAutoPlay] = useState(true);
+
+    // Ensure product.images is always an array
+    const images = product.images || [decorimage];
+
+    // Autoplay functionality
+    useEffect(() => {
+        let interval;
+        if (isAutoPlay && images.length > 1) {
+            interval = setInterval(() => {
+                setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+            }, 3000); // Autoplay speed: 3000ms
+        }
+        return () => clearInterval(interval);
+    }, [isAutoPlay, images.length]);
 
     const toggleSection = (section) => {
         setExpandedSection(expandedSection === section ? null : section);
@@ -34,6 +49,18 @@ const DecorBook = () => {
         alert(`Booking confirmed for ${product.name} on ${date} at ${time}.`);
     };
 
+    const nextImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    };
+
+    const prevImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    };
+
+    const goToImage = (index) => {
+        setCurrentImageIndex(index);
+    };
+
     return (
         <div className="decoration-booking-section">
 
@@ -46,8 +73,22 @@ const DecorBook = () => {
 
             <div className="booking-container">
                 <div className="image-gallery">
-                    {/* <img src={product.image || decorimage} alt={product.name} className="main-image" /> */}
-                    <img src={decorimage} alt={product.name} className="main-image" />
+                    <img
+                        src={images[currentImageIndex]}
+                        alt={product.name}
+                        className="main-image"
+                    />
+                    {images.length > 1 && (
+                        <div className="slider-dots">
+                            {images.map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={`custom-dot ${index === currentImageIndex ? "active" : ""}`}
+                                    onClick={() => goToImage(index)}
+                                ></div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 <div className="booking-details">
@@ -78,10 +119,6 @@ const DecorBook = () => {
                 </div>
             </div>
 
-            <div className="similar-products">
-                <SimilarProductSection products={similarProductData} section={"You might also like"} />
-            </div>
-
             {[
                 { title: "Inclusions", content: ["100 Metallic Balloons (50 Pink & 50 Red)", "10 Heart Shaped Balloons", "'Just Married' Occasion Foil Banner", "1 Fairy Light", "1 Kg Rose Petals", "20 Tea Light Candles", "Ribbons to hang balloons", "Inclusive of all taxes & conveyance charges"] },
                 { title: "Description", content: ["Make their first wedding night more beautiful with balloons and floral decoration."] },
@@ -102,6 +139,9 @@ const DecorBook = () => {
                     )}
                 </div>
             ))}
+            <div className="similar-products">
+                <SimilarProductSection products={similarProductData} section={"You might also like"} />
+            </div>
         </div>
     );
 };

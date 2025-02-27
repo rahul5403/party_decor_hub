@@ -18,6 +18,7 @@
   padding: 20px;
   background: linear-gradient(135deg, #002003, #a7e95c);
   color: white;
+  position: relative;
 }
 
 .profile-image {
@@ -33,9 +34,20 @@
   margin: 10px 0;
 }
 
-.profile-bio {
-  font-size: 14px;
-  color: #e0e0e0;
+.edit-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #fff;
+  color: #002003;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-button:hover {
+  background-color: #f0f0f0;
 }
 
 /* Profile Details */
@@ -50,22 +62,34 @@
   color: #333;
 }
 
-/* Profile Social Links */
-.profile-social {
-  padding: 15px;
-  background: #f9f9f9;
-  border-top: 1px solid #eee;
+/* Form Styles */
+.profile-details form {
+  display: flex;
+  flex-direction: column;
 }
 
-.profile-social a {
-  text-decoration: none;
-  color: #2575fc;
-  margin: 0 10px;
-  font-size: 14px;
+.profile-details form .form-group {
+  margin-bottom: 15px;
 }
 
-.profile-social a:hover {
-  text-decoration: underline;
+.profile-details form .form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.save-button {
+  background-color: #002003;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #004006;
 }
 
 /* Responsive Design */

@@ -4,10 +4,18 @@ import Disposal from "../assets/images/Disposal.jpg"
 
 export const decorationData = [
     {
-        id: 1,
-        image: Decoration, // Replace with actual image URL
+        image: Decoration, 
         title: "Table Decor",
         description: "Sustainable table decor for your events.",
+        id: 1,
+        name: "Balloons",
+        price: 39.00,
+        originalPrice: 29.00,
+        images: [
+          Decoration,
+          Party,
+          Disposal
+        ]
     },
     {
         id: 2,
