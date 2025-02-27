@@ -4,6 +4,7 @@ import FilterPanel from "../components/FilterPanel";
 import ProductSection from "../components/ProductSection";
 import ServiceBanner from "../components/ServiceBanner";
 import { partyDecorationFilterOption } from "../data/data";
+import { FaFilter, FaSort, FaSortAmountDown } from "react-icons/fa";
 
 const Service1 = ({ data }) => {
   const [showFilters, setShowFilters] = useState(false);
@@ -41,7 +42,7 @@ const Service1 = ({ data }) => {
           {/* Sorting dropdown for desktop */}
           <div className="sort-bar desktop-only">
             <div className="sort-by-container">
-              <label htmlFor="sort-by">Sort By:</label>
+              <label htmlFor="sort-by ">Sort By:</label>
               <select
                 id="sort-by"
                 onChange={(e) => setSortOrder(e.target.value)}
@@ -74,7 +75,7 @@ const Service1 = ({ data }) => {
             <div className="overlay-f-content">
               <button className="close-btn" onClick={() => setShowSort(false)}>×</button>
               <div className="sort-options">
-                <h3>Sort By</h3>
+                <ft>Sort By</ft>
                 <button
                   className={`sort-button ${sortOrder === "low-high" ? "active" : ""}`}
                   onClick={() => { setSortOrder("low-high"); setShowSort(false); }}
@@ -94,13 +95,15 @@ const Service1 = ({ data }) => {
 
         {/* Bottom Controls (Mobile) */}
         <div className="bottom-controls">
-          <button className="filter-toggle" onClick={toggleFilters}>
-            {showFilters ? "Close Filters" : "Filters"}
-          </button>
-          <button className="sort-toggle" onClick={toggleSort}>
-            {showSort ? "Close Sort" : "Sort"}
-          </button>
-        </div>
+      <button className="filter-toggle" onClick={toggleFilters}>
+        <FaFilter className="icon" />
+        {showFilters ? "Close Filters" : "Filters"}
+      </button>
+      <button className="sort-toggle" onClick={toggleSort}>
+        <FaSortAmountDown className="icon" />
+        {showSort ? "Close Sort" : "Sort"}
+      </button>
+      </div>
       </div>
     </React.Fragment>
   );

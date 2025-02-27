@@ -35,6 +35,7 @@
     scrollbar-width:thin;
     scrollbar-color: #0041345c transparent;
     white-space: nowrap;
+    padding: 1.5rem 0rem;
 }
 
 .decoration-scroll::-webkit-scrollbar {
@@ -119,6 +120,7 @@
 
     .decoration-section {
         padding: 0.8rem;
+        margin-top: 2rem;
     }
 
     .decoration-card {
@@ -166,6 +168,10 @@
     .vw {
         padding: 0.4rem 0.8rem;
         font-size: 0.85rem;
+    }
+    .decoration-section {
+        padding: 0.5rem;
+        margin-top: 1.5rem;
     }
 }
 
