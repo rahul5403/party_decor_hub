@@ -1,7 +1,8 @@
 import React from "react";
 import Slider from "react-slick";
-import "../assets/styles/HomeProductSection.css"
+// import "../assets/styles/HomeProductSection.css"
 import ProductCard from "./ProductCard";
+import "../assets/styles/SimilarProductSection.css";
 
 const SimilarProductSection = ({ products, section }) => {
   const settings = {

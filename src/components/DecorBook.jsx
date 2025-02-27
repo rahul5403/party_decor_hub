@@ -1,112 +1,74 @@
-// import React, { useState } from "react";
-// import "../assets/styles/DecorBook.css";
-// import { Helmet } from "react-helmet-async";
-// import { decorationData } from "../data/data";
-// import decorimage from "../assets/images/decoration_c.jpg";
-
-// const DecorBook = () => {
-//     const [pincode, setPincode] = useState("");
-//     const [date, setDate] = useState("");
-//     const [time, setTime] = useState("");
-//     const product = decorationData[0];
-
-//     return (
-//         <div className="decoration-booking-section">
-//             <Helmet>
-//                 <title>Book Decoration - Party Decor Hub</title>
-//                 <meta name="description" content={`Book ${product.name} for your special occasion at an affordable price.`} />
-//             </Helmet>
-//             <div className="booking-container">
-//                 <div className="image-gallery">
-//                     <img src={decorimage} alt="Decoration" className="main-image" />
-//                 </div>
-//                 <div className="booking-details">
-//                     <h1 className="booking-title">{product.name}</h1>
-//                     <div className="price-section">
-//                         {/* <span className="discounted-price">₹{product.price}</span> */}
-//                         <span className="discounted-price">₹4999</span>
-
-//                         {/* <span className="original-price">₹{product.originalPrice}</span> */}
-//                         <span className="original-price">₹8000</span>
-//                         {/* <span className="discount">-{product.discount}%</span> */}
-//                         <span className="discount">-37.5%</span>
-//                     </div>
-//                     <label className="input-label">Check Pin Code Availability *</label>
-//                     <input 
-//                         type="text" 
-//                         placeholder="Enter pin code to enable date and time" 
-//                         value={pincode} 
-//                         onChange={(e) => setPincode(e.target.value)}
-//                         className="input-field"
-//                     />
-//                     <label className="input-label">Select Date *</label>
-//                     <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input-field" />
-//                     <label className="input-label">Select Time *</label>
-//                     <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input-field" />
-//                     <button className="book-now-btn">Book Now</button>
-//                     <div className="features">
-//                         <div className="feature-box">✔ Quality Products</div>
-//                         <div className="feature-box">⭐ 4.9/5 Google Ratings</div>
-//                         <div className="feature-box">📞 24/7 Customer Support</div>
-//                         <div className="feature-box">💳 Secure Payment</div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default DecorBook;
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import "../assets/styles/DecorBook.css";
 import { Helmet } from "react-helmet-async";
-import { decorationData } from "../data/data";
+import { decorationData, similarProductData } from "../data/data";
 import decorimage from "../assets/images/decoration_c.jpg";
-import decor1 from "../assets/images/About.jpg";
-import decor2 from "../assets/images/About.jpg";
-import decor3 from "../assets/images/About.jpg";
-import decor4 from "../assets/images/About.jpg";
-import decor5 from "../assets/images/About.jpg";
-
-
+import SimilarProductSection from "./SimilarProductSection";
+import PincodeModal from "../components/PincodeModal";
 
 const DecorBook = () => {
+    const { productId } = useParams();
+    const product = decorationData.find(item => item.id === Number(productId)) || decorationData[0];
+
     const [pincode, setPincode] = useState("");
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
-    const product = decorationData[0];
-    
+    const [expandedSection, setExpandedSection] = useState(null);
+    const [showPincodeModal, setShowPincodeModal] = useState(true);
+
+    const toggleSection = (section) => {
+        setExpandedSection(expandedSection === section ? null : section);
+    };
+
+    const handlePincodeSubmit = (pincode) => {
+        setPincode(pincode);
+        setShowPincodeModal(false);
+    };
+
+    const handleBooking = () => {
+        if (!pincode || !date || !time) {
+            alert("Please fill all required fields.");
+            return;
+        }
+        alert(`Booking confirmed for ${product.name} on ${date} at ${time}.`);
+    };
+
     return (
         <div className="decoration-booking-section">
-            <Helmet>
-                <title>Book Decoration - Party Decor Hub</title>
-                <meta name="description" content={`Book ${product.name} for your special occasion at an affordable price.`} />
-            </Helmet>
+
+            {showPincodeModal && (
+                <PincodeModal 
+                    onClose={() => setShowPincodeModal(false)}
+                    onSubmit={handlePincodeSubmit}
+                />
+            )}
+
             <div className="booking-container">
                 <div className="image-gallery">
-                    <img src={decorimage} alt="Decoration" className="main-image" />
+                    {/* <img src={product.image || decorimage} alt={product.name} className="main-image" /> */}
+                    <img src={decorimage} alt={product.name} className="main-image" />
                 </div>
+
                 <div className="booking-details">
                     <h1 className="booking-title">{product.name}</h1>
                     <div className="price-section">
-                        <span className="discounted-price">₹4999</span>
-                        <span className="original-price">₹8000</span>
-                        <span className="discount">-37.5%</span>
+                        <span className="discounted-price">₹{product.discountedPrice || 4999}</span>
+                        <span className="original-price">₹{product.originalPrice || 8000}</span>
+                        <span className="discount">-{product.discount || "37.5"}%</span>
                     </div>
+
                     <label className="input-label">Check Pin Code Availability *</label>
-                    <input 
-                        type="text" 
-                        placeholder="Enter pin code to enable date and time" 
-                        value={pincode} 
-                        onChange={(e) => setPincode(e.target.value)}
-                        className="input-field"
-                    />
+                    <input type="text" placeholder="Enter pin code" value={pincode} readOnly className="input-field" onClick={() => setShowPincodeModal(true)} />
+
                     <label className="input-label">Select Date *</label>
                     <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input-field" />
+
                     <label className="input-label">Select Time *</label>
                     <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input-field" />
-                    <button className="book-now-btn">Book Now</button>
+
+                    <button className="book-now-btn" onClick={handleBooking}>Book Now</button>
+
                     <div className="features">
                         <div className="feature-box">✔ Quality Products</div>
                         <div className="feature-box">⭐ 4.9/5 Google Ratings</div>
@@ -115,16 +77,31 @@ const DecorBook = () => {
                     </div>
                 </div>
             </div>
-            <div className="recommendations">
-                <h2 className="recommend-title">You May Also Like</h2>
-                <div className="recommendation-gallery">
-                    <img src={decor1} alt="Recommendation 1" className="recommendation-image" />
-                    <img src={decor2} alt="Recommendation 2" className="recommendation-image" />
-                    <img src={decor3} alt="Recommendation 3" className="recommendation-image" />
-                    <img src={decor4} alt="Recommendation 4" className="recommendation-image" />
-                    <img src={decor5} alt="Recommendation 5" className="recommendation-image" />
-                </div>
+
+            <div className="similar-products">
+                <SimilarProductSection products={similarProductData} section={"You might also like"} />
             </div>
+
+            {[
+                { title: "Inclusions", content: ["100 Metallic Balloons (50 Pink & 50 Red)", "10 Heart Shaped Balloons", "'Just Married' Occasion Foil Banner", "1 Fairy Light", "1 Kg Rose Petals", "20 Tea Light Candles", "Ribbons to hang balloons", "Inclusive of all taxes & conveyance charges"] },
+                { title: "Description", content: ["Make their first wedding night more beautiful with balloons and floral decoration."] },
+                { title: "Must Know", content: ["Please ensure the room is ready for decoration before our team arrives."] },
+                { title: "Cancellation & Refund Policy", content: ["Cancellations made 24 hours before the event will receive a full refund."] }
+            ].map((section, index) => (
+                <div key={index} className="details-section">
+                    <div className="section-header" onClick={() => toggleSection(index)}>
+                        <h2 className="section-title">{section.title}</h2>
+                        <span className="toggle-icon">{expandedSection === index ? "-" : "+"}</span>
+                    </div>
+                    {expandedSection === index && (
+                        <ul className="details-list">
+                            {section.content.map((item, i) => (
+                                <li key={i}>{item}</li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            ))}
         </div>
     );
 };

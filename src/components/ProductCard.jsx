@@ -8,18 +8,25 @@ const ProductCard = ({ product, section }) => {
     const getButtonText = (section) => {
         switch (section) {
             case "Decoration Items":
+            case "Disposable Items":
                 return "Add to Cart";
             case "Decoration Services":
                 return "Enquiry Now";
-            case "Disposable Items":
-                return "Add to Cart";
             default:
-                return "Add to Cartt";
+                return "Add to Cart";
+        }
+    };
+
+    const handleNavigation = () => {
+        if (section === "Decoration Services") {
+            navigate(`/decor/${product?.id || product?._id || 2}`);
+        } else {
+            navigate(`/product/${product?.id || product?._id || 2}`);
         }
     };
 
     return (
-        <div className="decoration-card" key={product.id} onClick={() => navigate(`/product/${product?.id || product?._id || 2}`)}>
+        <div className="decoration-card" key={product.id} onClick={handleNavigation}>
             <img src={product.image} alt={product.title} className="decoration-image" />
             <h3 className="decoration-card-title">{product.title}</h3>
             <p className="decoration-description">{product.description}</p>

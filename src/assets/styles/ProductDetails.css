@@ -1,82 +1,98 @@
 /* General Styles */
 .product-details-section {
   font-family: "Poppins", sans-serif;
-  padding: 20px;
+  padding: 40px 20px;
   background-color: #f8f8f8;
+  min-height: 100vh;
 }
 
 /* Product Details Container */
 .product-details-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 40px;
   justify-content: center;
   align-items: flex-start;
   background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
   margin: auto;
+}
+
+.product-image {
+  flex: 1;
+  min-width: 300px;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .product-image img {
   width: 100%;
-  max-width: 300px;
-  border-radius: 10px;
+  max-width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.product-image img:hover {
+  transform: scale(1.02);
 }
 
 .product-info {
   flex: 1;
-  max-width: 450px;
+  max-width: 500px;
   text-align: left;
 }
 
 .product-title {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 /* Reviews */
 .product-reviews {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 15px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .stars {
   color: #ffcc00;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .review-count {
-  font-size: 14px;
+  font-size: 16px;
   color: #666;
 }
 
 /* Price */
 .product-price {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   color: #e63946;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .original-price {
   text-decoration: line-through;
-  font-size: 16px;
+  font-size: 18px;
   color: #999;
-  margin-left: 8px;
+  margin-left: 10px;
 }
 
 .product-description {
-  font-size: 14px;
+  font-size: 16px;
   color: #666;
-  line-height: 1.6;
-  margin-bottom: 20px;
+  line-height: 1.8;
+  margin-bottom: 30px;
   text-align: left;
 }
 
@@ -84,25 +100,31 @@
 .product-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
 .option-box {
   background-color: #efefef;
-  padding: 8px 15px;
-  border-radius: 20px;
+  padding: 10px 20px;
+  border-radius: 25px;
   font-size: 14px;
   font-weight: 600;
   color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.option-box:hover {
+  background-color: #ddd;
 }
 
 /* Quantity Selector */
 .quantity-selector {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
 .quantity-selector button {
@@ -112,9 +134,9 @@
   color: #fff;
   font-size: 18px;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 .quantity-selector button:hover {
@@ -122,58 +144,61 @@
 }
 
 .quantity-selector input {
-  width: 40px;
+  width: 50px;
   text-align: center;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 10px;
   background: #fff;
+  padding: 8px;
 }
 
 /* Add to Cart Button */
 .add-to-cart-btn {
   display: inline-block;
-  background-color: #e63946;
+  background: linear-gradient(135deg, #e63946, #d62839);
   color: #fff;
   padding: 12px 25px;
   font-size: 16px;
   font-weight: bold;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   text-transform: uppercase;
   width: 100%;
   max-width: 300px;
-  transition: 0.3s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
 }
 
 .add-to-cart-btn:hover {
-  background-color: #d62839;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(230, 57, 70, 0.4);
 }
 
 /* Tabs Section */
 .product-tabs {
   width: 100%;
-  margin-top: 30px;
+  margin-top: 40px;
   text-align: left;
 }
 
 .tabs {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   flex-wrap: wrap;
   border-bottom: 2px solid #ddd;
 }
 
 .tab {
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 16px;
   cursor: pointer;
   border: none;
   background-color: transparent;
   color: #333;
   font-weight: bold;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .tab.active {
@@ -187,64 +212,125 @@
 
 .tab-content {
   margin-top: 20px;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.8;
   color: #666;
   text-align: left;
+  padding: 20px 0;
 }
 
 /* Responsive Styles */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 860px) {
   .product-details-container {
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+  }
+
+  .product-image {
+    min-width: 70%;
+    max-width: 70%;
   }
 
   .product-info {
-      text-align: center;
+    text-align: center;
   }
 
   .product-options {
-      justify-content: center;
+    justify-content: center;
   }
 
   .quantity-selector {
-      justify-content: center;
+    justify-content: center;
   }
 
   .add-to-cart-btn {
-      width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .product-title {
+    font-size: 24px;
+  }
+  .product-image {
+    min-width: 80%;
+    max-width: 80%;
   }
 
-  .product-tabs {
-      text-align: center;
+  .product-price {
+    font-size: 22px;
+  }
+
+  .original-price {
+    font-size: 16px;
+  }
+
+  .quantity-selector button {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .quantity-selector input {
+    width: 40px;
+    font-size: 14px;
+  }
+
+  .product-image img {
+    max-width: 100%;
+  }
+
+  .tab {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .tab-content {
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 15px 0;
+    text-align: center;
   }
 }
 
 @media screen and (max-width: 480px) {
   .product-title {
-      font-size: 20px;
+    font-size: 22px;
   }
 
   .product-price {
-      font-size: 18px;
+    font-size: 20px;
   }
 
   .original-price {
-      font-size: 14px;
+    font-size: 14px;
   }
 
   .quantity-selector button {
-      width: 30px;
-      height: 30px;
+    width: 25px;
+    height: 25px;
+    font-size: 14px;
   }
 
   .quantity-selector input {
-      width: 35px;
+    width: 35px;
+    font-size: 12px;
   }
 
   .product-image img {
-      max-width: 250px;
+    max-width: 100%;
+  }
+
+  .tab {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  .tab-content {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 10px 0;
+    text-align: center;
   }
 }

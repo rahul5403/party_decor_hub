@@ -99,7 +99,7 @@ const Router = () => {
                 <Route path="/login" element={<Login2 />}></Route>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/orders" element={<Orders/>} />
-                <Route path="/decor" element={<DecorBook />} />
+                <Route path="/decor/:productId" element={<DecorBook />} />
                 <Route path="/pincode" element={<PincodeModal/>}/>
                 <Route path="*" element={<NotFound />} />
             </Routes>

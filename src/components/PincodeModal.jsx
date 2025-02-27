@@ -28,9 +28,14 @@ const PincodeModal = () => {
     }
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   return isOpen ? (
     <div className="pincode-modal">
       <div className="modal-content">
+        <button className="close-button" onClick={handleClose}>&times;</button>
         <h2>Enter Your Pincode</h2>
         <p>Currently, our decoration services are available in Delhi NCR only.</p>
         <input
@@ -40,7 +45,7 @@ const PincodeModal = () => {
           onChange={(e) => setPincodeInput(e.target.value)}
         />
         {error && <p className="error">{error}</p>}
-        <button onClick={handleSubmit}>Check Availability</button>
+        <button className="submit-button" onClick={handleSubmit}>Check Availability</button>
       </div>
     </div>
   ) : null;
