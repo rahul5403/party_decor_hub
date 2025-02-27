@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice";
 import "../assets/styles/Login2.css";
 
-const Login2 = ({ onClose, onSignupClick }) => { // Accept onSignupClick prop
+const Login2 = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,6 +30,7 @@ const Login2 = ({ onClose, onSignupClick }) => { // Accept onSignupClick prop
       dispatch(login(response.data));
 
       toast.success("Login successful! Redirecting...");
+      onClose(); // Close popup on successful login
       navigate("/home");
     } catch (error) {
       toast.error(error.response?.data?.error || "Invalid email or password");
@@ -42,6 +43,7 @@ const Login2 = ({ onClose, onSignupClick }) => { // Accept onSignupClick prop
   const handleGoogleSuccess = (credentialResponse) => {
     console.log("Google Token:", credentialResponse.credential);
     toast.success("Google Login Successful!");
+    onClose(); // Close popup on successful Google login
   };
 
   const handleGoogleFailure = (error) => {
@@ -63,7 +65,7 @@ const Login2 = ({ onClose, onSignupClick }) => { // Accept onSignupClick prop
           </div>
 
           <div className="login-right">
-            <button className="close-btn" onClick={onClose}>×</button> {/* Close button */}
+            <button className="close-btn" onClick={onClose}>×</button>
             <h2 className="wlcm">Welcome to Party Decor Hub</h2>
             <div className="form-container">
               <form onSubmit={handleLogin}>
@@ -99,11 +101,8 @@ const Login2 = ({ onClose, onSignupClick }) => { // Accept onSignupClick prop
                 </div>
 
                 <p className="signup-link">
-                  New to Party Decor Hub?{" "}
-                  <span
-                    className="signup-link-text"
-                    onClick={onSignupClick} // Trigger Sign Up modal
-                  >
+                  New to Party Decor Hub? {" "}
+                  <span className="signup-link-text" onClick={onSignupClick}>
                     Create Account
                   </span>
                 </p>
