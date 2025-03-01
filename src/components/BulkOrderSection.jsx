@@ -27,7 +27,7 @@ const BulkOrderSection = () => {
       </div>
       <div className="bulk-order-image">
         <img
-          src="https://partydecorhub.com/media/products-image/ballons1.jpg" 
+          src={bulk_image} 
           alt="Eco Soul Products"
         />
       </div>
