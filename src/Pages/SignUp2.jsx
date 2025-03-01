@@ -46,8 +46,8 @@ const SignUp2 = ({ onClose, onLoginClick }) => {
         onLoginClick(); // Login modal open karega
       }, 1000);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Signup failed");
-      console.error("Signup failed:", error.response?.data || error.message);
+      toast.error(error.response?.data?.error || "Signup failed");
+      console.error("Signup failed:", error.response?.data.error || error.message);
     } finally {
       setLoading(false);
     }

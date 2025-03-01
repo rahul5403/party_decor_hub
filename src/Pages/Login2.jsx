@@ -24,18 +24,50 @@ const Login2 = ({ onClose, onSignupClick }) => {
 
     setLoading(true);
     try {
+      // Step 1: Send login request
       const response = await axios.post(
         `https://partydecorhub.com/api/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
       );
-      dispatch(login(response.data));
+      console.log("Login Response:", response.data);
 
-      toast.success("Login successful! Redirecting...");
-      onClose(); // Close popup on successful login
+      const { access, refresh } = response.data;
+
+      // Store tokens
+      localStorage.setItem("accessToken", access);
+      document.cookie = `refreshToken=${refresh}; path=/; secure; HttpOnly`;
+
+      // Step 2: Verify authentication and fetch user details
+      const storedAccessToken = localStorage.getItem("accessToken");
+
+if (!storedAccessToken) {
+  console.error("Access token not found in localStorage");
+  return;
+}
+
+const authCheckResponse = await axios.get("https://partydecorhub.com/api/check-auth", {
+  headers: { Authorization: `Bearer ${storedAccessToken.trim()}` }, // Trim space
+});
+console.log("Auth Check Response:", authCheckResponse.data);
+      dispatch(login(authCheckResponse.data));
+      toast.success("Login successful!");
+
+      onClose();
       navigate("/home");
     } catch (error) {
-      toast.error(error.response?.data?.error || "Invalid email or password");
-      console.error("Login failed:", error.response?.data || error.message);
-    } finally {
+      if (error.response) {
+        if (error.response.status === 404) {
+          toast.error("User not found. Please check your email.");
+        } else if (error.response.status === 401) {
+          toast.error("Incorrect password. Please try again.");
+        } else {
+          toast.error(error.response.data?.error || "Something went wrong. Please try again.");
+        }
+      } else {
+        toast.error("Network error. Please check your connection.");
+      }
+      console.error(error.response?.data?.error || "Login failed");
+    }
+     finally {
       setLoading(false);
     }
   };
@@ -43,11 +75,10 @@ const Login2 = ({ onClose, onSignupClick }) => {
   const handleGoogleSuccess = (credentialResponse) => {
     console.log("Google Token:", credentialResponse.credential);
     toast.success("Google Login Successful!");
-    onClose(); // Close popup on successful Google login
+    onClose();
   };
 
   const handleGoogleFailure = (error) => {
-    console.error("Google Login Failed:", error);
     toast.error("Google Login Failed. Please try again.");
   };
 
@@ -57,11 +88,7 @@ const Login2 = ({ onClose, onSignupClick }) => {
         <div className="login-popup">
           <div className="login-left">
             <h2>Luxury & Comfort Redefined</h2>
-            <p>
-              Discover elegantly designed spaces, top-tier amenities, and an
-              unforgettable stay at Party Decor Hub. Your perfect getaway starts
-              here.
-            </p>
+            <p>Discover elegantly designed spaces, top-tier amenities, and an unforgettable stay at Party Decor Hub.</p>
           </div>
 
           <div className="login-right">
@@ -70,22 +97,10 @@ const Login2 = ({ onClose, onSignupClick }) => {
             <div className="form-container">
               <form onSubmit={handleLogin}>
                 <label>Email</label>
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+                <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
                 <label>Password</label>
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
                 <button type="submit" className="login-btn" disabled={loading}>
                   {loading ? "Logging in..." : "Sign in"}
@@ -94,17 +109,11 @@ const Login2 = ({ onClose, onSignupClick }) => {
                 <div className="divider">or</div>
 
                 <div className="google-login-container">
-                  <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={handleGoogleFailure}
-                  />
+                  <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} />
                 </div>
 
                 <p className="signup-link">
-                  New to Party Decor Hub? {" "}
-                  <span className="signup-link-text" onClick={onSignupClick}>
-                    Create Account
-                  </span>
+                  New to Party Decor Hub? <span className="signup-link-text" onClick={onSignupClick}>Create Account</span>
                 </p>
               </form>
             </div>

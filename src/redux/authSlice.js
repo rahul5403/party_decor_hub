@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem("accessToken"), // Check stored token
   user: null,
 };
 
@@ -16,6 +16,10 @@ const authSlice = createSlice({
     logout(state) {
       state.isAuthenticated = false;
       state.user = null;
+      localStorage.removeItem("accessToken");
+
+      // Remove refresh token from cookies
+      document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     },
   },
 });

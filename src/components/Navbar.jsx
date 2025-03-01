@@ -5,6 +5,8 @@ import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const NavBar = ({ onLoginClick}) => {
   const cartCount = useSelector((state) => state.cart.cartCount);
@@ -16,9 +18,23 @@ const NavBar = ({ onLoginClick}) => {
     setExpanded(false);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+  
+      if (token) {
+        await axios.post("https://partydecorhub.com/api/logout", {}, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
+  
+      dispatch(logout());
+      toast.success("Logout successful!");
+    } catch (error) {
+      toast.error("Logout failed, please try again.");
+    }
   };
+  
 
   const handleUserIconClick = () => {
     if (!isAuthenticated) {
