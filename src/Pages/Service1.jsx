@@ -1,15 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../assets/styles/ProductSection.css";
 import FilterPanel from "../components/FilterPanel";
 import ProductSection from "../components/ProductSection";
 import ServiceBanner from "../components/ServiceBanner";
 import { partyDecorationFilterOption } from "../data/data";
 import { FaFilter, FaSort, FaSortAmountDown } from "react-icons/fa";
+import axios from "axios";
+
+const BASE_IMAGE_URL = "https://partydecorhub.com"; 
+
 
 const Service1 = ({ data }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
   const [sortOrder, setSortOrder] = useState(""); // Sorting state
+
+  const [partyData, setPartyData] = useState([]);
+  useEffect(() => {
+      const fetchProducts = async () => {
+          try {
+              const response = await axios.get("https://partydecorhub.com/api/products");
+              const products = response.data.map(product => ({
+                  id: product.product_id || product.id, 
+                  name: product.name,
+                  price: product.price,
+                  originalPrice: product.price + 10,  
+                  description: product.category,  
+                  image: BASE_IMAGE_URL + product.thumbnail, 
+                  images: [BASE_IMAGE_URL + product.thumbnail], 
+              }));
+              setPartyData(products.filter(item => item.description === "Party Decor"));
+          } catch (error) {
+              console.error("Error fetching products:", error);
+          }
+      };
+
+      fetchProducts();
+  }, []);
+
+
 
   // Sorting Function
   const sortedData = [...data].sort((a, b) => {
@@ -55,7 +84,7 @@ const Service1 = ({ data }) => {
             </div>
           </div>
 
-          <ProductSection products={sortedData} section={"Decoration Items"} />
+          <ProductSection products={partyData} section={"Decoration Items"} />
         </div>
       </div>
 

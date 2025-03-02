@@ -83,7 +83,8 @@ const Router = () => {
                 <Route path="/party" element={<Service1 data={partyData} />}></Route>
                 <Route path="/decoration" element={<Service2 data={decorationData}/>}></Route>
                 <Route path="/disposable" element={<Service3 data={disposalData}/>}></Route>
-                <Route path="/product/:productId" element={<ProductDetails addToCart={addToCart}/>}></Route>
+                {/* <Route path="/products/:productId" element={<ProductDetails addToCart={addToCart}/>}></Route> */}
+                <Route path="/products/:productId" element={<ProductDetails />} />
                 <Route
                     path="/cart"
                     element={

@@ -7,6 +7,15 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); 
     margin-top: 3rem;
 }
+
+.decoration-section .product-grid {
+    display: flex; /* Change grid to flex for horizontal scroll */
+    flex-wrap: nowrap; /* Ensure cards don't wrap to the next line */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    gap: 1rem; /* Adjust gap as needed */
+    padding: 1.5rem 0; /* Add padding for spacing */
+}
+
 .decoration-section-similar {
     position: relative;
     background-color: transparent;
@@ -65,6 +74,7 @@
     text-align: center;
     padding: 15px 5px;
     width: 100%;
+    max-width: 400px;
 }
 
 .decoration-card:hover {
@@ -74,7 +84,8 @@
 
 .decoration-image {
     width: 100%;
-    height: auto;
+    height: 300px; 
+    object-fit: cover; 
     border-radius: 6px;
     margin-bottom: 10px;
 }
@@ -110,8 +121,8 @@
 
 @media (max-width: 1024px) {
     .decoration-card {
-        flex: 0 0 200px;
-        width: 90%;
+        flex: 0 0 220px;
+        width: 95%;
         
     }
     .decoration-scroll {
@@ -128,14 +139,14 @@
     }
 
     .decoration-card {
-        flex: 0 0 45%;
+        flex: 0 0 204px;
         width: 80%;
     }
     .decoration-scroll {
         gap: 0.3rem;
     }
     .decoration-image {
-        margin-bottom: 5px;
+        height: 250px;
     }
 }
 
@@ -156,10 +167,18 @@
         padding: 0.4rem 0.8rem;
         font-size: 0.85rem;
     }
+    .decoration-card {
+        flex: 0 0 170px;
+    }
+    .decoration-image {
+        height: 200px;
+    }
+    
 }
 
 .vw {
     padding: 0.5rem 1.2rem;
+    background-color: #00362b;
 
 }
 @media (max-width: 860px) {

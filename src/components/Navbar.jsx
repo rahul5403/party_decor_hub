@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
 import toast from "react-hot-toast";
 import axios from "axios";
+import logoh from "../assets/images/logo.png";
 
 const NavBar = ({ onLoginClick}) => {
   const cartCount = useSelector((state) => state.cart.cartCount);
@@ -57,7 +58,12 @@ const NavBar = ({ onLoginClick}) => {
         />
 
         <Navbar.Brand as={Link} to="/" className="logo mx-auto mx-lg-0">
-          <span>PARTY </span>DECOR <span>HUB</span>
+          {/* <span>PARTY </span>DECOR <span>HUB</span> */}
+          <img
+            src={logoh}
+            alt="Party Decor Hub"
+            className="logo-img"
+          />
         </Navbar.Brand>
 
         <Navbar.Collapse id="navbar-nav">

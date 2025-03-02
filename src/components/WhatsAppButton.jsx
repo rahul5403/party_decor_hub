@@ -1,6 +1,7 @@
 import React from "react";
 import "../assets/styles/WhatsAppButton.css"; 
 import { useLocation } from "react-router-dom";
+import WhatsApp_icon from "../assets/images/whatsapp_icon.png";
 
 const WhatsAppButton = () => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const WhatsAppButton = () => {
   return (
     <button className={`whatsapp-button ${isSpecialPage ? "special-page" : ""}`} onClick={openWhatsApp}>
       <img
-        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        src={WhatsApp_icon}
         alt="WhatsApp Chat"
       />
       Chat with Us

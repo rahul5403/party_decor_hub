@@ -2,6 +2,9 @@
 import React from "react";
 import "../assets/styles/BulkOrderSection.css";
 import bulk_image from "../assets/images/bulk_b.jpg";
+// import { WhatsApp } from "@mui/icons-material";
+
+import WhatsApp_icon from "../assets/images/whatsapp_icon.png";
 
 const BulkOrderSection = () => {
   const openWatsApp =() =>{
@@ -19,7 +22,7 @@ const BulkOrderSection = () => {
         <p className="bulk-order-subtext">Place a Bulk Order & Save Big</p>
         <button className="bulk-order-button" onClick={openWatsApp}>
         <img
-        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        src={WhatsApp_icon}
         alt="WhatsApp Chat"
         className="whatsapp-icon"
       />
