@@ -9,7 +9,7 @@ const WhatsAppButton = () => {
   const isSpecialPage = specialPages.includes(location.pathname);
 
   const openWhatsApp = () => {
-    const phNumber = "9891411070"; 
+    const phNumber = "7011676961"; 
     const message = "Hello! I'd like to know more about your services. Can you share more details?"; 
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/${phNumber}?text=${encodedMessage}`, "_blank");

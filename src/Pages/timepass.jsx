@@ -1,107 +1,149 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import toast from "react-hot-toast";
-import axios from "axios";
-import "../assets/styles/Login2.css";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import "../assets/styles/DecorBook.css";
+import { decorationData, similarProductData } from "../data/data";
+import decorimage from "../assets/images/decoration_c.jpg";
+import SimilarProductSection from "./SimilarProductSection";
+import PincodeModal from "../components/PincodeModal";
 
-const Login2 = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+const DecorBook = () => {
+    const { productId } = useParams();
+    const product = decorationData.find(item => item.id === Number(productId)) || decorationData[0];
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+    const [pincode, setPincode] = useState("");
+    const [date, setDate] = useState("");
+    const [time, setTime] = useState("");
+    const [expandedSection, setExpandedSection] = useState(null);
+    const [showPincodeModal, setShowPincodeModal] = useState(true);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isAutoPlay, setIsAutoPlay] = useState(true);
 
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+    // Ensure product.images is always an array
+    const images = product.images || [decorimage];
 
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        "https://partydecorhub.com/api/login",
-        { email, password }
-      );
-      console.log("Login successful:", response.data);
-      toast.success("Login successful! Redirecting...");
-      navigate("/home");
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
-      console.error("Login failed:", error.response?.data || error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Autoplay functionality
+    useEffect(() => {
+        let interval;
+        if (isAutoPlay && images.length > 1) {
+            interval = setInterval(() => {
+                setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+            }, 3000); // Autoplay speed: 3000ms
+        }
+        return () => clearInterval(interval);
+    }, [isAutoPlay, images.length]);
 
-  const handleGoogleSuccess = (credentialResponse) => {
-    console.log("Google Token:", credentialResponse.credential);
-  };
+    const toggleSection = (section) => {
+        setExpandedSection(expandedSection === section ? null : section);
+    };
 
-  const handleGoogleFailure = (error) => {
-    console.error("Google Login Failed:", error);
-  };
+    const handlePincodeSubmit = (pincode) => {
+        setPincode(pincode);
+        setShowPincodeModal(false);
+    };
 
-  return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-      <div className="parent">
-        <div className="login-container">
-          <div className="login-left">
-            <h2>Luxury & Comfort Redefined</h2>
-            <p>
-              Discover elegantly designed spaces, top-tier amenities, and an unforgettable stay at Party Decor Hub. Your perfect getaway starts here.
-            </p>
-          </div>
+    const handleBooking = () => {
+        if (!pincode || !date || !time) {
+            alert("Please fill all required fields.");
+            return;
+        }
+        alert(`Booking confirmed for ${product.name} on ${date} at ${time}.`);
+    };
 
-          <div className="login-right">
-            <button className="back-btn-lg" onClick={() => navigate(-1)}>← Back</button>
-            <h2 className="wlcm">Welcome to Party Decor Hub</h2>
+    const nextImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    };
 
-            <div className="form-container">
-              <form onSubmit={handleLogin}>
-                <label>Email</label>
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+    const prevImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    };
+
+    const goToImage = (index) => {
+        setCurrentImageIndex(index);
+    };
+
+    return (
+        <div className="decoration-booking-section">
+
+            {showPincodeModal && (
+                <PincodeModal 
+                    onClose={() => setShowPincodeModal(false)}
+                    onSubmit={handlePincodeSubmit}
                 />
+            )}
 
-                <label>Password</label>
-                <input
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-
-                <button type="submit" className="login-btn" disabled={loading}>
-                  {loading ? "Logging in..." : "Sign in"}
-                </button>
-
-                <div className="divider">or</div>
-
-                <div className="google-login-container">
-                  <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={handleGoogleFailure}
-                  />
+            <div className="booking-container">
+                <div className="image-gallery">
+                    <img
+                        src={images[currentImageIndex]}
+                        alt={product.name}
+                        className="main-image"
+                    />
+                    {images.length > 1 && (
+                        <div className="slider-dots">
+                            {images.map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={`custom-dot ${index === currentImageIndex ? "active" : ""}`}
+                                    onClick={() => goToImage(index)}
+                                ></div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
-                <p className="signup-link">
-                  New to Party Decor Hub? <a href="/signup">Create Account</a>
-                </p>
-              </form>
+                <div className="booking-details">
+                    <h1 className="booking-title">{product.name}</h1>
+                    <div className="price-section">
+                        <span className="discounted-price">₹{product.discountedPrice || 4999}</span>
+                        <span className="original-price">₹{product.originalPrice || 8000}</span>
+                        <span className="discount">-{product.discount || "37.5"}%</span>
+                    </div>
+
+                    <label className="input-label">Check Pin Code Availability *</label>
+                    <input type="text" placeholder="Enter pin code" value={pincode} readOnly className="input-field" onClick={() => setShowPincodeModal(true)} />
+
+                    <label className="input-label">Select Date *</label>
+                    <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input-field" />
+
+                    <label className="input-label">Select Time *</label>
+                    <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input-field" />
+
+                    <button className="book-now-btn" onClick={handleBooking}>Book Now</button>
+
+                    <div className="features">
+                        <div className="feature-box">✔ Quality Products</div>
+                        <div className="feature-box">⭐ 4.9/5 Google Ratings</div>
+                        <div className="feature-box">📞 24/7 Customer Support</div>
+                        <div className="feature-box">💳 Secure Payment</div>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            {[
+                { title: "Inclusions", content: ["100 Metallic Balloons (50 Pink & 50 Red)", "10 Heart Shaped Balloons", "'Just Married' Occasion Foil Banner", "1 Fairy Light", "1 Kg Rose Petals", "20 Tea Light Candles", "Ribbons to hang balloons", "Inclusive of all taxes & conveyance charges"] },
+                { title: "Description", content: ["Make their first wedding night more beautiful with balloons and floral decoration."] },
+                { title: "Must Know", content: ["Please ensure the room is ready for decoration before our team arrives."] },
+                { title: "Cancellation & Refund Policy", content: ["Cancellations made 24 hours before the event will receive a full refund."] }
+            ].map((section, index) => (
+                <div key={index} className="details-section">
+                    <div className="section-header" onClick={() => toggleSection(index)}>
+                        <h2 className="section-title">{section.title}</h2>
+                        <span className="toggle-icon">{expandedSection === index ? "-" : "+"}</span>
+                    </div>
+                    {expandedSection === index && (
+                        <ul className="details-list">
+                            {section.content.map((item, i) => (
+                                <li key={i}>{item}</li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            ))}
+            <div className="similar-products">
+                <SimilarProductSection products={similarProductData} section={"You might also like"} />
+            </div>
         </div>
-      </div>
-    </GoogleOAuthProvider>
-  );
+    );
 };
 
-export default Login2;
+export default DecorBook;

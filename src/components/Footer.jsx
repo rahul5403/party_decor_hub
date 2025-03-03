@@ -1,13 +1,6 @@
 import React from "react";
 import { Row, Col, Container } from "react-bootstrap";
-import {
-    FaFacebookF,
-    FaInstagram,
-    FaYoutube,
-    FaPhoneAlt,
-    FaEnvelope,
-    FaMapMarkerAlt,
-} from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaYoutube, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import "../assets/styles/Footer.css"
 import { Link } from "react-router-dom";
 

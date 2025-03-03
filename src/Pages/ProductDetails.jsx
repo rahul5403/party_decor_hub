@@ -1,158 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import "../assets/styles/ProductDetails.css";
-// import SimilarProductSection from "../components/SimilarProductSection";
-// import { useDispatch } from "react-redux";
-// import { addToCart } from "../redux/cartSlice";
-// import { decorationData, similarProductData } from "../data/data";
-// import { Helmet } from "react-helmet-async";
-
-// const ProductDetails = () => {
-//   const dispatch = useDispatch();
-//   const [quantity, setQuantity] = useState(1);
-//   const product = decorationData[0] || {}; 
-//   const [expandedSection, setExpandedSection] = useState(null);
-//   const [reviews, setReviews] = useState([]);
-//   const [newReview, setNewReview] = useState("");
-//   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-//   const [isAutoPlay, setIsAutoPlay] = useState(true);
-
-//   const images = product.images || [];
-
-//   useEffect(() => {
-//     let interval;
-//     if (isAutoPlay && images.length > 1) {
-//       interval = setInterval(() => {
-//         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-//       }, 3000);
-//     }
-//     return () => clearInterval(interval);
-//   }, [isAutoPlay, images.length]);
-
-//   const handleQuantityChange = (type) => {
-//     setQuantity((prev) => (type === "increment" ? prev + 1 : prev > 1 ? prev - 1 : prev));
-//   };
-
-//   const handleAddToCart = () => {
-//     dispatch(addToCart({ ...product, quantity }));
-//   };
-
-//   const toggleSection = (section) => {
-//     setExpandedSection(expandedSection === section ? null : section);
-//   };
-
-//   const handleAddReview = () => {
-//     if (newReview.trim()) {
-//       setReviews([...reviews, newReview]);
-//       setNewReview("");
-//     }
-//   };
-
-//   const nextImage = () => {
-//     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-//   };
-
-//   const prevImage = () => {
-//     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-//   };
-
-//   const goToImage = (index) => {
-//     setCurrentImageIndex(index);
-//   };
-
-//   return (
-//     <div className="product-details-section">
-//       <Helmet>
-//         <title>Party Decor Hub</title>
-//         <meta name="description" content={`Buy ${product.name} at an affordable price on Party Decor Hub.`} />
-//       </Helmet>
-//       <div className="product-details-container">
-//         <div className="product-image">
-//           <img
-//             src={images[currentImageIndex]}
-//             alt={`Product ${currentImageIndex + 1}`}
-//             className="slider-image"
-//           />
-//           {images.length > 1 && (
-//             <div className="slider-dots">
-//               {images.map((_, index) => (
-//                 <div
-//                   key={index}
-//                   className={`custom-dot ${index === currentImageIndex ? "active" : ""}`}
-//                   onClick={() => goToImage(index)}
-//                 ></div>
-//               ))}
-//             </div>
-//           )}
-//         </div>
-//         <div className="product-info">
-//           <h1 className="product-title">{product.name}</h1>
-//           <div className="product-reviews">
-//             <span className="stars">★★★★☆</span>
-//             <span className="review-count">3 Reviews</span>
-//           </div>
-//           <div className="product-price">
-//             ₹39.00 <span className="original-price">₹29.00</span>
-//           </div>
-//           <p className="product-description">
-//             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-//           </p>
-//           <div className="product-options">
-//             <div className="option-box">Party</div>
-//             <div className="option-box">Tag</div>
-//           </div>
-//           <div className="quantity-selector">
-//             <button onClick={() => handleQuantityChange("decrement")}>-</button>
-//             <input type="text" value={quantity} readOnly />
-//             <button onClick={() => handleQuantityChange("increment")}>+</button>
-//           </div>
-//           <button className="add-to-cart-btn" onClick={handleAddToCart}>Add to Cart</button>
-//         </div>
-//       </div>
-
-//       {[
-//         { 
-//           title: "Description", 
-//           content: [
-//             "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Suscipit exercitationem earum nemo quo corporis, perspiciatis ipsam dolores, dicta ut mollitia magni nesciunt odio velit libero porro. Laborum quas corrupti maxime ut ab eligendi veritatis magni! Maiores iure atque incidunt ad. Deserunt hic blanditiis nulla aliquid voluptatum, veritatis doloremque officiis incidunt corporis error. Laboriosam repellendus nihil doloremque, laudantium adipisci nam animi, id provident officia reiciendis libero asperiores dicta excepturi tempora eveniet tenetur consequatur? Deserunt voluptate officia molestias."
-//           ] 
-//         },
-//         { 
-//           title: "Reviews", 
-//           content: reviews.length > 0 ? reviews : ["No reviews yet. Be the first to write a review!"]
-//         }
-//       ].map((section, index) => (
-//         <div key={index} className="details-section">
-//           <div className="section-header" onClick={() => toggleSection(index)}>
-//             <h2 className="section-title">{section.title}</h2>
-//             <span className="toggle-icon">{expandedSection === index ? "-" : "+"}</span>
-//           </div>
-//           {expandedSection === index && (
-//             <ul className="details-list">
-//               {section.content.map((item, i) => (
-//                 <li key={i}>{item}</li>
-//               ))}
-//               {index === 1 && (
-//                 <li className="add-review">
-//                   <textarea
-//                     value={newReview}
-//                     onChange={(e) => setNewReview(e.target.value)}
-//                     placeholder="Write your review here..."
-//                   />
-//                   <button onClick={handleAddReview}>Submit Review</button>
-//                 </li>
-//               )}
-//             </ul>
-//           )}
-//         </div>
-//       ))}
-
-//       <SimilarProductSection products={similarProductData} section={"You might also like"} />
-//     </div>
-//   );
-// };
-
-// export default ProductDetails;
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../assets/styles/ProductDetails.css";
@@ -161,11 +6,11 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
-import { decorationData, similarProductData } from "../data/data";
+
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
 const ProductDetails = () => {
-  const { productId } = useParams();
+  const { product_id } = useParams();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState(null);
@@ -175,19 +20,41 @@ const ProductDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [expandedSection, setExpandedSection] = useState(null);
+  const [similarProducts, setSimilarProducts] = useState([]);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`https://partydecorhub.com/api/products/${productId}`);
+        const response = await axios.get(`https://partydecorhub.com/api/products/${product_id}`);
         const productData = response.data;
 
         const updatedProduct = {
           ...productData,
-          images: productData.images.map(img => BASE_IMAGE_URL + img.image)
+          images: productData.images.map((img) => BASE_IMAGE_URL + img.image),
         };
 
         setProduct(updatedProduct);
+        setSelectedColor(updatedProduct.available_colors?.[0] || "");
+        setSelectedSize(updatedProduct.available_sizes?.[0] || "");
+
+        // Fetch similar products based on category
+        const allProductsResponse = await axios.get("https://partydecorhub.com/api/products");
+        const filteredSimilarProducts = allProductsResponse.data
+          .filter(
+            (item) => item.category === updatedProduct.category && item.id !== updatedProduct.id
+          )
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            description: item.category,
+            image: BASE_IMAGE_URL + item.thumbnail,
+            images: [BASE_IMAGE_URL + item.thumbnail],
+          }));
+
+        setSimilarProducts(filteredSimilarProducts);
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {
@@ -196,7 +63,7 @@ const ProductDetails = () => {
     };
 
     fetchProduct();
-  }, [productId]);
+  }, [product_id]);
 
   useEffect(() => {
     let interval;
@@ -213,7 +80,7 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ ...product, quantity }));
+    dispatch(addToCart({ ...product, quantity, selectedColor, selectedSize }));
   };
 
   const toggleSection = (section) => {
@@ -258,11 +125,35 @@ const ProductDetails = () => {
             <span className="stars">★★★★☆</span>
             <span className="review-count">{reviews.length} Reviews</span>
           </div>
-          <div className="product-price">₹{product.price} <span className="original-price">₹{product.price + 10}</span></div>
+          <div className="product-price">
+            {/* Display discounted price if available */}
+            {product.discounted_price ? (
+              <>
+                <span className="discounted-price">₹{product.discounted_price}</span>
+                <span className="original-price">₹{product.price}</span>
+              </>
+            ) : (
+              <span>₹{product.price}</span>
+            )}
+          </div>
           <p className="product-description">{product.description}</p>
           <div className="product-options">
-            <div className="option-box">Color: {product.color}</div>
-            <div className="option-box">Size: {product.size}</div>
+            <div className="option-dropdown">
+              <label>Color:</label>
+              <select value={selectedColor} onChange={(e) => setSelectedColor(e.target.value)}>
+                {product.available_colors?.map((color, index) => (
+                  <option key={index} value={color}>{color}</option>
+                ))}
+              </select>
+            </div>
+            <div className="option-dropdown">
+              <label>Size:</label>
+              <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
+                {product.available_sizes?.map((size, index) => (
+                  <option key={index} value={size}>{size}</option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="quantity-selector">
             <button onClick={() => handleQuantityChange("decrement")}>-</button>
@@ -270,6 +161,12 @@ const ProductDetails = () => {
             <button onClick={() => handleQuantityChange("increment")}>+</button>
           </div>
           <button className="add-to-cart-btn" onClick={handleAddToCart}>Add to Cart</button>
+          <div className="features">
+            <div className="feature-box">✔ Quality Products</div>
+            <div className="feature-box">⭐ 4.9/5 Google Ratings</div>
+            <div className="feature-box">📞 24/7 Customer Support</div>
+            <div className="feature-box">💳 Secure Payment</div>
+          </div>
         </div>
       </div>
 
@@ -301,7 +198,7 @@ const ProductDetails = () => {
         </div>
       ))}
 
-  <SimilarProductSection products={similarProductData} section={"You might also like"} />   
+      <SimilarProductSection products={similarProducts} section={"You might also like"} />
     </div>
   );
 };

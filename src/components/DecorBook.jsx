@@ -1,60 +1,139 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../assets/styles/DecorBook.css";
-import { decorationData, similarProductData } from "../data/data";
-import decorimage from "../assets/images/decoration_c.jpg";
 import SimilarProductSection from "./SimilarProductSection";
-import PincodeModal from "../components/PincodeModal";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+
+const BASE_IMAGE_URL = "https://partydecorhub.com";
 
 const DecorBook = () => {
-    const { productId } = useParams();
-    const product = decorationData.find(item => item.id === Number(productId)) || decorationData[0];
+    const { product_id } = useParams();
+
+    const service_id = product_id;
+    const [service, setService] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const [pincode, setPincode] = useState("");
-    const [date, setDate] = useState("");
-    const [time, setTime] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [endTime, setEndTime] = useState("");
+    const [customerName, setCustomerName] = useState("");
+    const [address, setAddress] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [expandedSection, setExpandedSection] = useState(null);
-    const [showPincodeModal, setShowPincodeModal] = useState(true);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isAutoPlay, setIsAutoPlay] = useState(true);
+    const [pincodeMessage, setPincodeMessage] = useState("");
 
-    // Ensure product.images is always an array
-    const images = product.images || [decorimage];
-
-    // Autoplay functionality
+    // Fetch service details
     useEffect(() => {
-        let interval;
-        if (isAutoPlay && images.length > 1) {
-            interval = setInterval(() => {
-                setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-            }, 3000); // Autoplay speed: 3000ms
-        }
+        const fetchServiceDetails = async () => {
+            try {
+                const response = await axios.get(`https://partydecorhub.com/api/services/${service_id}`);
+                const serviceData = response.data;
+                // Prepend BASE_IMAGE_URL to each image URL
+                serviceData.images = serviceData.images.map(img => ({
+                    ...img,
+                    image: BASE_IMAGE_URL + img.image
+                }));
+                setService(serviceData);
+                setLoading(false);
+            } catch (err) {
+                toast.error("Failed to fetch service details.");
+                setLoading(false);
+            }
+        };
+
+        fetchServiceDetails();
+    }, [service_id]);
+
+    // Autoplay images
+    useEffect(() => {
+        if (!service || !service.images || service.images.length <= 1) return;
+
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prevIndex) => (prevIndex + 1) % service.images.length);
+        }, 3000); // Autoplay speed: 3000ms
+
         return () => clearInterval(interval);
-    }, [isAutoPlay, images.length]);
+    }, [service]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!service) {
+        return <div>Service not found.</div>;
+    }
+
+    const images = service.images.map(img => img.image);
 
     const toggleSection = (section) => {
         setExpandedSection(expandedSection === section ? null : section);
     };
 
-    const handlePincodeSubmit = (pincode) => {
-        setPincode(pincode);
-        setShowPincodeModal(false);
+    const handlePincodeCheck = () => {
+        const validPincodes = [
+            "110001", "110002", "110003", "110004", "110005", "110006", "110007", "110008", "110009", "110010",
+            "110011", "110012", "110013", "110014", "110015", "110016", "110017", "110018", "110019", "110020",
+            "110021", "110022", "110023", "110024", "110025", "110026", "110027", "110028", "110029", "110030",
+            "110031", "110032", "110033", "110034", "110035", "110036", "110037", "110038", "110039", "110040",
+            "110041", "110042", "110043", "110044", "110045", "110046", "110047", "110048", "110049", "110050",
+            "110051", "110052", "110053", "110054", "110055", "110056", "110057", "110058", "110059", "110060",
+            "110061", "110062", "110063", "110064", "110065", "110066", "110067", "110068", "110069", "110070",
+            "110071", "110072", "110073", "110074", "110075", "110076", "110077", "110078", "110079", "110080",
+            "110081", "110082", "110083", "110084", "110085", "110086", "110087", "110088", "110089", "110090",
+            "110091", "110092", "110093", "110094", "110095", "110096", "110097", "110098", "110099", "110100",
+        ];
+
+        if (validPincodes.includes(pincode)) {
+            setPincodeMessage("Service is available in your area!");
+            toast.success("Service is available in your area!");
+        } else {
+            setPincodeMessage("Sorry, we only provide services in Delhi NCR.");
+            toast.error("Sorry, we only provide services in Delhi NCR.");
+        }
     };
 
-    const handleBooking = () => {
-        if (!pincode || !date || !time) {
-            alert("Please fill all required fields.");
+    const handleBooking = async () => {
+        if (!pincode || !startDate || !startTime || !endDate || !endTime || !customerName || !address || !email || !phone) {
+            toast.error("Please fill all required fields.");
             return;
         }
-        alert(`Booking confirmed for ${product.name} on ${date} at ${time}.`);
-    };
 
-    const nextImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    };
+        const bookingData = {
+            decor_service_id: service.id,
+            customer_name: customerName,
+            address: address,
+            email: email,
+            phone: phone,
+            start_datetime: new Date(`${startDate}T${startTime}:00Z`).toISOString(),
+            end_datetime: new Date(`${endDate}T${endTime}:00Z`).toISOString(),
+        };
 
-    const prevImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+        try {
+            const response = await axios.post(`https://partydecorhub.com/api/bookings`, bookingData, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.status === 201) {
+                toast.success(`Booking confirmed for ${service.name} from ${startDate} at ${startTime} to ${endDate} at ${endTime}.`);
+
+                // Send WhatsApp message to the company owner
+                const whatsappMessage = `New Booking Details:\n\nService: ${service.name}\nCustomer Name: ${customerName}\nAddress: ${address}\nEmail: ${email}\nPhone: ${phone}\nStart Date: ${startDate} ${startTime}\nEnd Date: ${endDate} ${endTime}`;
+                const whatsappUrl = `https://wa.me/7646908233?text=${encodeURIComponent(whatsappMessage)}`;
+                window.open(whatsappUrl, "_blank");
+            } else {
+                toast.error("Booking failed. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            toast.error("An error occurred. Please try again.");
+        }
     };
 
     const goToImage = (index) => {
@@ -63,19 +142,12 @@ const DecorBook = () => {
 
     return (
         <div className="decoration-booking-section">
-
-            {showPincodeModal && (
-                <PincodeModal 
-                    onClose={() => setShowPincodeModal(false)}
-                    onSubmit={handlePincodeSubmit}
-                />
-            )}
-
+            <Toaster />
             <div className="booking-container">
                 <div className="image-gallery">
                     <img
                         src={images[currentImageIndex]}
-                        alt={product.name}
+                        alt={service.name}
                         className="main-image"
                     />
                     {images.length > 1 && (
@@ -92,23 +164,112 @@ const DecorBook = () => {
                 </div>
 
                 <div className="booking-details">
-                    <h1 className="booking-title">{product.name}</h1>
+                    <h1 className="booking-title">{service.name}</h1>
                     <div className="price-section">
-                        <span className="discounted-price">₹{product.discountedPrice || 4999}</span>
-                        <span className="original-price">₹{product.originalPrice || 8000}</span>
-                        <span className="discount">-{product.discount || "37.5"}%</span>
+                        <span className="discounted-price">₹{service.price}</span>
                     </div>
 
                     <label className="input-label">Check Pin Code Availability *</label>
-                    <input type="text" placeholder="Enter pin code" value={pincode} readOnly className="input-field" onClick={() => setShowPincodeModal(true)} />
+                    <div className="pincode-check">
+                        <input
+                            type="text"
+                            placeholder="Enter pin code"
+                            value={pincode}
+                            onChange={(e) => setPincode(e.target.value)}
+                            className="input-field"
+                        />
+                        <button className="check-availability-btn" onClick={handlePincodeCheck}>
+                            Check Availability
+                        </button>
+                    </div>
+                    {pincodeMessage && <p className={`pincode-message ${pincodeMessage.includes("available") ? "success" : "error"}`}>{pincodeMessage}</p>}
 
-                    <label className="input-label">Select Date *</label>
-                    <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input-field" />
+                    <label className="input-label">Customer Name *</label>
+                    <input
+                        type="text"
+                        placeholder="Enter your name"
+                        value={customerName}
+                        onChange={(e) => setCustomerName(e.target.value)}
+                        className="input-field"
+                    />
 
-                    <label className="input-label">Select Time *</label>
-                    <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input-field" />
+                    <label className="input-label">Address *</label>
+                    <input
+                        type="text"
+                        placeholder="Enter your address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        className="input-field"
+                    />
 
-                    <button className="book-now-btn" onClick={handleBooking}>Book Now</button>
+                    <label className="input-label">Email *</label>
+                    <input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="input-field"
+                    />
+
+                    <label className="input-label">Phone *</label>
+                    <input
+                        type="text"
+                        placeholder="Enter your phone number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="input-field"
+                    />
+<div className="flex flex-col gap-4">
+    {/* Start Date & Time */}
+    <div className="flex gap-4 start">
+        <div >
+            <label className="input-label">Start Date *</label>
+            <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="input-field w-full"
+            />
+        </div>
+
+        <div>
+            <label className="input-label">Start Time *</label>
+            <input
+                type="time"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="input-field w-full"
+            />
+        </div>
+    </div>
+
+    {/* End Date & Time */}
+    <div className="flex gap-4 end">
+        <div >
+            <label className="input-label">End Date *</label>
+            <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="input-field w-full"
+            />
+        </div>
+
+        <div>
+            <label className="input-label">End Time *</label>
+            <input
+                type="time"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="input-field w-full"
+            />
+        </div>
+    </div>
+</div>
+
+                    <button className="book-now-btn" onClick={handleBooking}>
+                        Book Now
+                    </button>
 
                     <div className="features">
                         <div className="feature-box">✔ Quality Products</div>
@@ -120,10 +281,10 @@ const DecorBook = () => {
             </div>
 
             {[
-                { title: "Inclusions", content: ["100 Metallic Balloons (50 Pink & 50 Red)", "10 Heart Shaped Balloons", "'Just Married' Occasion Foil Banner", "1 Fairy Light", "1 Kg Rose Petals", "20 Tea Light Candles", "Ribbons to hang balloons", "Inclusive of all taxes & conveyance charges"] },
-                { title: "Description", content: ["Make their first wedding night more beautiful with balloons and floral decoration."] },
-                { title: "Must Know", content: ["Please ensure the room is ready for decoration before our team arrives."] },
-                { title: "Cancellation & Refund Policy", content: ["Cancellations made 24 hours before the event will receive a full refund."] }
+                { title: "Inclusions", content: [service.inclusions] },
+                { title: "Description", content: [service.description] },
+                { title: "Must Know", content: [service.must_know] },
+                { title: "Cancellation & Refund Policy", content: [service.cancellation_policy] },
             ].map((section, index) => (
                 <div key={index} className="details-section">
                     <div className="section-header" onClick={() => toggleSection(index)}>
@@ -140,7 +301,7 @@ const DecorBook = () => {
                 </div>
             ))}
             <div className="similar-products">
-                <SimilarProductSection products={similarProductData} section={"You might also like"} />
+                <SimilarProductSection products={[]} section={"You might also like"} />
             </div>
         </div>
     );

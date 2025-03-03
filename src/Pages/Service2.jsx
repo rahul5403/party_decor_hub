@@ -1,16 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../assets/styles/ProductSection.css";
 import FilterPanel from "../components/FilterPanel";
 import ProductSection from "../components/ProductSection";
 import ServiceBanner from "../components/ServiceBanner";
 import { decorationFilterOption } from "../data/data";
 
-const Service2 = ({ data }) => {
+const BASE_IMAGE_URL = "https://partydecorhub.com";
+
+const Service2 = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
+  const [decorationServices, setDecorationServices] = useState([]);
 
-  const sortedData = [...data].sort((a, b) => {
+  useEffect(() => {
+    const fetchDecorationServices = async () => {
+      try {
+        const response = await axios.get("https://partydecorhub.com/api/services");
+        const services = response.data.map(service => ({
+          id: service.id,
+          name: service.name,
+          price: service.price,
+          image: BASE_IMAGE_URL + service.thumbnail,
+        }));
+        setDecorationServices(services);
+      } catch (error) {
+        console.error("Error fetching decoration services:", error);
+      }
+    };
+
+    fetchDecorationServices();
+  }, []);
+
+  const sortedData = [...decorationServices].sort((a, b) => {
     if (sortOrder === "low-high") return a.price - b.price;
     if (sortOrder === "high-low") return b.price - a.price;
     return 0;

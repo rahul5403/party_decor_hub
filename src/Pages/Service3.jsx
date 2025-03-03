@@ -1,32 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../assets/styles/ProductSection.css";
 import FilterPanel from "../components/FilterPanel";
 import ProductSection from "../components/ProductSection";
 import ServiceBanner from "../components/ServiceBanner";
 import { disposableFilterOption } from "../data/data";
 
-const Service3 = ({ data }) => {
+const BASE_IMAGE_URL = "https://partydecorhub.com";
+
+const Service3 = () => {
+  const [disposableItems, setDisposableItems] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [showSort, setShowSort] = useState(false);
-  const [sortOrder, setSortOrder] = useState(""); // Sorting state
+  const [sortOrder, setSortOrder] = useState("");
 
-  // Sorting Function
-  const sortedData = [...data].sort((a, b) => {
+  useEffect(() => {
+    const fetchDisposableItems = async () => {
+      try {
+        const response = await axios.get("https://partydecorhub.com/api/products");
+        const products = response.data
+          .filter(product => product.category === "Disposable Items")
+          .map(product => ({
+            id: product.product_id,
+            name: product.name,
+            price: product.price,
+            originalPrice: product.price + 10,
+            description: product.category,
+            image: BASE_IMAGE_URL + product.thumbnail,
+            images: [BASE_IMAGE_URL + product.thumbnail],
+          }));
+        setDisposableItems(products);
+      } catch (error) {
+        console.error("Error fetching disposable items:", error);
+      }
+    };
+
+    fetchDisposableItems();
+  }, []);
+
+  useEffect(() => {
+    console.log(disposableItems);
+  }, [disposableItems]);
+
+  const sortedData = [...disposableItems].sort((a, b) => {
     if (sortOrder === "low-high") return a.price - b.price;
     if (sortOrder === "high-low") return b.price - a.price;
     return 0;
   });
 
-  // Toggle Filters
   const toggleFilters = () => {
     setShowFilters(!showFilters);
-    if (showSort) setShowSort(false); // Close sort if open
+    if (showSort) setShowSort(false);
   };
 
-  // Toggle Sort
   const toggleSort = () => {
     setShowSort(!showSort);
-    if (showFilters) setShowFilters(false); // Close filters if open
+    if (showFilters) setShowFilters(false);
   };
 
   return (
@@ -36,29 +65,22 @@ const Service3 = ({ data }) => {
         <div className="filter-container">
           <FilterPanel filterOption={disposableFilterOption} />
         </div>
-        
+
         <div className="product-container">
-          {/* Sorting dropdown for desktop */}
           <div className="sort-bar desktop-only">
             <div className="sort-by-container">
               <label htmlFor="sort-by">Sort By:</label>
-              <select
-                id="sort-by"
-                onChange={(e) => setSortOrder(e.target.value)}
-                value={sortOrder}
-              >
+              <select id="sort-by" onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
                 <option value="">Select</option>
                 <option value="low-high">Price: Low to High</option>
                 <option value="high-low">Price: High to Low</option>
               </select>
             </div>
           </div>
-
           <ProductSection products={sortedData} section={"Disposable Items"} />
         </div>
       </div>
 
-      {/* Mobile Sorting & Filtering */}
       <div className="mobile-only">
         {showFilters && (
           <div className="overlay-f">
@@ -75,16 +97,10 @@ const Service3 = ({ data }) => {
               <button className="close-btn" onClick={() => setShowSort(false)}>×</button>
               <div className="sort-options">
                 <h3>Sort By</h3>
-                <button
-                  className={`sort-button ${sortOrder === "low-high" ? "active" : ""}`}
-                  onClick={() => { setSortOrder("low-high"); setShowSort(false); }}
-                >
+                <button className={`sort-button ${sortOrder === "low-high" ? "active" : ""}`} onClick={() => { setSortOrder("low-high"); setShowSort(false); }}>
                   Price: Low to High
                 </button>
-                <button
-                  className={`sort-button ${sortOrder === "high-low" ? "active" : ""}`}
-                  onClick={() => { setSortOrder("high-low"); setShowSort(false); }}
-                >
+                <button className={`sort-button ${sortOrder === "high-low" ? "active" : ""}`} onClick={() => { setSortOrder("high-low"); setShowSort(false); }}>
                   Price: High to Low
                 </button>
               </div>
@@ -92,7 +108,6 @@ const Service3 = ({ data }) => {
           </div>
         )}
 
-        {/* Bottom Controls (Mobile) */}
         <div className="bottom-controls">
           <button className="filter-toggle" onClick={toggleFilters}>
             {showFilters ? "Close Filters" : "Filters"}

@@ -54,16 +54,16 @@ const Router = () => {
         });
     };
 
-    const removeFromCart = (productId) => {
-        setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+    const removeFromCart = (product_id) => {
+        setCart((prevCart) => prevCart.filter((item) => item.id !== product_id));
     };
 
-    const updateQuantity = (productId, quantity) => {
-        if (quantity <= 0) return removeFromCart(productId);
+    const updateQuantity = (product_id, quantity) => {
+        if (quantity <= 0) return removeFromCart(product_id);
 
         setCart((prevCart) =>
             prevCart.map((item) =>
-                item.id === productId ? { ...item, quantity } : item
+                item.id === product_id ? { ...item, quantity } : item
             )
         );
     };
@@ -83,15 +83,14 @@ const Router = () => {
                 <Route path="/party" element={<Service1 data={partyData} />}></Route>
                 <Route path="/decoration" element={<Service2 data={decorationData}/>}></Route>
                 <Route path="/disposable" element={<Service3 data={disposalData}/>}></Route>
-                {/* <Route path="/products/:productId" element={<ProductDetails addToCart={addToCart}/>}></Route> */}
-                <Route path="/products/:productId" element={<ProductDetails />} />
+                {/* <Route path="/products/:product_id" element={<ProductDetails addToCart={addToCart}/>}></Route> */}
                 <Route
                     path="/cart"
                     element={
                         <Cart
-                            cart={cart}
-                            updateQuantity={updateQuantity}
-                            removeFromCart={removeFromCart}
+                        cart={cart}
+                        updateQuantity={updateQuantity}
+                        removeFromCart={removeFromCart}
                         />
                     }
                 />
@@ -100,7 +99,8 @@ const Router = () => {
                 <Route path="/login" element={<Login2 />}></Route>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/orders" element={<Orders/>} />
-                <Route path="/decor/:productId" element={<DecorBook />} />
+                <Route path="/services/:product_id" element={<DecorBook />} />
+                <Route path="/products/:product_id" element={<ProductDetails />} />
                 <Route path="/pincode" element={<PincodeModal/>}/>
                 <Route path="*" element={<NotFound />} />
             </Routes>

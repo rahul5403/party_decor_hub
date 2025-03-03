@@ -8,7 +8,7 @@ import WhatsApp_icon from "../assets/images/whatsapp_icon.png";
 
 const BulkOrderSection = () => {
   const openWatsApp =() =>{
-    const phNumber = "9891411070"
+    const phNumber = "7011676961"
     const message ="Hi! I'm interested in placing a bulk order. Can you provide more details?"
     const encodedMessage = encodeURIComponent(message)
 

@@ -95,11 +95,10 @@
 }
 
 .input-field {
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    margin-bottom: 10px;
+    border-radius: 4px;
+    width: 100%; /* Ensures inputs take full width inside their div */
 }
 
 .book-now-btn {
@@ -268,4 +267,40 @@
     .discount {
         font-size: 14px;
     }
+}
+
+.check-availability-btn {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 3px;
+}
+
+.check-availability-btn:hover {
+    background-color: #e63946;
+}
+
+.pincode-message {
+    margin:1px;
+    font-size: 14px;
+    color: #333; 
+}
+
+.pincode-message.success {
+    color: green;
+}
+
+.pincode-message.error {
+    color: red; 
+}
+
+.start,.end{
+    display: flex;
+    text-align: left;
 }
