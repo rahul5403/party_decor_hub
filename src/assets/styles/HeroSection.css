@@ -1,16 +1,13 @@
 .carousel-container {
   width: 100%;
-  /* max-width: 1200px; */
   margin: 0 auto;
   padding: 2rem;
   position: relative;
 }
 
-.carousel-container :hover {
+.carousel-container:hover {
   cursor: pointer;
 }
-
-
 
 .slick-dots {
   display: flex !important;
@@ -22,7 +19,6 @@
   margin: 0 5px;
 }
 
-/* Custom dot styles */
 .custom-dot {
   width: 12px;
   height: 12px;
@@ -33,16 +29,14 @@
 }
 
 .slick-dots li.slick-active .custom-dot {
-  background-color: #01634f; /* Green color for active dot */
-  transform: scale(1.3); /* Slightly bigger for active dot */
+  background-color: #01634f;
+  transform: scale(1.3);
 }
 
 .carousel-slide {
   position: relative;
   width: 100%;
   height: 310px;
-  background-size: cover;
-  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,29 +46,16 @@
   overflow: hidden;
 }
 
-.carousel-slide img {
+.carousel-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
-
-
-/* Background images */
-.slide1 {
-  background-image: url("../images/party_c_re.jpg");
-}
-
-.slide2 {
-  background-image: url("../images/decoration_c.jpg");
-}
-
-.slide3 {
-  background-image: url("../images/disposable_c.jpg");
-}
-
-/* Overlay effect */
 .overlay {
   position: absolute;
   top: 0;
@@ -82,6 +63,7 @@
   width: 100%;
   height: 100%;
   background: rgba(0, 98, 28, 0.3);
+  z-index: 1;
 }
 
 .carousel-text {
@@ -93,8 +75,8 @@
   padding: 1.5rem 2rem;
   border-radius: 8px;
   width: 100%;
+  z-index: 2;
 }
-
 
 .carousel-text h1 {
   font-size: 2.8rem;
@@ -112,7 +94,6 @@
   color: #fff;
 }
 
-/* Button styles */
 .shop-now {
   padding: 0.8rem 1.5rem;
   background: #f56565;
@@ -129,13 +110,12 @@
   transform: scale(1.05);
 }
 
-/* Responsive Design */
 @media (max-width: 860px) {
   .carousel-slide {
     height: 260px;
   }
 
-  .carousel-container{
+  .carousel-container {
     padding: 0.8rem;
   }
 
@@ -175,4 +155,3 @@
     padding: 0.5rem 1rem;
   }
 }
-

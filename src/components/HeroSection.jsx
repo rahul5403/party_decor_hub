@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Slider from "react-slick";
 import "../assets/styles/HeroSection.css";
 import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
-    const navigate = useNavigate()
+  const [slides, setSlides] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const response = await axios.get("https://partydecorhub.com/api/carousel");
+        const formattedSlides = response.data.map((slide) => ({
+          ...slide,
+          image: `https://partydecorhub.com/media/${slide.image}`,
+        }));
+        console.log("Formatted Slides:", formattedSlides); // Debugging
+        setSlides(formattedSlides);
+      } catch (error) {
+        console.error("Error fetching carousel data:", error);
+      }
+    };
+
+    fetchSlides();
+  }, []);
 
   const settings = {
     dots: true,
@@ -15,39 +35,34 @@ const HeroSection = () => {
     autoplay: true,
     autoplaySpeed: 3000,
     arrows: false,
-    appendDots: (dots) => <ul className="custom-dots"> {dots} </ul>,
+    appendDots: (dots) => <ul className="custom-dots">{dots}</ul>,
     customPaging: () => <div className="custom-dot"></div>,
   };
 
   return (
     <div className="carousel-container">
       <Slider {...settings}>
-
-        <div onClick={() =>  navigate("/decoration")} className="carousel-slide slide2">
-          <div className="overlay"></div>
-          <div className="carousel-text">
-            <h1>Sustainable Living</h1>
-            <p>Eco-friendly products for your daily needs.</p>
+        {slides.map((slide) => (
+          <div
+            key={slide.id}
+            onClick={() => navigate(`/${slide.text.toLowerCase().replace(/\s+/g, "-")}`)}
+            className="carousel-slide"
+          >
+            <img
+              src={slide.image}
+              alt={slide.text}
+              className="carousel-image"
+            />
+            <div className="overlay"></div>
+            <div className="carousel-text">
+              <h1>{slide.text}</h1>
+              <p>{slide.subtext}</p>
+            </div>
           </div>
-        </div>
-        <div onClick={() =>  navigate("/disposable")} className="carousel-slide slide3">
-          <div className="overlay"></div>
-          <div className="carousel-text">
-            <h1>Go Green</h1>
-            <p>Make a difference with sustainable choices.</p>
-          </div>
-        </div>
-        <div onClick={() =>  navigate("/party")} className="carousel-slide slide1">
-          <div className="overlay"></div>
-          <div className="carousel-text">
-            <h1>Cheers to <span>2025</span></h1>
-            <p>Grab Ecosoul Products up to 70% Off!</p>
-          </div>
-        </div>
+        ))}
       </Slider>
     </div>
   );
 };
 
 export default HeroSection;
-
