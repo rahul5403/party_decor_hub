@@ -3,6 +3,7 @@ import "../assets/styles/ProductSection.css";
 import FilterPanel from "../components/FilterPanel";
 import ProductSection from "../components/ProductSection";
 import ServiceBanner from "../components/ServiceBanner";
+import HeroSection from "../components/HeroSection";
 import { partyDecorationFilterOption } from "../data/data";
 import { FaFilter, FaSort, FaSortAmountDown } from "react-icons/fa";
 import axios from "axios";
@@ -61,7 +62,8 @@ const Service1 = ({ data }) => {
 
   return (
     <React.Fragment>
-      <ServiceBanner />
+      {/* <ServiceBanner /> */}
+      <HeroSection />
       <div className="service-container">
         <div className="filter-container">
           <FilterPanel filterOption={partyDecorationFilterOption} />

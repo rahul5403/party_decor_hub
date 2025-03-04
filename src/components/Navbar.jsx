@@ -39,7 +39,7 @@ const NavBar = ({ onLoginClick}) => {
 
   const handleUserIconClick = () => {
     if (!isAuthenticated) {
-      onLoginClick(); // Open Login2 popup
+      onLoginClick();
     }
   };
 
@@ -119,8 +119,8 @@ const NavBar = ({ onLoginClick}) => {
             ) : (
               <div
                 className="user-icon p-1"
-                onClick={handleUserIconClick} // Open Login2 popup on click
-                style={{ cursor: "pointer" }} // Add pointer cursor
+                onClick={handleUserIconClick} 
+                style={{ cursor: "pointer" }} 
               >
                 <FaUserCircle size={30} />
               </div>

@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice";
 import "../assets/styles/Login2.css";
+import logo from "../assets/images/logo.png";
 
 const Login2 = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
@@ -87,8 +88,9 @@ console.log("Auth Check Response:", authCheckResponse.data);
       <div className="overlay-s">
         <div className="login-popup">
           <div className="login-left">
-            <h2>Luxury & Comfort Redefined</h2>
-            <p>Discover elegantly designed spaces, top-tier amenities, and an unforgettable stay at Party Decor Hub.</p>
+          <img className="logo-img-l" src={logo} alt="Party Decor Hub" />
+            <h2>Party Decor Hub</h2>
+            <p>Bringing Your Celebration to Life, One Décor at a Time!</p>
           </div>
 
           <div className="login-right">
@@ -106,11 +108,11 @@ console.log("Auth Check Response:", authCheckResponse.data);
                   {loading ? "Logging in..." : "Sign in"}
                 </button>
 
-                <div className="divider">or</div>
+                {/* <div className="divider">or</div>
 
                 <div className="google-login-container">
                   <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} />
-                </div>
+                </div> */}
 
                 <p className="signup-link">
                   New to Party Decor Hub? <span className="signup-link-text" onClick={onSignupClick}>Create Account</span>

@@ -27,13 +27,11 @@ const DecorBook = () => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [pincodeMessage, setPincodeMessage] = useState("");
 
-    // Fetch service details
     useEffect(() => {
         const fetchServiceDetails = async () => {
             try {
                 const response = await axios.get(`https://partydecorhub.com/api/services/${service_id}`);
                 const serviceData = response.data;
-                // Prepend BASE_IMAGE_URL to each image URL
                 serviceData.images = serviceData.images.map(img => ({
                     ...img,
                     image: BASE_IMAGE_URL + img.image
@@ -49,14 +47,12 @@ const DecorBook = () => {
         fetchServiceDetails();
     }, [service_id]);
 
-    // Autoplay images
     useEffect(() => {
         if (!service || !service.images || service.images.length <= 1) return;
 
         const interval = setInterval(() => {
             setCurrentImageIndex((prevIndex) => (prevIndex + 1) % service.images.length);
-        }, 3000); // Autoplay speed: 3000ms
-
+        }, 3000);
         return () => clearInterval(interval);
     }, [service]);
 
@@ -97,11 +93,28 @@ const DecorBook = () => {
         }
     };
 
-    const handleBooking = async () => {
-        if (!pincode || !startDate || !startTime || !endDate || !endTime || !customerName || !address || !email || !phone) {
+    const handleBooking = async (e) => {
+
+        e.preventDefault();
+
+        if ( !startDate || !startTime || !endDate || !endTime || !customerName || !address || !email || !phone) {
             toast.error("Please fill all required fields.");
             return;
         }
+
+        const formatDateTime = (date, time) => {
+            const dateObj = new Date(`${date}T${time}:00`);
+            const options = { 
+                weekday: "short", 
+                year: "numeric", 
+                month: "short", 
+                day: "numeric", 
+                hour: "numeric", 
+                minute: "2-digit", 
+                hour12: true 
+            };
+            return dateObj.toLocaleString("en-US", options);
+        };
 
         const bookingData = {
             decor_service_id: service.id,
@@ -122,11 +135,18 @@ const DecorBook = () => {
 
             if (response.status === 201) {
                 toast.success(`Booking confirmed for ${service.name} from ${startDate} at ${startTime} to ${endDate} at ${endTime}.`);
+                const whatsappMessage = `*New Booking Details*\n\n` +
+                `➤  *Service:* ${service.name}\n` +
+                `➤  *Customer Name:* ${customerName}\n` +
+                `➤  *Address:* ${address}\n` +
+                `➤  *Email:* ${email}\n` +
+                `➤  *Phone:* ${phone}\n` +
+                `➤  *Start Date:* ${formatDateTime(startDate, startTime)}\n` +
+                `➤  *End Date:* ${formatDateTime(endDate, endTime)}`;
+            
 
-                // Send WhatsApp message to the company owner
-                const whatsappMessage = `New Booking Details:\n\nService: ${service.name}\nCustomer Name: ${customerName}\nAddress: ${address}\nEmail: ${email}\nPhone: ${phone}\nStart Date: ${startDate} ${startTime}\nEnd Date: ${endDate} ${endTime}`;
-                const whatsappUrl = `https://wa.me/7646908233?text=${encodeURIComponent(whatsappMessage)}`;
-                window.open(whatsappUrl, "_blank");
+            const whatsappUrl = `https://wa.me/7011676961?text=${encodeURIComponent(whatsappMessage)}`;
+            window.open(whatsappUrl, "_blank");
             } else {
                 toast.error("Booking failed. Please try again.");
             }
@@ -184,92 +204,102 @@ const DecorBook = () => {
                     </div>
                     {pincodeMessage && <p className={`pincode-message ${pincodeMessage.includes("available") ? "success" : "error"}`}>{pincodeMessage}</p>}
 
-                    <label className="input-label">Customer Name *</label>
-                    <input
-                        type="text"
-                        placeholder="Enter your name"
-                        value={customerName}
-                        onChange={(e) => setCustomerName(e.target.value)}
-                        className="input-field"
-                    />
+                    <form onSubmit={handleBooking}>
+    <label className="input-label">Customer Name *</label>
+    <input
+        type="text"
+        placeholder="Enter your name"
+        value={customerName}
+        onChange={(e) => setCustomerName(e.target.value)}
+        className="input-field"
+        required
+    />
 
-                    <label className="input-label">Address *</label>
-                    <input
-                        type="text"
-                        placeholder="Enter your address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        className="input-field"
-                    />
+    <label className="input-label">Address *</label>
+    <input
+        type="text"
+        placeholder="Enter your address"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+        className="input-field"
+        required
+    />
 
-                    <label className="input-label">Email *</label>
-                    <input
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="input-field"
-                    />
+    <label className="input-label">Email *</label>
+    <input
+        type="email"
+        placeholder="Enter your email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="input-field"
+        required
+    />
 
-                    <label className="input-label">Phone *</label>
-                    <input
-                        type="text"
-                        placeholder="Enter your phone number"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="input-field"
-                    />
-<div className="flex flex-col gap-4">
-    {/* Start Date & Time */}
-    <div className="flex gap-4 start">
-        <div >
-            <label className="input-label">Start Date *</label>
-            <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="input-field w-full"
-            />
+    <label className="input-label">Phone *</label>
+    <input
+        type="tel"
+        placeholder="Enter your phone number"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        className="input-field"
+        required
+    />
+
+    <div className="flex flex-col gap-4">
+        <div className="flex gap-4 start">
+            <div>
+                <label className="input-label">Start Date *</label>
+                <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="input-field w-full"
+                    required
+                />
+            </div>
+
+            <div>
+                <label className="input-label">Start Time *</label>
+                <input
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    className="input-field w-full"
+                    required
+                />
+            </div>
         </div>
 
-        <div>
-            <label className="input-label">Start Time *</label>
-            <input
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="input-field w-full"
-            />
+        <div className="flex gap-4 end">
+            <div>
+                <label className="input-label">End Date *</label>
+                <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="input-field w-full"
+                    required
+                />
+            </div>
+
+            <div>
+                <label className="input-label">End Time *</label>
+                <input
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    className="input-field w-full"
+                    required
+                />
+            </div>
         </div>
     </div>
 
-    {/* End Date & Time */}
-    <div className="flex gap-4 end">
-        <div >
-            <label className="input-label">End Date *</label>
-            <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="input-field w-full"
-            />
-        </div>
+    <button type="submit" className="book-now-btn">
+        Book Now
+    </button>
+</form>
 
-        <div>
-            <label className="input-label">End Time *</label>
-            <input
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="input-field w-full"
-            />
-        </div>
-    </div>
-</div>
-
-                    <button className="book-now-btn" onClick={handleBooking}>
-                        Book Now
-                    </button>
 
                     <div className="features">
                         <div className="feature-box">✔ Quality Products</div>

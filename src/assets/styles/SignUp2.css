@@ -142,7 +142,7 @@ input:focus {
 
 .signup-link {
   font-size: 0.8rem;
-  margin-top: 0.2rem;
+  margin-top: 0.4rem;
 }
 
 .signup-link a {
@@ -249,9 +249,35 @@ input:focus {
   color: #007bff;
   cursor: pointer;
   text-decoration: underline;
+  font-size: 0.9rem;
 }
 
 .login-link:hover {
   color: #0056b3;
   text-decoration: none;
+}
+
+.logo-img-s{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 10rem;
+  height: auto;
+  margin-right: 1.8rem;
+  margin-bottom: 10px;
+  
+}
+@media (max-width: 768px) {
+  .logo-img-s{
+    width: 8rem;
+    margin-right: 1.5rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .logo-img-s{
+    width: 6rem;
+    margin-right: 1rem;
+  }
 }

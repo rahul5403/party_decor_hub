@@ -3,6 +3,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
 import "../assets/styles/SignUp2.css";
 import axios from "axios";
+import logo from "../assets/images/logo.png";
 
 const SignUp2 = ({ onClose, onLoginClick }) => {
   const [username, setUsername] = useState("");
@@ -42,8 +43,8 @@ const SignUp2 = ({ onClose, onLoginClick }) => {
       toast.success("Signup successful! Redirecting to login...");
 
       setTimeout(() => {
-        onClose(); // Signup modal close karega
-        onLoginClick(); // Login modal open karega
+        onClose();
+        onLoginClick(); 
       }, 1000);
     } catch (error) {
       toast.error(error.response?.data?.error || "Signup failed");
@@ -58,9 +59,10 @@ const SignUp2 = ({ onClose, onLoginClick }) => {
       <div className="overlay-s">
         <div className="signup-popup">
           <div className="signup-left">
-            <h2>Luxury & Comfort Redefined</h2>
+            <img className="logo-img-s" src={logo} alt="Party Decor Hub" />
+            <h2>Party Decor Hub</h2>
             <p>
-              Discover elegantly designed spaces, top-tier amenities, and an unforgettable stay at Party Decor Hub. Your perfect getaway starts here.
+            Bringing Your Celebration to Life, One Décor at a Time!
             </p>
           </div>
 
@@ -85,10 +87,10 @@ const SignUp2 = ({ onClose, onLoginClick }) => {
                   {loading ? "Signing Up..." : "Sign Up"}
                 </button>
 
-                <div className="divider">or</div>
+                {/* <div className="divider">or</div>
                 <div className="google-login-container">
                   <GoogleLogin onSuccess={(res) => console.log("Google Token:", res.credential)} onError={(err) => console.error("Google Login Failed:", err)} />
-                </div>
+                </div> */}
 
                 <p className="signup-link">
                   Already have an account?{" "}

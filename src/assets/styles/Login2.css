@@ -146,14 +146,16 @@
   }
   
   .signup-link {
+
     font-size: 0.8rem;
-    margin-top: 0.2rem;
+    margin-top: 0.4rem;
   }
   
   .signup-link-text {
     color: #007bff;
     cursor: pointer;
     text-decoration: underline;
+    font-size: 0.9rem;
   }
   
   .signup-link-text:hover {
@@ -229,5 +231,30 @@
       top: 10px;
       left: 10px;
       font-size: 0.85rem;
+    }
+  }
+
+  .logo-img-l{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    width: 10rem;
+    height: auto;
+    margin-right: 1.8rem;
+    margin-bottom: 10px;
+    
+  }
+  @media (max-width: 768px) {
+    .logo-img-l{
+      width: 8rem;
+      margin-right: 1.5rem;
+    }
+  }
+  
+  
+  @media (max-width: 480px) {
+    .logo-img-l{
+      width: 6rem;
+      margin-right: 1rem;
     }
   }

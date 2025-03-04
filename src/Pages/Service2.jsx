@@ -4,6 +4,7 @@ import "../assets/styles/ProductSection.css";
 import FilterPanel from "../components/FilterPanel";
 import ProductSection from "../components/ProductSection";
 import ServiceBanner from "../components/ServiceBanner";
+import HeroSection from "../components/HeroSection";
 import { decorationFilterOption } from "../data/data";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
@@ -51,7 +52,8 @@ const Service2 = () => {
 
   return (
     <React.Fragment>
-      <ServiceBanner />
+      {/* <ServiceBanner /> */}
+      <HeroSection />
       <div className="service-container">
         <div className="filter-container">
           <FilterPanel filterOption={decorationFilterOption} />
