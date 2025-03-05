@@ -1,57 +1,159 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Button, Form } from "react-bootstrap";
-import "../assets/styles/Profile.css";
-import immmg from "../assets/images/Party.jpeg";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import '../assets/styles/Profile.css';
 
-const Profile = () => {
-  const user = useSelector((state) => state.auth.user);
-  const [isEditing, setIsEditing] = useState(false);
+const ProfilePage = () => {
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
-    username: user?.username || "",
-    email: user?.email || "",
+    email: '',
+    username: '',
+    phone: '',
+    address: {
+      line1: '',
+      line2: '',
+      city: '',
+      state: '',
+      pincode: ''
+    }
   });
 
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        setError('No access token found');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const authCheckResponse = await axios.get('https://partydecorhub.com/api/check-auth', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+
+        if (authCheckResponse.data.is_logged_in) {
+          const profileResponse = await axios.get('https://partydecorhub.com/api/profile', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          });
+          setProfile(profileResponse.data);
+          setFormData(profileResponse.data);
+        } else {
+          setError('User is not logged in');
+        }
+      } catch (err) {
+        setError('Failed to fetch profile data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name.includes('address.')) {
+      const addressField = name.split('.')[1];
+      setFormData({
+        ...formData,
+        address: {
+          ...formData.address,
+          [addressField]: value
+        }
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated Profile Data:", formData);
-    setIsEditing(false);
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      setError('No access token found');
+      return;
+    }
+
+    try {
+      await axios.put('https://partydecorhub.com/api/profile', formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      setProfile(formData);
+      setEditMode(false);
+    } catch (err) {
+      setError('Failed to update profile');
+    }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="profile-container">
-      <div className="profile-card">
-        <div className="profile-header">
-          <img src={immmg} alt="Profile" className="profile-image" />
-          <h1 className="profile-name">{user?.username || "John Doe"}</h1>
-          <Button onClick={handleEditClick}>{isEditing ? "Cancel" : "Edit Profile"}</Button>
-        </div>
+      <h1>Profile Page</h1>
+      {!editMode ? (
         <div className="profile-details">
-          {isEditing ? (
-            <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formUsername">
-                <Form.Label>Username</Form.Label>
-                <Form.Control type="text" name="username" value={formData.username} onChange={handleChange} />
-              </Form.Group>
-              <Button type="submit">Save Changes</Button>
-            </Form>
-          ) : (
-            <>
-              <p><strong>Email:</strong> {user?.email || "john.doe@example.com"}</p>
-            </>
-          )}
+          <p><strong>Email:</strong> {profile.email}</p>
+          <p><strong>Username:</strong> {profile.username}</p>
+          <p><strong>Phone:</strong> {profile.phone}</p>
+          <p><strong>Address:</strong></p>
+          <p>{profile.address.line1}</p>
+          <p>{profile.address.line2}</p>
+          <p>{profile.address.city}, {profile.address.state} {profile.address.pincode}</p>
+          <button onClick={() => setEditMode(true)}>Edit Profile</button>
         </div>
-      </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="profile-form">
+          <label>
+            Email:
+            <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
+          </label>
+          <label>
+            Username:
+            <input type="text" name="username" value={formData.username} onChange={handleInputChange} required />
+          </label>
+          <label>
+            Phone:
+            <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required />
+          </label>
+          <label>
+            Address Line 1:
+            <input type="text" name="address.line1" value={formData.address.line1} onChange={handleInputChange} />
+          </label>
+          <label>
+            Address Line 2:
+            <input type="text" name="address.line2" value={formData.address.line2} onChange={handleInputChange} />
+          </label>
+          <label>
+            City:
+            <input type="text" name="address.city" value={formData.address.city} onChange={handleInputChange} />
+          </label>
+          <label>
+            State:
+            <input type="text" name="address.state" value={formData.address.state} onChange={handleInputChange} />
+          </label>
+          <label>
+            Pincode:
+            <input type="text" name="address.pincode" value={formData.address.pincode} onChange={handleInputChange} />
+          </label>
+          <button type="submit">Save Changes</button>
+          <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+        </form>
+      )}
     </div>
   );
 };
 
-export default Profile;
+export default ProfilePage;

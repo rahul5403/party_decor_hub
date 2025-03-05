@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -17,8 +19,6 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState("");
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [expandedSection, setExpandedSection] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [selectedColor, setSelectedColor] = useState("");
@@ -32,7 +32,10 @@ const ProductDetails = () => {
 
         const updatedProduct = {
           ...productData,
-          images: productData.images.map((img) => BASE_IMAGE_URL + img.image),
+          images: productData.images.map((img) => ({
+            original: BASE_IMAGE_URL + img.image,
+            thumbnail: BASE_IMAGE_URL + img.image,
+          })),
         };
 
         setProduct(updatedProduct);
@@ -65,16 +68,6 @@ const ProductDetails = () => {
     fetchProduct();
   }, [product_id]);
 
-  useEffect(() => {
-    let interval;
-    if (isAutoPlay && product?.images?.length > 1) {
-      interval = setInterval(() => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.images.length);
-      }, 3000);
-    }
-    return () => clearInterval(interval);
-  }, [isAutoPlay, product]);
-
   const handleQuantityChange = (type) => {
     setQuantity((prev) => (type === "increment" ? prev + 1 : prev > 1 ? prev - 1 : prev));
   };
@@ -105,18 +98,13 @@ const ProductDetails = () => {
       </Helmet>
       <div className="product-details-container">
         <div className="product-image">
-          <img src={product.images[currentImageIndex]} alt={product.name} className="slider-image" />
-          {product.images.length > 1 && (
-            <div className="slider-dots">
-              {product.images.map((_, index) => (
-                <div
-                  key={index}
-                  className={`custom-dot ${index === currentImageIndex ? "active" : ""}`}
-                  onClick={() => setCurrentImageIndex(index)}
-                ></div>
-              ))}
-            </div>
-          )}
+          <ImageGallery
+            items={product.images}
+            showPlayButton={false}
+            showFullscreenButton={true}
+            showThumbnails={true}
+            autoPlay={false}
+          />
         </div>
 
         <div className="product-info">

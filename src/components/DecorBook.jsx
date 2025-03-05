@@ -76,10 +76,8 @@ const DecorBook = () => {
 
         if (validPincodes.includes(pincode)) {
             setPincodeMessage("Service is available in your area!");
-            toast.success("Service is available in your area!");
         } else {
             setPincodeMessage("Sorry, we only provide services in Delhi NCR.");
-            toast.error("Sorry, we only provide services in Delhi NCR.");
         }
     };
 
