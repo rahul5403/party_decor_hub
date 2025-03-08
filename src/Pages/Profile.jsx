@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../assets/styles/Profile.css';
@@ -97,22 +99,34 @@ const ProfilePage = () => {
     }
   };
 
+  // Helper function to get initials from username (first two characters)
+  const getInitials = (name) => {
+    return name ? name.slice(0, 2).toUpperCase() : '';
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="profile-container">
-      <h1>Profile Page</h1>
+      <h1 className='heading-profile-page'>Profile Page</h1>
       {!editMode ? (
         <div className="profile-details">
+          <div className="profile-picture">
+            {getInitials(profile.username)}
+          </div>
           <p><strong>Email:</strong> {profile.email}</p>
           <p><strong>Username:</strong> {profile.username}</p>
           <p><strong>Phone:</strong> {profile.phone}</p>
-          <p><strong>Address:</strong></p>
-          <p>{profile.address.line1}</p>
-          <p>{profile.address.line2}</p>
-          <p>{profile.address.city}, {profile.address.state} {profile.address.pincode}</p>
-          <button onClick={() => setEditMode(true)}>Edit Profile</button>
+          <div className="address-row">
+            <p className="address-label"><strong>Address:</strong></p>
+            <span>{profile.address.line1}</span>
+            <span>{profile.address.line2}</span>
+            <span>{profile.address.city}</span>
+            <span>{profile.address.state}</span>
+            <span>{profile.address.pincode}</span>
+          </div>
+          <button className='edit-button-profile-page' onClick={() => setEditMode(true)}>Edit Profile</button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="profile-form">
@@ -128,28 +142,31 @@ const ProfilePage = () => {
             Phone:
             <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required />
           </label>
-          <label>
-            Address Line 1:
-            <input type="text" name="address.line1" value={formData.address.line1} onChange={handleInputChange} />
-          </label>
-          <label>
-            Address Line 2:
-            <input type="text" name="address.line2" value={formData.address.line2} onChange={handleInputChange} />
-          </label>
-          <label>
-            City:
-            <input type="text" name="address.city" value={formData.address.city} onChange={handleInputChange} />
-          </label>
-          <label>
-            State:
-            <input type="text" name="address.state" value={formData.address.state} onChange={handleInputChange} />
-          </label>
-          <label>
-            Pincode:
-            <input type="text" name="address.pincode" value={formData.address.pincode} onChange={handleInputChange} />
-          </label>
-          <button type="submit">Save Changes</button>
-          <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+          <label className='address-pp'>Address:</label>
+          <div className="address-row">
+            <label>
+              Line 1:
+              <input type="text" name="address.line1" value={formData.address.line1} onChange={handleInputChange} />
+            </label>
+            <label>
+              Line 2:
+              <input type="text" name="address.line2" value={formData.address.line2} onChange={handleInputChange} />
+            </label>
+            <label>
+              City:
+              <input type="text" name="address.city" value={formData.address.city} onChange={handleInputChange} />
+            </label>
+            <label>
+              State:
+              <input type="text" name="address.state" value={formData.address.state} onChange={handleInputChange} />
+            </label>
+            <label>
+              Pincode:
+              <input type="text" name="address.pincode" value={formData.address.pincode} onChange={handleInputChange} />
+            </label>
+          </div>
+          <button className="save-btn-profile-page" type="submit">Save Changes</button>
+          <button className="cancel-btn-profile-page" type="button" onClick={() => setEditMode(false)}>Cancel</button>
         </form>
       )}
     </div>

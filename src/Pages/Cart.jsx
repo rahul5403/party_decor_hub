@@ -2,19 +2,37 @@ import React from "react";
 import "../assets/styles/Cart.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart, removeFromCart } from "../redux/cartSlice";
+import {
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+  mergeCart,
+} from "../redux/cartSlice";
+import useGetCartItems from "../hooks/useGetCartItems";
+import useRemoveItem from "../hooks/useRemoveItem";
+// import useGetThumbnail from "../hooks/useGetThumbnail";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  // const thumbnails = useSelector((state) => state.cart.thumbnails);
+  const removeItem = useRemoveItem();
+
+
+  useGetCartItems();
+  // useGetThumbnail(); 
+
 
   const calculateSubTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
 
   const calculateTax = () => {
-    return 2; 
+    return 2;
   };
 
   const calculateTotal = () => {
@@ -26,8 +44,11 @@ const Cart = () => {
   };
 
   const handleQuantityChange = (id, newQuantity) => {
+    const item = cartItems.find((item) => item.id === id);
     if (newQuantity > 0) {
-      dispatch(addToCart({ id, quantity: newQuantity })); 
+      dispatch(updateQuantity({ id, quantity: newQuantity }));
+    } else {
+      dispatch(removeFromCart({ id }));
     }
   };
 
@@ -60,13 +81,18 @@ const Cart = () => {
                 {cartItems.map((item) => (
                   <tr key={item.id}>
                     <td>
-                      <img
-                        src={item.image}
+                      {/* <img
+                        src={`https://partydecorhub.com${
+                          thumbnails.find(
+                            (t) => t.product_id === item.product_id
+                          )?.thumbnail
+                        }`}
                         alt={item.name}
                         className="cart-product-img"
-                      />
+                      /> */}
+                      <img className="cart-product-img" src={item.thumbnail } alt={item.name} />
                     </td>
-                    <td>{item.name}</td>
+                    <td>{item.name || item.product_name}</td>
                     <td>₹{item.price}</td>
                     <td>
                       <input
@@ -74,7 +100,10 @@ const Cart = () => {
                         className="cart-quantity-input"
                         value={item.quantity}
                         onChange={(e) =>
-                          handleQuantityChange(item.id, parseInt(e.target.value) || 1)
+                          handleQuantityChange(
+                            item.id,
+                            parseInt(e.target.value) || 1
+                          )
                         }
                       />
                     </td>
@@ -82,7 +111,9 @@ const Cart = () => {
                     <td>
                       <button
                         className="cart-remove-button"
-                        onClick={() => dispatch(removeFromCart({ id: item.id }))}
+                        onClick={() => {
+                          removeItem(item);
+                        }}
                       >
                         🗑️
                       </button>
@@ -106,8 +137,10 @@ const Cart = () => {
             <div className="cart-summary-item">
               <span>Total Price:</span>
               <span>₹{calculateTotal()}</span>
-            </div>  
-            <button className="cart-pay-button" onClick={onCheckout}>Checkout</button>
+            </div>
+            <button className="cart-pay-button" onClick={onCheckout}>
+              Checkout
+            </button>
           </div>
         </>
       )}

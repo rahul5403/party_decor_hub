@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
+import { toast} from "react-toastify";
 import "../assets/styles/SignUp2.css";
 import axios from "axios";
 import logo from "../assets/images/logo.png";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "../Pages/Home";
 import Navbar from "../components/Navbar";
@@ -22,51 +22,12 @@ import PincodeModal from "../components/PincodeModal";
 
 const Router = () => {
     const location = useLocation();
-    const [cart, setCart] = useState([
-        {
-            id: 7,
-            image: "https://placehold.co/50x50", // Replace with actual image URL
-            title: "Decorative Plates",
-            description: "Stylish and sustainable essentials.",
-            price: 60,
-            quantity: 1
-        }
-    ]);
     const [showSignup, setShowSignup] = useState(false);
     const [showLogin, setShowLogin] = useState(false); 
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
-
-    const addToCart = (product) => {
-        setCart((prevCart) => {
-            const existingProduct = prevCart.find((item) => item.id === product.id);
-            if (existingProduct) {
-                return prevCart.map((item) =>
-                    item.id === product.id
-                        ? { ...item, quantity: item.quantity + 1 }
-                        : item
-                );
-            } else {
-                return [...prevCart, { ...product, quantity: 1 }];
-            }
-        });
-    };
-
-    const removeFromCart = (product_id) => {
-        setCart((prevCart) => prevCart.filter((item) => item.id !== product_id));
-    };
-
-    const updateQuantity = (product_id, quantity) => {
-        if (quantity <= 0) return removeFromCart(product_id);
-
-        setCart((prevCart) =>
-            prevCart.map((item) =>
-                item.id === product_id ? { ...item, quantity } : item
-            )
-        );
-    };
 
     const hideHeaderFooter = ["/login", "/signup"].includes(location.pathname);
 
@@ -83,24 +44,14 @@ const Router = () => {
                 <Route path="/party" element={<Service1 data={partyData} />}></Route>
                 <Route path="/decoration" element={<Service2 data={decorationData}/>}></Route>
                 <Route path="/disposable" element={<Service3 data={disposalData}/>}></Route>
-                {/* <Route path="/products/:product_id" element={<ProductDetails addToCart={addToCart}/>}></Route> */}
-                <Route
-                    path="/cart"
-                    element={
-                        <Cart
-                        cart={cart}
-                        updateQuantity={updateQuantity}
-                        removeFromCart={removeFromCart}
-                        />
-                    }
-                />
+                <Route path="/products/:product_id" element={<ProductDetails />}></Route>
+                <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />}></Route>
                 <Route path="/about" element={<About />}></Route>
                 <Route path="/login" element={<Login2 />}></Route>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/orders" element={<Orders/>} />
                 <Route path="/services/:product_id" element={<DecorBook />} />
-                <Route path="/products/:product_id" element={<ProductDetails />} />
                 <Route path="/pincode" element={<PincodeModal/>}/>
                 <Route path="*" element={<NotFound />} />
             </Routes>

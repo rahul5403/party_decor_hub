@@ -5,7 +5,7 @@ import SimilarProductSection from "./SimilarProductSection";
 import axios from "axios";
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
-import toast, { Toaster } from "react-hot-toast";
+import { toast} from "react-toastify";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -144,7 +144,6 @@ const DecorBook = () => {
 
     return (
         <div className="decoration-booking-section">
-            <Toaster />
             <div className="booking-container">
                 <div className="image-gallery">
                     <ImageGallery

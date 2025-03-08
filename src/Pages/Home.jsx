@@ -5,6 +5,7 @@ import Services from "../components/Services";
 import BulkOrderSection from "../components/BulkOrderSection";
 import HomeProductSection from "../components/HomeProductSection";
 import { Helmet } from "react-helmet-async";
+import useGetCartItems from "../hooks/useGetCartItems";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -12,6 +13,7 @@ function Home() {
     const [partyData, setPartyData] = useState([]);
     const [disposalData, setDisposalData] = useState([]);
     const [decorationServices, setDecorationServices] = useState([]);
+    useGetCartItems();
 
     useEffect(() => {
         const fetchProducts = async () => {

@@ -2,98 +2,173 @@
 .profile-container {
   max-width: 500px;
   margin: 50px auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.15);
   text-align: center;
-  font-family: 'Inter', sans-serif;
-  color: #333;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
 }
 
-h1 {
-  font-size: 26px;
-  color: #222;
-  margin-bottom: 20px;
+.profile-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.heading-profile-page {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(to right, #2c3e50, #27ae60);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 25px;
+  letter-spacing: -0.5px;
+}
+
+/* Profile Picture Styles */
+.profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #27ae60, #2c3e50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: white;
+  margin: 0 auto 20px auto;
+}
+
+.profile-details {
+  text-align: left;
+  font-size: 16px;
 }
 
 .profile-details p {
-  font-size: 16px;
-  margin: 8px 0;
+  margin: 12px 0;
+  padding: 14px;
   background: #f9f9f9;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  color: #555;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-button {
-  background: #00362b;
-  border: none;
-  color: white;
-  padding: 12px 18px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.3s ease-in-out;
-  margin-top: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.3);
+.profile-details p:hover {
+  background: #f0f0f0;
+  transform: translateX(5px);
 }
 
-button:hover {
-  background: linear-gradient(135deg, #0056b3, #00a2c7);
+.profile-details strong {
+  color: #333;
+  margin-right: 10px;
+  flex-shrink: 0;
+  min-width: 100px;
+  font-weight: 600;
 }
 
+/* Address Row Styles */
+.address-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+  padding: 14px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  color: #555;
+  font-weight: 500;
+}
+
+.address-label {
+  margin-right: 5px;
+}
+
+/* Profile Form Styles */
 .profile-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 0.3rem;
+  max-width: 100%;
 }
 
 .profile-form label {
-  font-size: 14px;
-  font-weight: bold;
+  display: flex;
+  flex-direction: column;
   text-align: left;
-  color: #444;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
 }
 
-.profile-form input {
+input {
   width: 100%;
   padding: 12px;
+  margin-top: 8px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 14px;
-  outline: none;
-  transition: 0.3s ease;
+  transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.profile-form input:focus {
+input:focus {
   border-color: #007bff;
-  box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.3);
+  outline: none;
+  box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.4);
 }
 
-.profile-form button {
-  background: linear-gradient(135deg, #28a745, #64dd17);
+.edit-button-profile-page, .save-btn-profile-page, .cancel-btn-profile-page  {
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
   transition: all 0.3s ease-in-out;
-  box-shadow: 0px 4px 8px rgba(40, 167, 69, 0.3);
+  background: linear-gradient(to right, #27ae60, #2c3e50);
+  color: white;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.profile-form button:hover {
-  background: linear-gradient(135deg, #1e7e34, #388e3c);
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.cancel-btn-profile-page {
+  background: linear-gradient(to right, #ff4d4d, #e63939);
+}
+
+.profile-details button {
+  margin-top: 15px;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
   .profile-container {
     width: 90%;
-    padding: 15px;
+    padding: 20px;
   }
-  
-  .profile-form input {
-    font-size: 14px;
+
+  .heading-profile-page {
+    font-size: 28px;
   }
-  
-  button {
+
+  input {
+    padding: 10px;
+  }
+
+  .edit-button-profile-page {
+    padding: 12px;
     font-size: 14px;
-    padding: 10px 14px;
   }
 }
+

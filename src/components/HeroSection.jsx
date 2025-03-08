@@ -45,7 +45,8 @@ const HeroSection = () => {
         {slides.map((slide) => (
           <div
             key={slide.id}
-            onClick={() => navigate(`/${slide.text.toLowerCase().replace(/\s+/g, "-")}`)}
+            // onClick={() => navigate(`/${slide.text.toLowerCase().replace(/\s+/g, "-")}`)}
+            onClick={() => navigate(`/party`)}
             className="carousel-slide"
           >
             <img

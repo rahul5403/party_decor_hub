@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../assets/styles/ProductDetails.css";
 import SimilarProductSection from "../components/SimilarProductSection";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/cartSlice";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
+import useSetCartItems from "../hooks/useSetCartItems";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cartSlice";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
 const ProductDetails = () => {
   const { product_id } = useParams();
-  const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,17 +24,23 @@ const ProductDetails = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
 
+  const addItemToCart = useSetCartItems();
+  const dispatch = useDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`https://partydecorhub.com/api/products/${product_id}`);
+        const response = await axios.get(
+          `https://partydecorhub.com/api/products/${product_id}`
+        );
         const productData = response.data;
 
         const updatedProduct = {
           ...productData,
+          thumbnail: BASE_IMAGE_URL + productData.thumbnail,
           images: productData.images.map((img) => ({
-            original: BASE_IMAGE_URL + img.image,
-            thumbnail: BASE_IMAGE_URL + img.image,
+            image: BASE_IMAGE_URL + img.image,
           })),
         };
 
@@ -42,11 +48,14 @@ const ProductDetails = () => {
         setSelectedColor(updatedProduct.available_colors?.[0] || "");
         setSelectedSize(updatedProduct.available_sizes?.[0] || "");
 
-        // Fetch similar products based on category
-        const allProductsResponse = await axios.get("https://partydecorhub.com/api/products");
+        const allProductsResponse = await axios.get(
+          "https://partydecorhub.com/api/products"
+        );
         const filteredSimilarProducts = allProductsResponse.data
           .filter(
-            (item) => item.category === updatedProduct.category && item.id !== updatedProduct.id
+            (item) =>
+              item.category === updatedProduct.category &&
+              item.id !== updatedProduct.id
           )
           .map((item) => ({
             id: item.id,
@@ -69,11 +78,30 @@ const ProductDetails = () => {
   }, [product_id]);
 
   const handleQuantityChange = (type) => {
-    setQuantity((prev) => (type === "increment" ? prev + 1 : prev > 1 ? prev - 1 : prev));
+    setQuantity((prev) =>
+      type === "increment" ? prev + 1 : prev > 1 ? prev - 1 : prev
+    );
   };
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ ...product, quantity, selectedColor, selectedSize }));
+    const item = {
+      id: product_id, 
+      product_id,
+      quantity,
+      color: selectedColor,
+      size: selectedSize,
+      price: product.price,
+      name: product.name,
+      thumbnail: product.thumbnail,
+      images: product.images
+    };
+
+
+    if (!accessToken) {
+      dispatch(addToCart(item)); 
+    } else {
+      addItemToCart(item); 
+    }
   };
 
   const toggleSection = (section) => {
@@ -94,7 +122,10 @@ const ProductDetails = () => {
     <div className="product-details-section">
       <Helmet>
         <title>{product.name} - Party Decor Hub</title>
-        <meta name="description" content={`Buy ${product.name} at an affordable price.`} />
+        <meta
+          name="description"
+          content={`Buy ${product.name} at an affordable price.`}
+        />
       </Helmet>
       <div className="product-details-container">
         <div className="product-image">
@@ -114,10 +145,11 @@ const ProductDetails = () => {
             <span className="review-count">{reviews.length} Reviews</span>
           </div>
           <div className="product-price">
-            {/* Display discounted price if available */}
             {product.discounted_price ? (
               <>
-                <span className="discounted-price">₹{product.discounted_price}</span>
+                <span className="discounted-price">
+                  ₹{product.discounted_price}
+                </span>
                 <span className="original-price">₹{product.price}</span>
               </>
             ) : (
@@ -128,17 +160,27 @@ const ProductDetails = () => {
           <div className="product-options">
             <div className="option-dropdown">
               <label>Color:</label>
-              <select value={selectedColor} onChange={(e) => setSelectedColor(e.target.value)}>
+              <select
+                value={selectedColor}
+                onChange={(e) => setSelectedColor(e.target.value)}
+              >
                 {product.available_colors?.map((color, index) => (
-                  <option key={index} value={color}>{color}</option>
+                  <option key={index} value={color}>
+                    {color}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="option-dropdown">
               <label>Size:</label>
-              <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
+              <select
+                value={selectedSize}
+                onChange={(e) => setSelectedSize(e.target.value)}
+              >
                 {product.available_sizes?.map((size, index) => (
-                  <option key={index} value={size}>{size}</option>
+                  <option key={index} value={size}>
+                    {size}
+                  </option>
                 ))}
               </select>
             </div>
@@ -148,7 +190,9 @@ const ProductDetails = () => {
             <input type="text" value={quantity} readOnly />
             <button onClick={() => handleQuantityChange("increment")}>+</button>
           </div>
-          <button className="add-to-cart-btn" onClick={handleAddToCart}>Add to Cart</button>
+          <button className="add-to-cart-btn" onClick={handleAddToCart}>
+            Add to Cart
+          </button>
           <div className="features">
             <div className="feature-box">✔ Quality Products</div>
             <div className="feature-box">⭐ 4.9/5 Google Ratings</div>
@@ -162,31 +206,30 @@ const ProductDetails = () => {
         <div key={index} className="details-section">
           <div className="section-header" onClick={() => toggleSection(index)}>
             <h2 className="section-title">{section}</h2>
-            <span className="toggle-icon">{expandedSection === index ? "-" : "+"}</span>
+            <span className="toggle-icon">
+              {expandedSection === index ? "-" : "+"}
+            </span>
           </div>
           {expandedSection === index && (
             <ul className="details-list">
               {section === "Reviews" ? (
-                reviews.length > 0 ? reviews.map((review, i) => <li key={i}>{review}</li>) : <li>No reviews yet.</li>
+                reviews.length > 0 ? (
+                  reviews.map((review, i) => <li key={i}>{review}</li>)
+                ) : (
+                  <li>No reviews yet.</li>
+                )
               ) : (
                 <li>{product.description}</li>
-              )}
-              {section === "Reviews" && (
-                <li className="add-review">
-                  <textarea
-                    value={newReview}
-                    onChange={(e) => setNewReview(e.target.value)}
-                    placeholder="Write your review here..."
-                  />
-                  <button onClick={handleAddReview}>Submit Review</button>
-                </li>
               )}
             </ul>
           )}
         </div>
       ))}
 
-      <SimilarProductSection products={similarProducts} section={"You might also like"} />
+      <SimilarProductSection
+        products={similarProducts}
+        section={"You might also like"}
+      />
     </div>
   );
 };

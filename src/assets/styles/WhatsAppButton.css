@@ -2,7 +2,9 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #01634f;
+    /* background-color: #01634f; */
+    background: linear-gradient(to right, #27ae60, #2c3e50);
+
     color: white;
     padding: 12px 20px;
     border-radius: 50px;

@@ -5,15 +5,19 @@ import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import axios from "axios";
 import logoh from "../assets/images/logo.png";
+import { mergeCart } from "../redux/cartSlice";
+import useGetCartItems from "../hooks/useGetCartItems";
 
-const NavBar = ({ onLoginClick}) => {
+const NavBar = ({ onLoginClick }) => {
   const cartCount = useSelector((state) => state.cart.cartCount);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
+  useGetCartItems();
 
   const handleNavLinkClick = () => {
     setExpanded(false);
@@ -22,20 +26,24 @@ const NavBar = ({ onLoginClick}) => {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-  
+
       if (token) {
-        await axios.post("https://partydecorhub.com/api/logout", {}, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.post(
+          "https://partydecorhub.com/api/logout",
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
       }
-  
+
       dispatch(logout());
+      dispatch(mergeCart([]));
       toast.success("Logout successful!");
     } catch (error) {
       toast.error("Logout failed, please try again.");
     }
   };
-  
 
   const handleUserIconClick = () => {
     if (!isAuthenticated) {
@@ -59,11 +67,7 @@ const NavBar = ({ onLoginClick}) => {
 
         <Navbar.Brand as={Link} to="/" className="logo mx-auto mx-lg-0">
           {/* <span>PARTY </span>DECOR <span>HUB</span> */}
-          <img
-            src={logoh}
-            alt="Party Decor Hub"
-            className="logo-img"
-          />
+          <img src={logoh} alt="Party Decor Hub" className="logo-img" />
         </Navbar.Brand>
 
         <Navbar.Collapse id="navbar-nav">
@@ -119,8 +123,8 @@ const NavBar = ({ onLoginClick}) => {
             ) : (
               <div
                 className="user-icon p-1"
-                onClick={handleUserIconClick} 
-                style={{ cursor: "pointer" }} 
+                onClick={handleUserIconClick}
+                style={{ cursor: "pointer" }}
               >
                 <FaUserCircle size={30} />
               </div>
