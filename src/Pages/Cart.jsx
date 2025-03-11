@@ -3,10 +3,10 @@ import "../assets/styles/Cart.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  addToCart,
+  // addToCart,
   removeFromCart,
   updateQuantity,
-  mergeCart,
+  // mergeCart,
 } from "../redux/cartSlice";
 import useGetCartItems from "../hooks/useGetCartItems";
 import useRemoveItem from "../hooks/useRemoveItem";
