@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-// import toast from "react-hot-toast";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/authSlice";
 import "../assets/styles/Login2.css";
 import logo from "../assets/images/logo.png";
-import useSetCartItems from "../hooks/useSetCartItems";
 
 const Login2 = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
@@ -35,9 +33,6 @@ const Login2 = ({ onClose, onSignupClick }) => {
           email
         )}&password=${encodeURIComponent(password)}`
       );
-
-      console.log("Login Response:", response.data);
-
       const { access, refresh } = response.data;
 
       // Store tokens
@@ -59,30 +54,55 @@ const Login2 = ({ onClose, onSignupClick }) => {
         }
       );
 
-      for (let i = 0; i < cartItems.length; i++) {
-        try {
-          const item = cartItems[i];
-          const response = await axios.post(
-            `https://partydecorhub.com/api/cart/add`,
-            {
-              product_id: item.product_id,
-              quantity: item.quantity,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${storedAccessToken.trim()}`,
-              },
-            }
-          );
-          console.log(`Cart item ${item.product_id} added successfully`, response.data);
-        } catch (error) {
-          console.error(`Failed to add item ${cartItems[i].product_id} to cart`, error.response?.data || error.message);
-          toast.error(`Error adding item ${cartItems[i].product_id} to cart`);
-        }
-      }
-      
+      // for (let i = 0; i < cartItems.length; i++) {
+      //   try {
+      //     const item = cartItems[i];
+      //     const response = await axios.post(
+      //       `https://partydecorhub.com/api/cart/add`,
+      //       {
+      //         product_id: item.product_id,
+      //         quantity: item.quantity,
+      //       },
+      //       {
+      //         headers: {
+      //           Authorization: `Bearer ${storedAccessToken.trim()}`,
+      //         },
+      //       }
+      //     );
+      //     console.log(`Cart item ${item.product_id} added successfully`, response.data);
+      //   } catch (error) {
+      //     console.error(`Failed to add item ${cartItems[i].product_id} to cart`, error.response?.data || error.message);
+      //     toast.error(`Error adding item ${cartItems[i].product_id} to cart`);
+      //   }
+      // }
 
-      console.log("Auth Check Response:", authCheckResponse.data);
+      const formattedCartItems = cartItems.map((item) => ({
+        product_id: item.product_id, // Correct field
+        quantity: item.quantity,
+        color: item.color,
+        size: item.size,
+      }));
+
+      try {
+        const response = await axios.post(
+          `https://partydecorhub.com/api/cart/add`,
+
+          formattedCartItems,
+          {
+            headers: {
+              Authorization: `Bearer ${storedAccessToken.trim()}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      } catch (error) {
+        console.error(
+          `Failed to add item ${formattedCartItems} to cart`,
+          error.response?.data || error.message
+        );
+        toast.error(`Error adding item ${formattedCartItems} to cart`);
+      }
+
       dispatch(login(authCheckResponse.data));
       toast.success("Login successful!");
 
@@ -110,7 +130,6 @@ const Login2 = ({ onClose, onSignupClick }) => {
   };
 
   const handleGoogleSuccess = (credentialResponse) => {
-    console.log("Google Token:", credentialResponse.credential);
     toast.success("Google Login Successful!");
     onClose();
   };

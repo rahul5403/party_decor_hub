@@ -4,7 +4,7 @@
   background-position: center;
   color: #064420; 
   font-family: Arial, sans-serif;
-  padding: 5px 10px 5px 20px;
+  padding: 0.1rem 2rem;
   position: relative;
   z-index: 4;
   box-sizing: border-box;
@@ -13,7 +13,7 @@
 .container-fluid {
   display: flex;
   align-items: center;
-  padding: 0;
+  padding: 0px 1px;
 }
 
 .logo {
@@ -147,6 +147,12 @@
   border-radius: 5px;
   overflow: hidden;
   transform: translateX(-30%);
+}
+
+@media (max-width: 860) {
+  .navbar-custom {
+    padding: 0.1rem 0.8rem;
+  }
 }
 
 @media (max-width: 992px) {

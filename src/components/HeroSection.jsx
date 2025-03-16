@@ -16,7 +16,6 @@ const HeroSection = () => {
           ...slide,
           image: `https://partydecorhub.com/media/${slide.image}`,
         }));
-        console.log("Formatted Slides:", formattedSlides); // Debugging
         setSlides(formattedSlides);
       } catch (error) {
         console.error("Error fetching carousel data:", error);

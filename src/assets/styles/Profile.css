@@ -77,14 +77,15 @@
 .address-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  /* gap: 10px; */
   flex-wrap: wrap;
   margin: 12px 0;
-  padding: 14px;
+  /* padding: 14px; */
   background: #f9f9f9;
   border-radius: 10px;
   color: #555;
   font-weight: 500;
+  flex-direction: row;
 }
 
 .address-label {
@@ -137,7 +138,7 @@ input:focus {
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
+.edit-button-profile-page, .save-btn-profile-page, .cancel-btn-profile-page:hover {
   opacity: 0.9;
   transform: translateY(-2px);
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
@@ -171,4 +172,33 @@ button:hover {
     font-size: 14px;
   }
 }
+.address-container {
+  display: flex;
+  align-items: center; /* Label aur address ek line me rahenge */
+  gap: 10px;
+  padding: 14px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  color: #555;
+  font-weight: 500;
+  flex-wrap: wrap; /* Agar jagah kam ho to address wrap ho jaye */
+}
 
+.address-label {
+  font-weight: bold;
+  flex-shrink: 0; /* Label fix rahega */
+  min-width: 80px; /* Thoda width fix taaki label ek jagah rahe */
+}
+
+.address-content {
+  flex: 1; /* Baaki space address le lega */
+  word-break: break-word; /* Address proper wrap ho */
+}
+
+
+.address-form{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}

@@ -1,6 +1,6 @@
 .product-details-section {
   font-family: "Poppins", sans-serif;
-  padding: 10px;
+  padding: 20px;
   background-color: #f8f8f8;
   min-height: 100vh;
 }
@@ -8,33 +8,22 @@
 .product-details-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 30px;
   justify-content: center;
   align-items: flex-start;
   background: #fff;
-  padding: 30px;
+  padding: 20px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   max-width: 1100px;
   margin: auto;
 }
 
-.product-image {
-  flex: 1;
-  min-width: 280px;
-  max-width: 600px;
-  height: 400px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 3 / 2;
-}
+
 
 .slider-image {
   width: 100%;
-  height: 100%;
+  height: 450px; /* Increased height for better visibility */
   object-fit: contain;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -42,7 +31,7 @@
 }
 
 .slider-image:hover {
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
 
 .slider-dots {
@@ -55,8 +44,8 @@
 }
 
 .custom-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   cursor: pointer;
@@ -82,7 +71,7 @@
   font-size: 28px;
   font-weight: bold;
   color: #333;
-  margin: 15px 0px 5px 0px;
+  margin: 15px 0 5px 0;
 }
 
 .product-reviews {
@@ -144,7 +133,7 @@
 }
 
 .option-dropdown select {
-  padding: 2px 10px;
+  padding: 5px 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
@@ -288,40 +277,32 @@
   .product-details-container {
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
   }
 
-  .product-image {
-    height: 400px; 
-    min-width: 330px;
-  }
 
   .product-price {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
 
   .product-description {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
 }
 
 @media screen and (max-width: 768px) {
   .product-details-section {
-    padding: 30px 15px;
+    padding: 20px 15px;
   }
 
-  .product-image {
-    height: 400px;
-    min-width: 280px;
-  }
 
   .slider-dots {
     gap: 8px;
   }
 
   .custom-dot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   .product-title {
@@ -350,16 +331,11 @@
 
 @media screen and (max-width: 480px) {
   .product-details-section {
-    padding: 20px 10px;
+    padding: 15px 10px;
   }
 
   .product-details-container {
-    gap: 10px;
-  }
-
-  .product-image {
-    height: 250px;
-    min-width: 300px;
+    gap: 15px;
   }
 
   .slider-dots {
@@ -368,8 +344,8 @@
   }
 
   .custom-dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   .product-title {
@@ -395,3 +371,53 @@
     font-size: 12px;
   }
 }
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.feature-box {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+
+@media (max-width: 768px) {
+  .image-gallery {
+      height: 500px; }/* Adjust height for smaller screens */
+  }.image-gallery .main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+    border-radius: 10px;
+}
+
+.image-gallery {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 600px; /* Fixed height for the image container */
+  overflow: hidden; /* Ensure images don't overflow */
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  .image-gallery {
+      height: 350px; /* Adjust height for mobile screens */
+  }}
+
+  .image-gallery-left-nav,
+  .image-gallery-right-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+  }

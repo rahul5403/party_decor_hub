@@ -18,7 +18,7 @@ const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   // const thumbnails = useSelector((state) => state.cart.thumbnails);
   const removeItem = useRemoveItem();
-
+  // console.log(cartItems[0].thumbnail);
 
   useGetCartItems();
   // useGetThumbnail(); 
@@ -69,7 +69,7 @@ const Cart = () => {
             <table className="cart-table">
               <thead>
                 <tr>
-                  <th>Product Img</th>
+                  <th>Image</th>
                   <th>Name</th>
                   <th>Price</th>
                   <th>Quantity</th>
@@ -79,7 +79,7 @@ const Cart = () => {
               </thead>
               <tbody>
                 {cartItems.map((item) => (
-                  <tr key={item.id}>
+                  <tr key={item.product_id}>
                     <td>
                       {/* <img
                         src={`https://partydecorhub.com${
@@ -90,7 +90,7 @@ const Cart = () => {
                         alt={item.name}
                         className="cart-product-img"
                       /> */}
-                      <img className="cart-product-img" src={item.thumbnail } alt={item.name} />
+                      <img className="cart-product-img" src={item.thumbnail} alt={item.name} />
                     </td>
                     <td>{item.name || item.product_name}</td>
                     <td>₹{item.price}</td>

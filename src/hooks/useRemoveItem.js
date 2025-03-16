@@ -22,19 +22,21 @@ const useRemoveItem = () => {
     );
     dispatch(mergeCart(updatedCart));
 
-    try {
-      const res = await axios.post(
-        "https://partydecorhub.com/api/cart/remove",
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      return res.data;
-    } catch (error) {
-      console.error("Error removing item from cart:", error);
+    if(accessToken){
+      try {
+        const res = await axios.post(
+          "https://partydecorhub.com/api/cart/remove",
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error removing item from cart:", error);
+      }
     }
   };
 

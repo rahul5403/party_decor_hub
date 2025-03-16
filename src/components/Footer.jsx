@@ -63,7 +63,7 @@ const Footer = () => {
                     <Col md={4} className="text-center text-md-left mb-3 mb-md-0">
                         <div className="social-icons">
                             <a href="#"><FaFacebookF /></a>
-                            <a href="#"><FaInstagram /></a>
+                            <a href="https://www.instagram.com/partydecorhub_/?utm_source=qr#" target="_blank"><FaInstagram /></a>
                             <a href="#"><FaYoutube /></a>
                         </div>
                     </Col>
@@ -74,7 +74,7 @@ const Footer = () => {
                 </Row>
                 <Row>
                     <Col className="text-center">
-                        <p className="made-with-love">Made with ❤️ by <a href="https://pixeladsmedia.com" target="_blank" rel="noopener noreferrer">Pixel AI Media</a> </p>
+                        <p className="made-with-love">Made with ❤️ by <a href="https://pixeladsmedia.com" target="_blank" rel="noopener noreferrer">Pixel Ads Media</a> </p>
                         <p>Copyright © 2025 </p>
                     </Col>
                 </Row>

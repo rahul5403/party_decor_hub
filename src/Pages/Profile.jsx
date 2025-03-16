@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../assets/styles/Profile.css';
@@ -120,12 +118,22 @@ const ProfilePage = () => {
           <p><strong>Phone:</strong> {profile.phone}</p>
           <div className="address-row">
             <p className="address-label"><strong>Address:</strong></p>
-            <span>{profile.address.line1}</span>
-            <span>{profile.address.line2}</span>
-            <span>{profile.address.city}</span>
-            <span>{profile.address.state}</span>
-            <span>{profile.address.pincode}</span>
+            <span className="address-content">
+            <span>{profile.address.line1}, </span>
+            <span>{profile.address.line2}, </span>
+            <span>{profile.address.city}, </span>
+            <span>{profile.address.state}, </span>
+            <span>{profile.address.pincode}, </span>
+            </span>
           </div>
+          {/* <div className="address-row">
+  <strong className="address-label">Address:</strong>
+  <span className="address-content">
+    B-19, Raipur, raipur, raipur Raipur, raipur, raipur Raipur CG 456548
+  </span>
+</div> */}
+
+
           <button className='edit-button-profile-page' onClick={() => setEditMode(true)}>Edit Profile</button>
         </div>
       ) : (
@@ -143,7 +151,7 @@ const ProfilePage = () => {
             <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required />
           </label>
           <label className='address-pp'>Address:</label>
-          <div className="address-row">
+          <div className="address-row address-form">
             <label>
               Line 1:
               <input type="text" name="address.line1" value={formData.address.line1} onChange={handleInputChange} />

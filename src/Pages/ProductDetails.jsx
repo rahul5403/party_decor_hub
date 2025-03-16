@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../assets/styles/ProductDetails.css";
 import SimilarProductSection from "../components/SimilarProductSection";
-import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -40,9 +39,13 @@ const ProductDetails = () => {
           ...productData,
           thumbnail: BASE_IMAGE_URL + productData.thumbnail,
           images: productData.images.map((img) => ({
-            image: BASE_IMAGE_URL + img.image,
+            original: BASE_IMAGE_URL + img.image,
+            thumbnail: BASE_IMAGE_URL + img.image,
           })),
         };
+        
+        console.log(updatedProduct);
+
 
         setProduct(updatedProduct);
         setSelectedColor(updatedProduct.available_colors?.[0] || "");
@@ -84,7 +87,7 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = () => {
-    const item = {
+    const item = [{
       id: product_id, 
       product_id,
       quantity,
@@ -94,11 +97,11 @@ const ProductDetails = () => {
       name: product.name,
       thumbnail: product.thumbnail,
       images: product.images
-    };
+    }];
 
 
     if (!accessToken) {
-      dispatch(addToCart(item)); 
+      dispatch(addToCart(item[0])); 
     } else {
       addItemToCart(item); 
     }
@@ -120,15 +123,8 @@ const ProductDetails = () => {
 
   return (
     <div className="product-details-section">
-      <Helmet>
-        <title>{product.name} - Party Decor Hub</title>
-        <meta
-          name="description"
-          content={`Buy ${product.name} at an affordable price.`}
-        />
-      </Helmet>
       <div className="product-details-container">
-        <div className="product-image">
+        <div className="image-gallery">
           <ImageGallery
             items={product.images}
             showPlayButton={false}
