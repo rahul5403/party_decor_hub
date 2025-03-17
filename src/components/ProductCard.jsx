@@ -17,6 +17,8 @@ const ProductCard = ({ product, section }) => {
         }
     };
 
+    console.log(product);
+
     const handleNavigation = () => {
         if (section === "Decoration Services") {
             navigate(`/services/${product.id}`, { state: { product } });

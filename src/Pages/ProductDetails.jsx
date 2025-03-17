@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "../assets/styles/ProductDetails.css";
 import SimilarProductSection from "../components/SimilarProductSection";
 import axios from "axios";
 import ImageGallery from "react-image-gallery";
@@ -8,6 +7,8 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import useSetCartItems from "../hooks/useSetCartItems";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
+import "../assets/styles/ProductDetails.css";
+
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -34,6 +35,7 @@ const ProductDetails = () => {
           `https://partydecorhub.com/api/products/${product_id}`
         );
         const productData = response.data;
+        console.log(productData);
 
         const updatedProduct = {
           ...productData,
@@ -45,7 +47,6 @@ const ProductDetails = () => {
         };
         
         console.log(updatedProduct);
-
 
         setProduct(updatedProduct);
         setSelectedColor(updatedProduct.available_colors?.[0] || "");
@@ -99,7 +100,6 @@ const ProductDetails = () => {
       images: product.images
     }];
 
-
     if (!accessToken) {
       dispatch(addToCart(item[0])); 
     } else {
@@ -131,6 +131,8 @@ const ProductDetails = () => {
             showFullscreenButton={true}
             showThumbnails={true}
             autoPlay={false}
+            slideDuration={450}
+            slideInterval={3000}
           />
         </div>
 
@@ -152,8 +154,9 @@ const ProductDetails = () => {
               <span>₹{product.price}</span>
             )}
           </div>
-          <p className="product-description">{product.description}</p>
+          {/* <p className="product-description">{product.description}</p> */}
           <div className="product-options">
+          {product?.available_colors?.length > 0 && (
             <div className="option-dropdown">
               <label>Color:</label>
               <select
@@ -166,7 +169,8 @@ const ProductDetails = () => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div>)}
+            {product?.available_sizes?.length > 0 && (
             <div className="option-dropdown">
               <label>Size:</label>
               <select
@@ -180,6 +184,7 @@ const ProductDetails = () => {
                 ))}
               </select>
             </div>
+          )}
           </div>
           <div className="quantity-selector">
             <button onClick={() => handleQuantityChange("decrement")}>-</button>

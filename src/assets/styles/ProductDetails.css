@@ -19,48 +19,6 @@
   margin: auto;
 }
 
-
-
-.slider-image {
-  width: 100%;
-  height: 450px; /* Increased height for better visibility */
-  object-fit: contain;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.slider-image:hover {
-  transform: scale(1.05);
-}
-
-.slider-dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-}
-
-.custom-dot {
-  width: 12px;
-  height: 12px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.custom-dot.active,
-.custom-dot:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.custom-dot.active {
-  background-color: rgba(255, 255, 255, 1);
-}
-
 .product-info {
   flex: 1;
   max-width: 500px;
@@ -280,7 +238,6 @@
     gap: 20px;
   }
 
-
   .product-price {
     margin-bottom: 10px;
   }
@@ -293,16 +250,6 @@
 @media screen and (max-width: 768px) {
   .product-details-section {
     padding: 20px 15px;
-  }
-
-
-  .slider-dots {
-    gap: 8px;
-  }
-
-  .custom-dot {
-    width: 10px;
-    height: 10px;
   }
 
   .product-title {
@@ -336,16 +283,6 @@
 
   .product-details-container {
     gap: 15px;
-  }
-
-  .slider-dots {
-    bottom: 5px;
-    gap: 6px;
-  }
-
-  .custom-dot {
-    width: 8px;
-    height: 8px;
   }
 
   .product-title {
@@ -388,36 +325,45 @@
 }
 
 
-@media (max-width: 768px) {
-  .image-gallery {
-      height: 500px; }/* Adjust height for smaller screens */
-  }.image-gallery .main-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image covers the container without distortion */
-    border-radius: 10px;
+.image-gallery-slide .image-gallery-image {
+  width: 600px;
+  height: 500px;
+  object-fit: contain; 
 }
 
-.image-gallery {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  height: 600px; /* Fixed height for the image container */
-  overflow: hidden; /* Ensure images don't overflow */
-  border-radius: 10px;
-  justify-content: center;
-  align-items: center;
+.image-gallery-thumbnail .image-gallery-thumbnail-image {
+  width: 80px;
+  height: 60px; 
+  object-fit: contain; 
 }
 
-@media (max-width: 480px) {
-  .image-gallery {
-      height: 350px; /* Adjust height for mobile screens */
-  }}
 
-  .image-gallery-left-nav,
-  .image-gallery-right-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 10;
+@media screen and (max-width: 910px) {
+  .image-gallery-slide .image-gallery-image {
+    width: 450px;
+    height: 350px;
+    object-fit: contain; 
   }
+  
+  .image-gallery-thumbnail .image-gallery-thumbnail-image {
+    width: 70px;
+    height: 50px; 
+    object-fit: contain; 
+  }
+  
+}
+
+@media screen and (max-width: 510px) {
+  .image-gallery-slide .image-gallery-image {
+    width: 300px;
+    height: 250px;
+    object-fit: contain; 
+  }
+  
+  .image-gallery-thumbnail .image-gallery-thumbnail-image {
+    max-width: 60px;
+    height: 40px; 
+    object-fit: contain; 
+  }
+  
+}

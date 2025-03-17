@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "../assets/styles/DecorBook.css";
 import SimilarProductSection from "./SimilarProductSection";
 import axios from "axios";
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
 import { toast} from "react-toastify";
+import "../assets/styles/DecorBook.css";
+
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -19,8 +20,6 @@ const DecorBook = () => {
     const [pincode, setPincode] = useState("");
     const [startDate, setStartDate] = useState("");
     const [startTime, setStartTime] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [endTime, setEndTime] = useState("");
     const [customerName, setCustomerName] = useState("");
     const [address, setAddress] = useState("");
     const [email, setEmail] = useState("");
@@ -84,7 +83,7 @@ const DecorBook = () => {
     const handleBooking = async (e) => {
         e.preventDefault();
 
-        if (!startDate || !startTime || !endDate || !endTime || !customerName || !address || !email || !phone) {
+        if (!startDate || !startTime || !customerName || !address || !email || !phone) {
             toast.error("Please fill all required fields.");
             return;
         }
@@ -110,7 +109,6 @@ const DecorBook = () => {
             email: email,
             phone: phone,
             start_datetime: new Date(`${startDate}T${startTime}:00Z`).toISOString(),
-            end_datetime: new Date(`${endDate}T${endTime}:00Z`).toISOString(),
         };
 
         try {
@@ -121,15 +119,14 @@ const DecorBook = () => {
             });
 
             if (response.status === 201) {
-                toast.success(`Booking confirmed for ${service.name} from ${startDate} at ${startTime} to ${endDate} at ${endTime}.`);
+                toast.success(`Booking confirmed for ${service.name} from ${startDate} at ${startTime}`);
                 const whatsappMessage = `*New Booking Details*\n\n` +
                     `➤  *Service:* ${service.name}\n` +
                     `➤  *Customer Name:* ${customerName}\n` +
                     `➤  *Address:* ${address}\n` +
                     `➤  *Email:* ${email}\n` +
                     `➤  *Phone:* ${phone}\n` +
-                    `➤  *Start Date:* ${formatDateTime(startDate, startTime)}\n` +
-                    `➤  *End Date:* ${formatDateTime(endDate, endTime)}`;
+                    `➤  *Start Date:* ${formatDateTime(startDate, startTime)}`; 
 
                 const whatsappUrl = `https://wa.me/7011676961?text=${encodeURIComponent(whatsappMessage)}`;
                 window.open(whatsappUrl, "_blank");
@@ -223,7 +220,7 @@ const DecorBook = () => {
                         <div className="flex flex-col gap-4">
                             <div className="flex gap-4 start">
                                 <div>
-                                    <label className="input-label">Start Date *</label>
+                                    <label className="input-label"> Date *</label>
                                     <input
                                         type="date"
                                         value={startDate}
@@ -234,7 +231,7 @@ const DecorBook = () => {
                                 </div>
 
                                 <div>
-                                    <label className="input-label">Start Time *</label>
+                                    <label className="input-label"> Time *</label>
                                     <input
                                         type="time"
                                         value={startTime}
@@ -245,29 +242,6 @@ const DecorBook = () => {
                                 </div>
                             </div>
 
-                            <div className="flex gap-4 end">
-                                <div>
-                                    <label className="input-label">End Date *</label>
-                                    <input
-                                        type="date"
-                                        value={endDate}
-                                        onChange={(e) => setEndDate(e.target.value)}
-                                        className="input-field w-full"
-                                        required
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="input-label">End Time *</label>
-                                    <input
-                                        type="time"
-                                        value={endTime}
-                                        onChange={(e) => setEndTime(e.target.value)}
-                                        className="input-field w-full"
-                                        required
-                                    />
-                                </div>
-                            </div>
                         </div>
 
                         <button type="submit" className="book-now-btn">
