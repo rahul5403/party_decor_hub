@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import "../assets/styles/ProductDetails.css";
 
-
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
 const ProductDetails = () => {
@@ -44,11 +43,11 @@ const ProductDetails = () => {
             thumbnail: BASE_IMAGE_URL + img.image,
           })),
         };
-        
 
         setProduct(updatedProduct);
-        setSelectedColor(updatedProduct.available_colors?.[0] || "");
-        setSelectedSize(updatedProduct.available_sizes?.[0] || "");
+
+        setSelectedColor(updatedProduct.color || "");
+        setSelectedSize(updatedProduct.size || "");
 
         const allProductsResponse = await axios.get(
           "https://partydecorhub.com/api/products"
@@ -86,22 +85,24 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = () => {
-    const item = [{
-      id: product_id, 
-      product_id,
-      quantity,
-      color: selectedColor,
-      size: selectedSize,
-      price: product.price,
-      name: product.name,
-      thumbnail: product.thumbnail,
-      images: product.images
-    }];
+    const item = [
+      {
+        id: product_id,
+        product_id,
+        quantity,
+        color: selectedColor,
+        size: selectedSize,
+        price: product.price,
+        name: product.name,
+        thumbnail: product.thumbnail,
+        images: product.images,
+      },
+    ];
 
     if (!accessToken) {
-      dispatch(addToCart(item[0])); 
+      dispatch(addToCart(item[0]));
     } else {
-      addItemToCart(item); 
+      addItemToCart(item);
     }
   };
 
@@ -152,46 +153,67 @@ const ProductDetails = () => {
               <span>₹{product.price}</span>
             )}
           </div>
-          {/* <p className="product-description">{product.description}</p> */}
+
+          {/* Product Options */}
           <div className="product-options">
-          {product?.available_colors?.length > 0 && (
-            <div className="option-dropdown">
-              <label>Color:</label>
-              <select
-                value={selectedColor}
-                onChange={(e) => setSelectedColor(e.target.value)}
-              >
-                {product.available_colors?.map((color, index) => (
-                  <option key={index} value={color}>
-                    {color}
-                  </option>
-                ))}
-              </select>
-            </div>)}
-            {product?.available_sizes?.length > 0 && (
-            <div className="option-dropdown">
-              <label>Size:</label>
-              <select
-                value={selectedSize}
-                onChange={(e) => setSelectedSize(e.target.value)}
-              >
-                {product.available_sizes?.map((size, index) => (
-                  <option key={index} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+            {/* Color Selection */}
+            {product.color ? (
+              <div className="option-box">
+                <label>Color:</label>
+                <span>{product.color}</span>
+              </div>
+            ) : product.available_colors?.length > 0 ? (
+              <div className="option-dropdown">
+                <label>Color:</label>
+                <select
+                  value={selectedColor}
+                  onChange={(e) => setSelectedColor(e.target.value)}
+                >
+                  {product.available_colors.map((color, index) => (
+                    <option key={index} value={color}>
+                      {color}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
+
+            {/* Size Selection */}
+            {product.size ? (
+              <div className="option-box">
+                <label>Size:</label>
+                <span>{product.size}</span>
+              </div>
+            ) : product.available_sizes?.length > 0 ? (
+              <div className="option-dropdown">
+                <label>Size:</label>
+                <select
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(e.target.value)}
+                >
+                  {product.available_sizes.map((size, index) => (
+                    <option key={index} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
           </div>
+
+          {/* Quantity Selector */}
           <div className="quantity-selector">
             <button onClick={() => handleQuantityChange("decrement")}>-</button>
             <input type="text" value={quantity} readOnly />
             <button onClick={() => handleQuantityChange("increment")}>+</button>
           </div>
+
+          {/* Add to Cart Button */}
           <button className="add-to-cart-btn" onClick={handleAddToCart}>
             Add to Cart
           </button>
+
+          {/* Features */}
           <div className="features">
             <div className="feature-box">✔ Quality Products</div>
             <div className="feature-box">⭐ 4.9/5 Google Ratings</div>
@@ -201,6 +223,7 @@ const ProductDetails = () => {
         </div>
       </div>
 
+      {/* Description & Reviews */}
       {["Description", "Reviews"].map((section, index) => (
         <div key={index} className="details-section">
           <div className="section-header" onClick={() => toggleSection(index)}>
@@ -211,24 +234,17 @@ const ProductDetails = () => {
           </div>
           {expandedSection === index && (
             <ul className="details-list">
-              {section === "Reviews" ? (
-                reviews.length > 0 ? (
-                  reviews.map((review, i) => <li key={i}>{review}</li>)
-                ) : (
-                  <li>No reviews yet.</li>
-                )
-              ) : (
-                <li>{product.description}</li>
-              )}
+              {section === "Reviews"
+                ? reviews.length > 0
+                  ? reviews.map((review, i) => <li key={i}>{review}</li>)
+                  : "No reviews yet."
+                : product.description}
             </ul>
           )}
         </div>
       ))}
 
-      <SimilarProductSection
-        products={similarProducts}
-        section={"You might also like"}
-      />
+      <SimilarProductSection products={similarProducts} section={"You might also like"} />
     </div>
   );
 };

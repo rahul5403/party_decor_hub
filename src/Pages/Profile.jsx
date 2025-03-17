@@ -138,8 +138,8 @@ const ProfilePage = () => {
             <strong>Phone:</strong> {profile.phone || "N/A"}
           </p>
           <div className="address-row">
-            <p className="address-label address-pp-nm">
-              <strong>Address:</strong>
+            <p className="address-label">
+              <strong>Address:</strong></p>
             
             <span className="address-content">
               {Object.values(profile.address).some((value) => value) // ✅ Koi bhi field filled hai?
@@ -154,7 +154,7 @@ const ProfilePage = () => {
                     .join(", ") 
                 : "N/A"}{" "}
             </span>
-            </p>
+            
           </div>
 
           <button

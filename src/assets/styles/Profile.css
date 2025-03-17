@@ -48,6 +48,9 @@
   font-size: 16px;
 }
 
+
+
+
 .profile-details p {
   margin: 12px 0;
   padding: 14px;
@@ -58,6 +61,10 @@
   display: flex;
   align-items: center;
   transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.address-row p{
+  padding: 14px 0px 14px 14px;
 }
 
 .profile-details p:hover {
@@ -201,4 +208,8 @@ input:focus {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+}
+
+.address-pp-nm p{
+  padding: 0px;
 }
