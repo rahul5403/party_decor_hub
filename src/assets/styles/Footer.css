@@ -234,3 +234,23 @@
 
 
 
+.footer-divider {
+    border: 1.5px solid rgba(16, 69, 19, 0.2);
+    background-color: rgba(27, 94, 32, 0.2); 
+    margin: 0.5rem 0;
+}
+
+@media (max-width: 767.98px) {
+    .footer-divider {
+        height: 1px; 
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .footer-divider {
+        width: 1px;
+        height: 100%;
+        margin: 0 1.5rem;
+    }
+}

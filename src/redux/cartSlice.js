@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   cartItems: [],
   cartCount: 0,
-  // thumbnails: [],
 };
 
 const cartSlice = createSlice({
@@ -44,20 +43,6 @@ const cartSlice = createSlice({
         0
       );
     }
-    
-    // ,
-    // storeThumbnail: (state, action) => {
-    //   const { product_id, thumbnail } = action.payload;
-    //   const existingThumbnailIndex = state.thumbnails.findIndex(
-    //     (t) => t.product_id === product_id
-    //   );
-    
-    //   if (existingThumbnailIndex !== -1) {
-    //     state.thumbnails[existingThumbnailIndex].thumbnail = thumbnail;
-    //   } else {
-    //     state.thumbnails.push({ product_id, thumbnail });
-    //   }
-    // },
   },
 });
 
@@ -66,6 +51,5 @@ export const {
   removeFromCart,
   updateQuantity,
   mergeCart,
-  // storeThumbnail,
 } = cartSlice.actions;
 export default cartSlice.reducer;

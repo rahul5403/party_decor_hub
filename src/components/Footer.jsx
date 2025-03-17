@@ -8,11 +8,10 @@ const Footer = () => {
     return (
         <footer className="footer p-3">
             <Container>
-
                 {/* Main Footer Section */}
-                <Row >
+                <Row>
                     {/* Company Info */}
-                    <Col md={4} >
+                    <Col md={4}>
                         <div className="logo-f"><span>PARTY</span> DECOR <span>HUB</span></div>
                         <div className="contact-info">
                             <p>
@@ -32,6 +31,11 @@ const Footer = () => {
                         </div>
                     </Col>
 
+                    {/* Horizontal Rule for Mobile */}
+                    <Col xs={12} className="d-block d-md-none">
+                        <hr className="footer-divider" />
+                    </Col>
+
                     {/* Shop Links */}
                     <Col md={4}>
                         <h5>Services</h5>
@@ -46,6 +50,11 @@ const Footer = () => {
                                 <Link to="/disposable" className="nav-link">Disposable Items</Link>
                             </li>
                         </ul>
+                    </Col>
+
+                    {/* Horizontal Rule for Mobile */}
+                    <Col xs={12} className="d-block d-md-none">
+                        <hr className="footer-divider" />
                     </Col>
 
                     {/* Company Links */}
@@ -69,7 +78,7 @@ const Footer = () => {
                     </Col>
 
                     <Col md={4} className="text-center mb-3 mb-md-0">
-                         <div className="logo-f"> <span>PARTY</span> DECOR <span>HUB</span></div>
+                        <div className="logo-f"> <span>PARTY</span> DECOR <span>HUB</span></div>
                     </Col>
                 </Row>
                 <Row>

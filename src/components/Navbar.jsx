@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Container, Dropdown } from "react-bootstrap";
 import "../assets/styles/Navbar.css";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
@@ -12,9 +12,11 @@ import logoh from "../assets/images/logo.png";
 import { mergeCart } from "../redux/cartSlice";
 import useGetCartItems from "../hooks/useGetCartItems";
 
+
 const NavBar = ({ onLoginClick }) => {
   const cartCount = useSelector((state) => state.cart.cartCount);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
   useGetCartItems();
@@ -23,10 +25,33 @@ const NavBar = ({ onLoginClick }) => {
     setExpanded(false);
   };
 
-  const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
+  
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        setUserLoggedIn(false);
+        return;
+      };
+  
+      try {
+        const response = await axios.get("https://partydecorhub.com/api/check-auth", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserLoggedIn(response.data.is_logged_in);
+      } catch (error) {
+        setUserLoggedIn(false);
+      }
+    };
+  
+    checkAuth();
+  }, [localStorage.getItem("accessToken")]);
+
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem("accessToken");
+    try {
       if (token) {
         await axios.post(
           "https://partydecorhub.com/api/logout",
@@ -36,7 +61,8 @@ const NavBar = ({ onLoginClick }) => {
           }
         );
       }
-
+      localStorage.removeItem("accessToken"); 
+      setUserLoggedIn(false);
       dispatch(logout());
       dispatch(mergeCart([]));
       toast.success("Logout successful!");
@@ -46,7 +72,7 @@ const NavBar = ({ onLoginClick }) => {
   };
 
   const handleUserIconClick = () => {
-    if (!isAuthenticated) {
+    if (!userLoggedIn) {
       onLoginClick();
     }
   };
@@ -101,7 +127,7 @@ const NavBar = ({ onLoginClick }) => {
         <div className="d-flex align-items-center">
           {/* User Icon */}
           <div className="nav-user-icon">
-            {isAuthenticated ? (
+            {userLoggedIn ? (
               <Dropdown>
                 <Dropdown.Toggle
                   id="user-dropdown"

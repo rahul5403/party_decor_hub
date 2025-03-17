@@ -24,8 +24,8 @@ function Home() {
                 const products = response.data.map(product => ({
                     id: product.product_id || product.id,
                     name: product.name,
+                    discounted_price: product.discounted_price,
                     price: product.price,
-                    originalPrice: product.price + 10,
                     description: product.category,
                     image: BASE_IMAGE_URL + product.thumbnail,
                     images: [BASE_IMAGE_URL + product.thumbnail],
