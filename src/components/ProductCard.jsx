@@ -17,7 +17,6 @@ const ProductCard = ({ product, section }) => {
     }
   };
 
-  console.log(product);
 
   const handleNavigation = () => {
     if (section === "Decoration Services") {

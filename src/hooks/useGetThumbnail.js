@@ -6,7 +6,6 @@ import { storeThumbnail } from "../redux/cartSlice";
 const useGetThumbnail = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
-  console.log(cartItems);
 
   useEffect(() => {
     const getThumbnail = async () => {
@@ -16,7 +15,6 @@ const useGetThumbnail = () => {
             `https://partydecorhub.com/api/products/${item.product_id}`
 
           );
-          console.log(res.data.thumbnail);
 
           dispatch(
             storeThumbnail({

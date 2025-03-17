@@ -35,7 +35,6 @@ const ProductDetails = () => {
           `https://partydecorhub.com/api/products/${product_id}`
         );
         const productData = response.data;
-        console.log(productData);
 
         const updatedProduct = {
           ...productData,
@@ -46,7 +45,6 @@ const ProductDetails = () => {
           })),
         };
         
-        console.log(updatedProduct);
 
         setProduct(updatedProduct);
         setSelectedColor(updatedProduct.available_colors?.[0] || "");

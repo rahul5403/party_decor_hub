@@ -10,7 +10,6 @@ const useRemoveItem = () => {
   const removeItem = async (item) => {
     if (!item) return;
 
-    console.log(item);
     const data = {
       product_id: item.product_id,
       quantity: item.quantity,

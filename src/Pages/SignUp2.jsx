@@ -40,7 +40,6 @@ const SignUp2 = ({ onClose, onLoginClick }) => {
         password,
       });
 
-      console.log("Signup successful:", response.data);
       toast.success("Signup successful! Redirecting to login...");
 
       setTimeout(() => {

@@ -39,9 +39,6 @@ const Service3 = () => {
     fetchDisposableItems();
   }, []);
 
-  useEffect(() => {
-    console.log(disposableItems);
-  }, [disposableItems]);
 
   const sortedData = [...disposableItems].sort((a, b) => {
     if (sortOrder === "low-high") return a.price - b.price;

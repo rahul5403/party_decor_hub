@@ -19,8 +19,6 @@ function Home() {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get("https://partydecorhub.com/api/products");
-                console.log("Products fetched successfully");
-                console.log(response.data);
                 const products = response.data.map(product => ({
                     id: product.product_id || product.id,
                     name: product.name,

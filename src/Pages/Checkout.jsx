@@ -29,7 +29,6 @@ const Checkout = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Here you can add logic to handle the form submission, e.g., sending the data to a server
-    console.log("Form Data Submitted:", formData);
     // Navigate to a confirmation page or show a success message
     navigate("/order-confirmation");
   };
