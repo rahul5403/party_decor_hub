@@ -155,51 +155,54 @@ const ProductDetails = () => {
           </div>
 
           {/* Product Options */}
-          <div className="product-options">
-            {/* Color Selection */}
-            {product.color ? (
-              <div className="option-box">
-                <label>Color:</label>
-                <span>{product.color}</span>
-              </div>
-            ) : product.available_colors?.length > 0 ? (
-              <div className="option-dropdown">
-                <label>Color:</label>
-                <select
-                  value={selectedColor}
-                  onChange={(e) => setSelectedColor(e.target.value)}
-                >
-                  {product.available_colors.map((color, index) => (
-                    <option key={index} value={color}>
-                      {color}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : null}
+          {(product.color || product.available_colors?.length > 0 || product.size || product.available_sizes?.length > 0) && (
+  <div className="product-options">
+    {/* Color Selection */}
+    {product.color ? (
+      <div className="option-box">
+        <label>Color:</label>
+        <span>{product.color}</span>
+      </div>
+    ) : product.available_colors?.length > 0 ? (
+      <div className="option-dropdown">
+        <label>Color:</label>
+        <select
+          value={selectedColor}
+          onChange={(e) => setSelectedColor(e.target.value)}
+        >
+          {product.available_colors.map((color, index) => (
+            <option key={index} value={color}>
+              {color}
+            </option>
+          ))}
+        </select>
+      </div>
+    ) : null}
 
-            {/* Size Selection */}
-            {product.size ? (
-              <div className="option-box">
-                <label>Size:</label>
-                <span>{product.size}</span>
-              </div>
-            ) : product.available_sizes?.length > 0 ? (
-              <div className="option-dropdown">
-                <label>Size:</label>
-                <select
-                  value={selectedSize}
-                  onChange={(e) => setSelectedSize(e.target.value)}
-                >
-                  {product.available_sizes.map((size, index) => (
-                    <option key={index} value={size}>
-                      {size}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : null}
-          </div>
+    {/* Size Selection */}
+    {product.size ? (
+      <div className="option-box">
+        <label>Size:</label>
+        <span>{product.size}</span>
+      </div>
+    ) : product.available_sizes?.length > 0 ? (
+      <div className="option-dropdown">
+        <label>Size:</label>
+        <select
+          value={selectedSize}
+          onChange={(e) => setSelectedSize(e.target.value)}
+        >
+          {product.available_sizes.map((size, index) => (
+            <option key={index} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
+      </div>
+    ) : null}
+  </div>
+)}
+
 
           {/* Quantity Selector */}
           <div className="quantity-selector">
