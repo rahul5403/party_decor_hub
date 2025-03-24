@@ -94,6 +94,10 @@
     font-size: 1rem;
     color: #01634f;
     margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip; 
+    width: 100%; /* Adjust width as needed */
 }
 
 .decoration-description {

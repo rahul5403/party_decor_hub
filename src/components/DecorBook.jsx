@@ -161,6 +161,9 @@ const DecorBook = () => {
                         <span className="discounted-price">₹{service.price}</span>
                     </div>
 
+
+                    <form onSubmit={handleBooking}>
+
                     <label className="input-label">Check Pin Code Availability *</label>
                     <div className="pincode-check">
                         <input
@@ -176,7 +179,6 @@ const DecorBook = () => {
                     </div>
                     {pincodeMessage && <p className={`pincode-message ${pincodeMessage.includes("available") ? "success" : "error"}`}>{pincodeMessage}</p>}
 
-                    <form onSubmit={handleBooking}>
                         <label className="input-label">Customer Name *</label>
                         <input
                             type="text"
@@ -257,27 +259,27 @@ const DecorBook = () => {
                     </div>
                 </div>
             </div>
+            {[ 
+    { title: "Inclusions", content: service.inclusions },
+    { title: "Description", content: service.description },
+    { title: "Must Know", content: service.must_know },
+    { title: "Cancellation & Refund Policy", content: service.cancellation_policy },
+].map((section, index) => (
+    <div key={index} className="details-section">
+        <div className="section-header" onClick={() => toggleSection(index)}>
+            <h2 className="section-title">{section.title}</h2>
+            <span className="toggle-icon">{expandedSection === index ? "-" : "+"}</span>
+        </div>
+        {expandedSection === index && (
+            <ul className="details-list">
+                {section.content?.split("\n").map((item, i) => (
+                    <li key={i}>{item.trim()}</li>
+                ))}
+            </ul>
+        )}
+    </div>
+))}
 
-            {[
-                { title: "Inclusions", content: [service.inclusions] },
-                { title: "Description", content: [service.description] },
-                { title: "Must Know", content: [service.must_know] },
-                { title: "Cancellation & Refund Policy", content: [service.cancellation_policy] },
-            ].map((section, index) => (
-                <div key={index} className="details-section">
-                    <div className="section-header" onClick={() => toggleSection(index)}>
-                        <h2 className="section-title">{section.title}</h2>
-                        <span className="toggle-icon">{expandedSection === index ? "-" : "+"}</span>
-                    </div>
-                    {expandedSection === index && (
-                        <ul className="details-list">
-                            {section.content.map((item, i) => (
-                                <li key={i}>{item}</li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-            ))}
             <div className="similar-products">
                 <SimilarProductSection products={[]} section={"You might also like"} />
             </div>

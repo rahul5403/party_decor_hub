@@ -76,7 +76,7 @@ const Router = () => {
                 />
             )}
 
-            {!hideHeaderFooter && <WhatsAppButton />}
+            {/* {!hideHeaderFooter && <WhatsAppButton />} */}
             {!hideHeaderFooter && <Footer />}
         </div>
     );

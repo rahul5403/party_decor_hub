@@ -4,7 +4,6 @@ import HeroSection from "../components/HeroSection";
 import Services from "../components/Services";
 import BulkOrderSection from "../components/BulkOrderSection";
 import HomeProductSection from "../components/HomeProductSection";
-import { Helmet } from "react-helmet-async";
 import useGetCartItems from "../hooks/useGetCartItems";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
@@ -56,11 +55,6 @@ function Home() {
 
     return (
         <React.Fragment>
-            <Helmet>
-                <title> Party Decor Hub</title>
-                <meta name="description" content="Discover premium home decor products at Party Decor Hub." />
-                <meta name="keywords" content="home decor, party supplies, disposable items" />
-            </Helmet>
             <HeroSection />
             <Services />
             <HomeProductSection products={partyData} section={"Decoration Items"} />

@@ -210,22 +210,9 @@
     }
 }
 
-.check-availability-btn {
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    margin-top: 3px;
-}
 
-.check-availability-btn:hover {
-    background-color: #e63946;
-}
+
+
 
 .pincode-message {
     margin:1px;
@@ -245,4 +232,57 @@
     display: flex;
     text-align: left;
 }
+.pincode-check {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between input and button */
+    flex-wrap: wrap; /* Ensures responsiveness */
+}
 
+.input-field {
+    flex: 1; /* Takes available space */
+    min-width: 150px; /* Prevents too small input fields on small screens */
+    padding: 8px;
+}
+
+.pincode-check {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between input and button */
+    width: 100%;
+}
+
+.input-field {
+    flex: 1; /* Allows input to take remaining space */
+    min-width: 0; /* Prevents unwanted width issues */
+    padding: 8px;
+}
+
+.check-availability-btn {
+    padding: 8px 10px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    white-space: nowrap; /* Prevents text from breaking */
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/* Ensure responsiveness */
+@media (max-width: 500px) {
+    .pincode-check {
+        width: 100%;
+        flex-wrap: nowrap; /* Prevents wrapping */
+    }
+
+    .input-field {
+        width: 100%; /* Ensures input takes available space */
+    }
+
+    .check-availability-btn {
+        flex-shrink: 0; /* Prevents button from resizing */
+    }
+}
