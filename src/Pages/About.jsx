@@ -4,7 +4,7 @@ import AboutImage from "../assets/images/About.jpg";
 
 function About({ data, addToCart }) {
   return (
-    <div className="about-section">
+    <div className="about-section min-h-screen">
       <h1 className="about-title">About Us</h1>
       <div className="about-inner-section">
         <div className="left-section">
