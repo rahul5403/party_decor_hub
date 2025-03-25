@@ -12,6 +12,7 @@
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "cra-template": "1.2.0",
+    "lucide-react": "^0.484.0",
     "mdi-material-ui": "^7.7.0",
     "react": "^19.0.0",
     "react-alice-carousel": "^2.7.1",

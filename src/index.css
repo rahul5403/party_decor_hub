@@ -23,3 +23,7 @@ code {
   position: fixed !important;
   top: 10px;
 }
+
+.scale-250 {
+  scale: 2;
+}
