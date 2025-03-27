@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/authSlice";
-import "../assets/styles/Login2.css";
 import logo from "../assets/images/logo.png";
+import background from "../assets/images/header_bg.png";
 
 const Login2 = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
@@ -14,8 +14,8 @@ const Login2 = ({ onClose, onSignupClick }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const cartItems = useSelector((state) => state.cart.cartItems);
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -26,166 +26,102 @@ const Login2 = ({ onClose, onSignupClick }) => {
 
     setLoading(true);
     try {
-      // Step 1: Send login request
-
       const response = await axios.post(
-        `https://partydecorhub.com/api/login?email=${encodeURIComponent(
-          email
-        )}&password=${encodeURIComponent(password)}`
+        `https://partydecorhub.com/api/login`,
+        { email, password }
       );
       const { access, refresh } = response.data;
 
-      // Store tokens
       localStorage.setItem("accessToken", access);
       document.cookie = `refreshToken=${refresh}; path=/; secure; HttpOnly`;
-
-      // Step 2: Verify authentication and fetch user details
-      const storedAccessToken = localStorage.getItem("accessToken");
-
-      if (!storedAccessToken) {
-        console.error("Access token not found in localStorage");
-        return;
-      }
 
       const authCheckResponse = await axios.get(
         "https://partydecorhub.com/api/check-auth",
         {
-          headers: { Authorization: `Bearer ${storedAccessToken.trim()}` }, // Trim space
+          headers: { Authorization: `Bearer ${access}` },
         }
       );
 
-      // for (let i = 0; i < cartItems.length; i++) {
-      //   try {
-      //     const item = cartItems[i];
-      //     const response = await axios.post(
-      //       `https://partydecorhub.com/api/cart/add`,
-      //       {
-      //         product_id: item.product_id,
-      //         quantity: item.quantity,
-      //       },
-      //       {
-      //         headers: {
-      //           Authorization: `Bearer ${storedAccessToken.trim()}`,
-      //         },
-      //       }
-      //     );
-      //     console.log(`Cart item ${item.product_id} added successfully`, response.data);
-      //   } catch (error) {
-      //     console.error(`Failed to add item ${cartItems[i].product_id} to cart`, error.response?.data || error.message);
-      //     toast.error(`Error adding item ${cartItems[i].product_id} to cart`);
-      //   }
-      // }
-
       const formattedCartItems = cartItems.map((item) => ({
-        product_id: item.product_id, // Correct field
+        product_id: item.product_id,
         quantity: item.quantity,
         color: item.color,
         size: item.size,
       }));
 
-      try {
-        const response = await axios.post(
-          `https://partydecorhub.com/api/cart/add`,
-
-          formattedCartItems,
-          {
-            headers: {
-              Authorization: `Bearer ${storedAccessToken.trim()}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      } catch (error) {
-        console.error(
-          `Failed to add item ${formattedCartItems} to cart`,
-          error.response?.data || error.message
-        );
-        toast.error(`Error adding item ${formattedCartItems} to cart`);
-      }
+      await axios.post(
+        `https://partydecorhub.com/api/cart/add`,
+        formattedCartItems,
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       dispatch(login(authCheckResponse.data));
       toast.success("Login successful!");
-
       onClose();
       navigate("/home");
     } catch (error) {
-      if (error.response) {
-        if (error.response.status === 404) {
-          toast.error("User not found. Please check your email.");
-        } else if (error.response.status === 401) {
-          toast.error("Incorrect password. Please try again.");
-        } else {
-          toast.error(
-            error.response.data?.error ||
-              "Something went wrong. Please try again."
-          );
-        }
-      } else {
-        toast.error("Network error. Please check your connection.");
-      }
-      console.error(error.response?.data?.error || "Login failed");
+      toast.error(error.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleSuccess = (credentialResponse) => {
-    toast.success("Google Login Successful!");
-    onClose();
-  };
-
-  const handleGoogleFailure = (error) => {
-    toast.error("Google Login Failed. Please try again.");
-  };
-
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-      <div className="overlay-s">
-        <div className="login-popup">
-          <div className="login-left">
-            <img className="logo-img-l" src={logo} alt="Party Decor Hub" />
-            <h2>Party Decor Hub</h2>
-            <p>Bringing Your Celebration to Life, One Décor at a Time!</p>
-          </div>
+      <div className="fixed z-30 inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="bg-[#FAF3E0] rounded-xl overflow-hidden max-w-md md:max-w-3xl w-full mx-4 md:mx-8 lg:mx-auto shadow-2xl">
+          <div className="flex flex-col md:flex-row">
+            <div
+              className="w-full md:w-2/5 flex flex-col items-center justify-center text-center p-8 text-white"
+              style={{ backgroundImage: `url(${background})`, backgroundSize: "cover", backgroundPosition: "center" }}
+            >
+              <img className="w-20 h-20 mb-4" src={logo} alt="Party Decor Hub" />
+              <h2 className="text-2xl font-bold">Party Decor Hub</h2>
+              <p className="text-sm max-w-xs">Bringing Your Celebration to Life, One Décor at a Time!</p>
+            </div>
 
-          <div className="login-right">
-            <button className="close-btn" onClick={onClose}>
-              ×
-            </button>
-            <h2 className="wlcm">Welcome to Party Decor Hub</h2>
-            <div className="form-container">
-              <form onSubmit={handleLogin}>
-                <label>Email</label>
-                <input
+            <div className="w-full md:w-3/5 p-6 relative">
+              <button className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl" onClick={onClose}>
+                ×
+              </button>
+              <h2 className="text-lg font-semibold text-center text-gray-800">Welcome Back</h2>
+              <form onSubmit={handleLogin} className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 text-left">Email</label>
+              <input
                   type="email"
+                  className="w-full p-2 border rounded"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
 
-                <label>Password</label>
+<label className="block text-sm font-medium text-gray-700 text-left">Password</label>
                 <input
                   type="password"
+                  className="w-full p-2 border rounded"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
 
-                <button type="submit" className="login-btn" disabled={loading}>
-                  {loading ? "Logging in..." : "Sign in"}
+                <button
+                  type="submit"
+                  className="mt-4 w-full bg-green-900 text-white py-2 rounded hover:bg-green-800"
+                  disabled={loading}
+                >
+                  {loading ? "Logging in..." : "Sign In"}
                 </button>
 
-                {/* <div className="divider">or</div>
-
-                <div className="google-login-container">
-                  <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleFailure} />
-                </div> */}
-
-                <p className="signup-link">
-                  New to Party Decor Hub?{" "}
-                  <span className="signup-link-text" onClick={onSignupClick}>
+                <p className="text-sm text-center mt-2">
+                  New to Party Decor Hub? {" "}
+                  <span className="text-blue-500 cursor-pointer" onClick={onSignupClick}>
                     Create Account
                   </span>
                 </p>

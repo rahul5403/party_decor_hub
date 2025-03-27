@@ -228,7 +228,7 @@ const ProductDetails = () => {
             {/* Color Selection */}
             {(product.color || product.available_colors?.length > 0) && (
               <div className="mb-4 w-4/5">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Color:</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Color:</label>
                 {product.color ? (
                   <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
                     {product.color}
@@ -250,7 +250,7 @@ const ProductDetails = () => {
             {/* Size Selection */}
             {(product.size || product.available_sizes?.length > 0) && (
               <div className="mb-6 w-4/5">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Size:</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2 text-left" >Size:</label>
                 {product.size ? (
                   <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
                     {product.size}
@@ -271,7 +271,7 @@ const ProductDetails = () => {
 
             {/* Quantity Selector */}
             <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Quantity:</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Quantity:</label>
               <div className="flex items-center gap-2 w-4/5">
                 <button
                   onClick={() => handleQuantityChange("decrement")}

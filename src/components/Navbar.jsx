@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { FiSearch, FiUser } from "react-icons/fi";
+import { useState, useEffect, useCallback } from "react";
+import { FiUser, FiSearch } from "react-icons/fi";
 import { BsCartFill } from "react-icons/bs";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Link } from "react-router-dom";
@@ -11,6 +11,21 @@ import logoh from "../assets/images/logo.png";
 import { mergeCart } from "../redux/cartSlice";
 import useGetCartItems from "../hooks/useGetCartItems";
 import { motion } from "framer-motion";
+import SearchBar from "./SearchBar";
+
+const NavLink = ({ to, children, onClick, mobile }) => (
+  <li>
+    <Link
+      to={to}
+      className={`no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700 ${
+        mobile ? "text-lg" : ""
+      }`}
+      onClick={onClick}
+    >
+      {children}
+    </Link>
+  </li>
+);
 
 const NavBar = ({ onLoginClick }) => {
   const cartCount = useSelector((state) => state.cart.cartCount);
@@ -20,29 +35,30 @@ const NavBar = ({ onLoginClick }) => {
   const dispatch = useDispatch();
   useGetCartItems();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        setUserLoggedIn(false);
-        return;
-      }
-      try {
-        const response = await axios.get(
-          "https://partydecorhub.com/api/check-auth",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setUserLoggedIn(response.data.is_logged_in);
-      } catch (error) {
-        setUserLoggedIn(false);
-      }
-    };
-    checkAuth();
-  }, [localStorage.getItem("accessToken")]);
+  const checkAuth = useCallback(async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setUserLoggedIn(false);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        "https://partydecorhub.com/api/check-auth",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUserLoggedIn(response.data.is_logged_in);
+    } catch (error) {
+      setUserLoggedIn(false);
+    }
+  }, []);
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  const handleLogout = useCallback(async () => {
     const token = localStorage.getItem("accessToken");
     try {
       if (token) {
@@ -62,75 +78,41 @@ const NavBar = ({ onLoginClick }) => {
     } catch (error) {
       toast.error("Logout failed, please try again.");
     }
-  };
+  }, [dispatch]);
+
+  const navLinks = [
+    { to: "/home", text: "Home" },
+    { to: "/party", text: "Decoration Items" },
+    { to: "/decoration", text: "Decoration Services" },
+    { to: "/disposable", text: "Disposable Items" },
+    { to: "/about", text: "About Us" },
+  ];
 
   return (
     <nav
-      className="bg-cover bg-center p-2 relative z-50"
+      className="bg-cover bg-center p-1 relative z-20"
       style={{ backgroundImage: "url('../images/bg-with-doodle.png')" }}
     >
       {/* Desktop View */}
-      <div className="hidden md:flex justify-between items-center max-w-7xl mx-auto py-2">
+      <div className="hidden md:flex justify-between items-center max-w-7xl mx-auto py-1">
         <div>
           <Link to="/">
             <img src={logoh} alt="Logo" className="h-12 w-auto" />
           </Link>
         </div>
 
-        <div className="w-full flex justify-center">
-        <ul className="flex space-x-10 font-semibold text-green-900 text-lg items-center">
-            <li>
-              <Link
-                to="/home"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/party"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-              >
-                Decoration Items
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/decoration"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-              >
-                Decoration Services
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/desposable"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-              >
-                Disposable Items
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/about"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-              >
-                About Us
-              </Link>
-            </li>
+        <div className="w-[80%] flex justify-center">
+          <ul className="flex space-x-10 font-semibold text-green-900 text-lg items-center m-0">
+            {navLinks.map((link) => (
+              <NavLink key={link.to} to={link.to}>
+                {link.text}
+              </NavLink>
+            ))}
           </ul>
         </div>
 
         <div className="flex items-center space-x-4">
-          <div className="relative hidden md:block">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="border rounded-full px-4 py-1 outline-none"
-            />
-            <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-900" />
-          </div>
+          <SearchBar />
           <Link to="/cart">
             <div className="relative">
               <BsCartFill className="text-green-900 text-2xl" />
@@ -141,17 +123,10 @@ const NavBar = ({ onLoginClick }) => {
               )}
             </div>
           </Link>
-          {userLoggedIn ? (
-            <FiUser
-              className="text-green-900 text-3xl cursor-pointe"
-              onClick={handleLogout}
-            />
-          ) : (
-            <FiUser
-              className="text-green-900 text-3xl cursor-pointer"
-              onClick={onLoginClick}
-            />
-          )}
+          <FiUser
+            className="text-green-900 text-3xl cursor-pointer"
+            onClick={userLoggedIn ? handleLogout : onLoginClick}
+          />
         </div>
       </div>
 
@@ -169,7 +144,6 @@ const NavBar = ({ onLoginClick }) => {
         </Link>
 
         <div className="flex items-center space-x-4">
-          {/* Search Icon for Mobile */}
           <button
             onClick={() => setIsSearchOpen(!isSearchOpen)}
             className="md:hidden"
@@ -187,97 +161,32 @@ const NavBar = ({ onLoginClick }) => {
               )}
             </div>
           </Link>
-          {userLoggedIn ? (
-            <FiUser
-              className="text-green-900 text-2xl cursor-pointer"
-              onClick={handleLogout}
-            />
-          ) : (
-            <FiUser
-              className="text-green-900 text-2xl cursor-pointer"
-              onClick={onLoginClick}
-            />
-          )}
+          <FiUser
+            className="text-green-900 text-2xl cursor-pointer"
+            onClick={userLoggedIn ? handleLogout : onLoginClick}
+          />
         </div>
       </div>
 
-      {/* Mobile Search Input */}
-      {isSearchOpen && (
-        <div className="md:hidden flex justify-center mt-2">
-          <div className="relative w-3/4">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="border border-green-900 rounded-full px-4 py-1 outline-none w-full"
-            />
-            <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-900" />
-          </div>
-        </div>
-      )}
+      {isSearchOpen && <SearchBar mobile />}
 
-
-
-
-{isOpen && (
-  <motion.div
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -20 }}
-    transition={{ duration: 0.3, ease: "easeInOut" }}
-    className="md:hidden absolute top-16 left-0 w-full bg-[#f9f8ef] shadow-md py-4 px-6"
-    style={{
-      backgroundImage: "url('../images/bg-with-doodle.png')",
-    }}
-  >
-    <ul className="space-y-4 text-center text-green-900 font-semibold">
-            <li>
-              <Link
-                to="/home"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-                onClick={() => setIsOpen(false)}
-              >
-                HOME
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/party"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-                onClick={() => setIsOpen(false)}
-              >
-                DECORATION ITEMS
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/decoration"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-                onClick={() => setIsOpen(false)}
-              >
-                DECORATION SERVICES
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/disposable"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-                onClick={() => setIsOpen(false)}
-              >
-                DISPOSABLE ITEMS
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/about"
-                className="no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700"
-                onClick={() => setIsOpen(false)}
-              >
-                ABOUT US
-              </Link>
-            </li>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="md:hidden absolute top-16 left-0 w-full bg-[#f9f8ef] shadow-md py-4 px-6"
+        >
+          <ul className="space-y-4 text-center text-green-900 font-semibold p-0">
+            {navLinks.map((link) => (
+              <NavLink key={link.to} to={link.to} mobile onClick={() => setIsOpen(false)}>
+                {link.text}
+              </NavLink>
+            ))}
           </ul>
-  </motion.div>
-)}
+        </motion.div>
+      )}
     </nav>
   );
 };

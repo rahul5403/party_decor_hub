@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-// import toast from "react-hot-toast";
-import { toast} from "react-toastify";
-import "../assets/styles/SignUp2.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { toast } from "react-toastify";
 import axios from "axios";
 import logo from "../assets/images/logo.png";
+import background from "../assets/images/header_bg.png"; // Ensure this image exists
 
 const SignUp2 = ({ onClose, onLoginClick }) => {
   const [username, setUsername] = useState("");
@@ -34,7 +33,7 @@ const SignUp2 = ({ onClose, onLoginClick }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://partydecorhub.com/api/signup", {
+      await axios.post("https://partydecorhub.com/api/signup", {
         username,
         email,
         password,
@@ -44,11 +43,10 @@ const SignUp2 = ({ onClose, onLoginClick }) => {
 
       setTimeout(() => {
         onClose();
-        onLoginClick(); 
+        onLoginClick();
       }, 1000);
     } catch (error) {
       toast.error(error.response?.data?.error || "Signup failed");
-      console.error("Signup failed:", error.response?.data.error || error.message);
     } finally {
       setLoading(false);
     }
@@ -56,45 +54,79 @@ const SignUp2 = ({ onClose, onLoginClick }) => {
 
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-      <div className="overlay-s">
-        <div className="signup-popup">
-          <div className="signup-left">
-            <img className="logo-img-s" src={logo} alt="Party Decor Hub" />
-            <h2>Party Decor Hub</h2>
-            <p>
-            Bringing Your Celebration to Life, One Décor at a Time!
-            </p>
-          </div>
+      <div className="fixed z-30 inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="bg-[#FAF3E0] rounded-xl overflow-hidden max-w-md md:max-w-3xl w-full mx-4 md:mx-8 lg:mx-auto shadow-2xl">
+          <div className="flex flex-col md:flex-row">
+            {/* Left Side with Background Image */}
+            <div
+              className="w-full md:w-2/5 flex flex-col items-center justify-center text-center p-8 text-white"
+              style={{ backgroundImage: `url(${background})`, backgroundSize: "cover", backgroundPosition: "center" }}
+            >
+              <img className="w-20 h-20 mb-4" src={logo} alt="Party Decor Hub" />
+              <h2 className="text-2xl font-bold">Party Decor Hub</h2>
+              <p className="text-sm max-w-xs">Bringing Your Celebration to Life, One Décor at a Time!</p>
+            </div>
 
-          <div className="signup-right">
-            <button className="close-btn" onClick={onClose}>×</button>
-            <h2 className="wlcm">Welcome to Party Decor Hub</h2>
-            <div className="form-container">
-              <form onSubmit={handleSignup}>
-                <label>Username</label>
-                <input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+            {/* Right Side - Form */}
+            <div className="w-full md:w-3/5 p-6 relative">
+              <button className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl" onClick={onClose}>
+                ×
+              </button>
+              <h2 className="text-lg font-semibold text-center text-gray-800">Welcome to Party Decor Hub</h2>
+              <form onSubmit={handleSignup} className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 text-left">Username</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded"
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
 
-                <label>Email</label>
-                <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <label className="block mt-2 text-sm font-medium text-gray-700 text-left">Email</label>
+                <input
+                  type="email"
+                  className="w-full p-2 border rounded"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
 
-                <label>Password</label>
-                <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <label className="block mt-2 text-sm font-medium text-gray-700 text-left">Password</label>
+                <input
+                  type="password"
+                  className="w-full p-2 border rounded"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
 
-                <label>Confirm Password</label>
-                <input type="password" placeholder="Confirm your password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                <label className="block mt-2 text-sm font-medium text-gray-700 text-left">Confirm Password</label>
+                <input
+                  type="password"
+                  className="w-full p-2 border rounded"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
 
-                <button type="submit" className="signup-btn" disabled={loading}>
+                <button
+                  type="submit"
+                  className="mt-4 w-full bg-green-900 text-white py-2 rounded hover:bg-green-800"
+                  disabled={loading}
+                >
                   {loading ? "Signing Up..." : "Sign Up"}
                 </button>
 
-                {/* <div className="divider">or</div>
-                <div className="google-login-container">
-                  <GoogleLogin onSuccess={(res) => console.log("Google Token:", res.credential)} onError={(err) => console.error("Google Login Failed:", err)} />
-                </div> */}
-
-                <p className="signup-link">
+                <p className="text-sm text-center mt-2">
                   Already have an account?{" "}
-                  <span className="login-link" onClick={onLoginClick}>Login here</span>
+                  <span className="text-blue-500 cursor-pointer" onClick={onLoginClick}>
+                    Login here
+                  </span>
                 </p>
               </form>
             </div>
