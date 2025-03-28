@@ -1,149 +1,230 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import "../assets/styles/DecorBook.css";
-import { decorationData, similarProductData } from "../data/data";
-import decorimage from "../assets/images/decoration_c.jpg";
-import SimilarProductSection from "./SimilarProductSection";
-import PincodeModal from "../components/PincodeModal";
+import { useState, useEffect } from "react";
+import { FiUser, FiSearch } from "react-icons/fi";
+import { BsCartFill } from "react-icons/bs";
+import { HiMenu, HiX } from "react-icons/hi";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import logoh from "../assets/images/logo.png";
+import useGetCartItems from "../hooks/useGetCartItems";
+import useLogout from "../hooks/useLogout";
+import { motion } from "framer-motion";
+import SearchBar from "./SearchBar";
 
-const DecorBook = () => {
-    const { productId } = useParams();
-    const product = decorationData.find(item => item.id === Number(productId)) || decorationData[0];
+const NavLink = ({ to, children, onClick, mobile }) => (
+  <li>
+    <Link
+      to={to}
+      className={`no-underline text-green-900 relative transition-all duration-300 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-[2px] before:bg-green-900 before:transition-all before:duration-300 hover:before:w-full hover:text-green-700 ${
+        mobile ? "text-lg" : ""
+      }`}
+      onClick={onClick}
+    >
+      {children}
+    </Link>
+  </li>
+);
 
-    const [pincode, setPincode] = useState("");
-    const [date, setDate] = useState("");
-    const [time, setTime] = useState("");
-    const [expandedSection, setExpandedSection] = useState(null);
-    const [showPincodeModal, setShowPincodeModal] = useState(true);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isAutoPlay, setIsAutoPlay] = useState(true);
+const NavBar = ({ onLoginClick }) => {
+  const cartCount = useSelector((state) => state.cart.cartCount);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const handleLogout = useLogout();
+  useGetCartItems();
 
-    // Ensure product.images is always an array
-    const images = product.images || [decorimage];
+  const handleUserIconClick = () => {
+    if (isAuthenticated) {
+      setShowUserDropdown(!showUserDropdown);
+    } else {
+      onLoginClick();
+    }
+  };
 
-    // Autoplay functionality
-    useEffect(() => {
-        let interval;
-        if (isAutoPlay && images.length > 1) {
-            interval = setInterval(() => {
-                setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-            }, 3000); // Autoplay speed: 3000ms
-        }
-        return () => clearInterval(interval);
-    }, [isAutoPlay, images.length]);
+  const navLinks = [
+    { to: "/home", text: "Home" },
+    { to: "/party", text: "Decoration Items" },
+    { to: "/decoration", text: "Decoration Services" },
+    { to: "/disposable", text: "Disposable Items" },
+    { to: "/about", text: "About Us" },
+  ];
 
-    const toggleSection = (section) => {
-        setExpandedSection(expandedSection === section ? null : section);
-    };
-
-    const handlePincodeSubmit = (pincode) => {
-        setPincode(pincode);
-        setShowPincodeModal(false);
-    };
-
-    const handleBooking = () => {
-        if (!pincode || !date || !time) {
-            alert("Please fill all required fields.");
-            return;
-        }
-        alert(`Booking confirmed for ${product.name} on ${date} at ${time}.`);
-    };
-
-    const nextImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    };
-
-    const prevImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-    };
-
-    const goToImage = (index) => {
-        setCurrentImageIndex(index);
-    };
-
-    return (
-        <div className="decoration-booking-section">
-
-            {showPincodeModal && (
-                <PincodeModal 
-                    onClose={() => setShowPincodeModal(false)}
-                    onSubmit={handlePincodeSubmit}
-                />
-            )}
-
-            <div className="booking-container">
-                <div className="image-gallery">
-                    <img
-                        src={images[currentImageIndex]}
-                        alt={product.name}
-                        className="main-image"
-                    />
-                    {images.length > 1 && (
-                        <div className="slider-dots">
-                            {images.map((_, index) => (
-                                <div
-                                    key={index}
-                                    className={`custom-dot ${index === currentImageIndex ? "active" : ""}`}
-                                    onClick={() => goToImage(index)}
-                                ></div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                <div className="booking-details">
-                    <h1 className="booking-title">{product.name}</h1>
-                    <div className="price-section">
-                        <span className="discounted-price">₹{product.discountedPrice || 4999}</span>
-                        <span className="original-price">₹{product.originalPrice || 8000}</span>
-                        <span className="discount">-{product.discount || "37.5"}%</span>
-                    </div>
-
-                    <label className="input-label">Check Pin Code Availability *</label>
-                    <input type="text" placeholder="Enter pin code" value={pincode} readOnly className="input-field" onClick={() => setShowPincodeModal(true)} />
-
-                    <label className="input-label">Select Date *</label>
-                    <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input-field" />
-
-                    <label className="input-label">Select Time *</label>
-                    <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input-field" />
-
-                    <button className="book-now-btn" onClick={handleBooking}>Book Now</button>
-
-                    <div className="features">
-                        <div className="feature-box">✔ Quality Products</div>
-                        <div className="feature-box">⭐ 4.9/5 Google Ratings</div>
-                        <div className="feature-box">📞 24/7 Customer Support</div>
-                        <div className="feature-box">💳 Secure Payment</div>
-                    </div>
-                </div>
-            </div>
-
-            {[
-                { title: "Inclusions", content: ["100 Metallic Balloons (50 Pink & 50 Red)", "10 Heart Shaped Balloons", "'Just Married' Occasion Foil Banner", "1 Fairy Light", "1 Kg Rose Petals", "20 Tea Light Candles", "Ribbons to hang balloons", "Inclusive of all taxes & conveyance charges"] },
-                { title: "Description", content: ["Make their first wedding night more beautiful with balloons and floral decoration."] },
-                { title: "Must Know", content: ["Please ensure the room is ready for decoration before our team arrives."] },
-                { title: "Cancellation & Refund Policy", content: ["Cancellations made 24 hours before the event will receive a full refund."] }
-            ].map((section, index) => (
-                <div key={index} className="details-section">
-                    <div className="section-header" onClick={() => toggleSection(index)}>
-                        <h2 className="section-title">{section.title}</h2>
-                        <span className="toggle-icon">{expandedSection === index ? "-" : "+"}</span>
-                    </div>
-                    {expandedSection === index && (
-                        <ul className="details-list">
-                            {section.content.map((item, i) => (
-                                <li key={i}>{item}</li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-            ))}
-            <div className="similar-products">
-                <SimilarProductSection products={similarProductData} section={"You might also like"} />
-            </div>
+  return (
+    <nav
+      className="bg-cover bg-center p-1 relative z-20"
+      style={{ backgroundImage: "url('../images/bg-with-doodle.png')" }}
+    >
+      {/* Desktop View */}
+      <div className="hidden md:flex justify-between items-center max-w-7xl mx-auto py-1">
+        <div>
+          <Link to="/">
+            <img src={logoh} alt="Logo" className="h-12 w-auto" />
+          </Link>
         </div>
-    );
+
+        <div className="w-[80%] flex justify-center">
+          <ul className="flex space-x-10 font-semibold text-green-900 text-lg items-center m-0">
+            {navLinks.map((link) => (
+              <NavLink key={link.to} to={link.to}>
+                {link.text}
+              </NavLink>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex items-center space-x-5 relative">
+          <SearchBar />
+          <Link to="/cart">
+            <div className="relative">
+              <BsCartFill className="text-green-900 text-2xl" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+          </Link>
+          <div className="relative">
+            <FiUser
+              className="text-green-900 text-2xl cursor-pointer"
+              onClick={handleUserIconClick}
+            />
+            {isAuthenticated && showUserDropdown && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl py-2 z-50 border border-gray-200"
+              >
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline"
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  <i className="fas fa-user-circle text-lg text-gray-500 no-underline"></i>
+                  My Profile
+                </Link>
+                <Link
+                  to="/orders"
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline" 
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  <i className="fas fa-box text-lg text-gray-500"></i>
+                  My Orders
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setShowUserDropdown(false);
+                  }}
+                  className="flex items-center gap-3 w-full text-left px-5 py-2 text-sm text-red-600 font-medium hover:bg-red-50 transition-all duration-200"
+                >
+                  <i className="fas fa-sign-out-alt text-lg text-red-500"></i>
+                  Logout
+                </button>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile View */}
+      <div className="md:hidden flex justify-between items-center p-2">
+        <button className="p-2" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? (
+            <HiX className="text-2xl text-green-900" />
+          ) : (
+            <HiMenu className="text-2xl text-green-900" />
+          )}
+        </button>
+        <Link to="/">
+          <img src={logoh} alt="Logo" className="h-12 w-auto" />
+        </Link>
+
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => setIsSearchOpen(!isSearchOpen)}
+            className="md:hidden"
+          >
+            <FiSearch className="text-green-900 text-2xl" />
+          </button>
+
+          <Link to="/cart">
+            <div className="relative">
+              <BsCartFill className="text-green-900 text-2xl" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+          </Link>
+          <div className="relative">
+            <FiUser
+              className="text-green-900 text-2xl cursor-pointer"
+              onClick={handleUserIconClick}
+            />
+            {isAuthenticated && showUserDropdown && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl py-2 z-50 border border-gray-200"
+              >
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline"
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  <i className="fas fa-user-circle text-lg text-gray-500"></i>
+                  My Profile
+                </Link>
+                <Link
+                  to="/orders"
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline"
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  <i className="fas fa-box text-lg text-gray-500"></i>
+                  My Orders
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setShowUserDropdown(false);
+                  }}
+                  className="flex items-center gap-3 w-full text-left px-5 py-2 text-sm text-red-600 font-medium hover:bg-red-50 transition-all duration-200 no-underline"
+                >
+                  <i className="fas fa-sign-out-alt text-lg text-red-500"></i>
+                  Logout
+                </button>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {isSearchOpen && <SearchBar mobile />}
+
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="md:hidden absolute top-16 left-0 w-full bg-[#f9f8ef] shadow-md py-4 px-6"
+        >
+          <ul className="space-y-4 text-center text-green-900 font-semibold p-0">
+            {navLinks.map((link) => (
+              <NavLink key={link.to} to={link.to} mobile onClick={() => setIsOpen(false)}>
+                {link.text}
+              </NavLink>
+            ))}
+          </ul>
+        </motion.div>
+      )}
+    </nav>
+  );
 };
 
-export default DecorBook;
+export default NavBar;

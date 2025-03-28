@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaFilter, FaSortAmountDown, FaTimes, FaRupeeSign, FaCheck } from "react-icons/fa";
-import { partyDecorationFilterOption } from "../data/data";
 import { useNavigate } from "react-router-dom";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
-const Service1 = ({ data }) => {
+const Service1 = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
   const [partyData, setPartyData] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
   const navigate = useNavigate();
+  const [filters, setFilters] = useState([]);
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -56,6 +57,25 @@ const Service1 = ({ data }) => {
     fetchProducts();
   }, [selectedFilters, sortOrder]);
 
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const response = await fetch("https://partydecorhub.com/api/filters");
+        const data = await response.json();
+
+        const partyDecorFilters = data.find(category => category.category === "Party Decor")?.filters || [];
+
+        setFilters(partyDecorFilters);
+      } catch (error) {
+        console.error("Error fetching filters:", error);
+      }
+    };
+
+    fetchFilters();
+  }, []);
+
+
   const handleFilterChange = (filterName) => {
     setSelectedFilters((prevFilters) =>
       prevFilters.includes(filterName)
@@ -98,7 +118,7 @@ const Service1 = ({ data }) => {
               </div>
               
               <div className="space-y-2 mt-2">
-                {partyDecorationFilterOption.map((item) => (
+                {filters.map((item) => (
                   <div 
                     key={item.id} 
                     className={`flex items-center p-2 rounded-md transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-50'}`}
@@ -244,7 +264,7 @@ const Service1 = ({ data }) => {
             </div>
             
             <div className="p-3 space-y-1">
-              {partyDecorationFilterOption.map((item) => (
+              {filters.map((item) => (
                 <div 
                   key={item.id} 
                   className={`flex items-center p-2 rounded transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}

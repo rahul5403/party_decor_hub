@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaFilter, FaSortAmountDown, FaTimes, FaRupeeSign, FaCheck } from "react-icons/fa";
-import { disposableFilterOption } from "../data/data";
 import { useNavigate } from "react-router-dom";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
@@ -12,6 +11,7 @@ const Service3 = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [disposableItems, setDisposableItems] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filters, setFilters] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,6 +48,26 @@ const Service3 = () => {
 
     fetchDisposableItems();
   }, [selectedFilters, sortOrder]);
+
+  
+    useEffect(() => {
+      const fetchFilters = async () => {
+        try {
+          const response = await fetch("https://partydecorhub.com/api/filters");
+          const data = await response.json();
+  
+          // Extract filters for "Party Decor"
+          const partyDecorFilters = data.find(category => category.category === "Disposable Items")?.filters || [];
+  
+          setFilters(partyDecorFilters);
+        } catch (error) {
+          console.error("Error fetching filters:", error);
+        }
+      };
+  
+      fetchFilters();
+    }, []);
+
 
   const handleFilterChange = (filterName) => {
     setSelectedFilters((prevFilters) =>
@@ -91,7 +111,7 @@ const Service3 = () => {
               </div>
               
               <div className="space-y-2 mt-2">
-                {disposableFilterOption.map((item) => (
+                {filters.map((item) => (
                   <div 
                     key={item.id} 
                     className={`flex items-center p-2 rounded-md transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-50'}`}
@@ -238,7 +258,7 @@ const Service3 = () => {
             </div>
             
             <div className="p-3 space-y-1">
-              {disposableFilterOption.map((item) => (
+              {filters.map((item) => (
                 <div 
                   key={item.id} 
                   className={`flex items-center p-2 rounded transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}

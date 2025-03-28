@@ -1,74 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/authSlice";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useLogin } from "../hooks/useLogin";
 import logo from "../assets/images/logo.png";
 import background from "../assets/images/header_bg.png";
 
-const Login2 = ({ onClose, onSignupClick }) => {
+const Login = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.cartItems);
+  const { loading, handleLogin } = useLogin();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        `https://partydecorhub.com/api/login`,
-        { email, password }
-      );
-      const { access, refresh } = response.data;
-
-      localStorage.setItem("accessToken", access);
-      document.cookie = `refreshToken=${refresh}; path=/; secure; HttpOnly`;
-
-      const authCheckResponse = await axios.get(
-        "https://partydecorhub.com/api/check-auth",
-        {
-          headers: { Authorization: `Bearer ${access}` },
-        }
-      );
-
-      const formattedCartItems = cartItems.map((item) => ({
-        product_id: item.product_id,
-        quantity: item.quantity,
-        color: item.color,
-        size: item.size,
-      }));
-
-      await axios.post(
-        `https://partydecorhub.com/api/cart/add`,
-        formattedCartItems,
-        {
-          headers: {
-            Authorization: `Bearer ${access}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      dispatch(login(authCheckResponse.data));
-      toast.success("Login successful!");
-      onClose();
-      navigate("/home");
-    } catch (error) {
-      toast.error(error.response?.data?.error || "Login failed");
-    } finally {
-      setLoading(false);
-    }
+    await handleLogin(email, password, onClose);
   };
 
   return (
@@ -90,9 +33,9 @@ const Login2 = ({ onClose, onSignupClick }) => {
                 ×
               </button>
               <h2 className="text-lg font-semibold text-center text-gray-800">Welcome Back</h2>
-              <form onSubmit={handleLogin} className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 text-left">Email</label>
-              <input
+              <form onSubmit={handleSubmit} className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 text-left">Email</label>
+                <input
                   type="email"
                   className="w-full p-2 border rounded"
                   placeholder="Enter your email"
@@ -101,7 +44,7 @@ const Login2 = ({ onClose, onSignupClick }) => {
                   required
                 />
 
-<label className="block text-sm font-medium text-gray-700 text-left">Password</label>
+                <label className="block text-sm font-medium text-gray-700 text-left">Password</label>
                 <input
                   type="password"
                   className="w-full p-2 border rounded"
@@ -134,4 +77,4 @@ const Login2 = ({ onClose, onSignupClick }) => {
   );
 };
 
-export default Login2;
+export default Login;

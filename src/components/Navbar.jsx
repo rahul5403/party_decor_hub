@@ -1,15 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState,} from "react";
 import { FiUser, FiSearch } from "react-icons/fi";
 import { BsCartFill } from "react-icons/bs";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../redux/authSlice";
-import { toast } from "react-toastify";
-import axios from "axios";
+import { useSelector } from "react-redux";
 import logoh from "../assets/images/logo.png";
-import { mergeCart } from "../redux/cartSlice";
 import useGetCartItems from "../hooks/useGetCartItems";
+import useLogout from "../hooks/useLogout";
 import { motion } from "framer-motion";
 import SearchBar from "./SearchBar";
 
@@ -29,56 +26,20 @@ const NavLink = ({ to, children, onClick, mobile }) => (
 
 const NavBar = ({ onLoginClick }) => {
   const cartCount = useSelector((state) => state.cart.cartCount);
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const dispatch = useDispatch();
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const handleLogout = useLogout();
   useGetCartItems();
 
-  const checkAuth = useCallback(async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      setUserLoggedIn(false);
-      return;
+  const handleUserIconClick = () => {
+    if (isAuthenticated) {
+      setShowUserDropdown(!showUserDropdown);
+    } else {
+      onLoginClick();
     }
-    try {
-      const response = await axios.get(
-        "https://partydecorhub.com/api/check-auth",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setUserLoggedIn(response.data.is_logged_in);
-    } catch (error) {
-      setUserLoggedIn(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  const handleLogout = useCallback(async () => {
-    const token = localStorage.getItem("accessToken");
-    try {
-      if (token) {
-        await axios.post(
-          "https://partydecorhub.com/api/logout",
-          {},
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-      }
-      localStorage.removeItem("accessToken");
-      setUserLoggedIn(false);
-      dispatch(logout());
-      dispatch(mergeCart([]));
-      toast.success("Logout successful!");
-    } catch (error) {
-      toast.error("Logout failed, please try again.");
-    }
-  }, [dispatch]);
+  };
 
   const navLinks = [
     { to: "/home", text: "Home" },
@@ -111,7 +72,7 @@ const NavBar = ({ onLoginClick }) => {
           </ul>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-5 relative">
           <SearchBar />
           <Link to="/cart">
             <div className="relative">
@@ -123,10 +84,47 @@ const NavBar = ({ onLoginClick }) => {
               )}
             </div>
           </Link>
-          <FiUser
-            className="text-green-900 text-3xl cursor-pointer"
-            onClick={userLoggedIn ? handleLogout : onLoginClick}
-          />
+          <div className="relative">
+            <FiUser
+              className="text-green-900 text-2xl cursor-pointer"
+              onClick={handleUserIconClick}
+            />
+            {isAuthenticated && showUserDropdown && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl py-2 z-50 border border-gray-200"
+              >
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline"
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  <i className="fas fa-user-circle text-lg text-gray-500 no-underline"></i>
+                  My Profile
+                </Link>
+                <Link
+                  to="/orders"
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline" 
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  <i className="fas fa-box text-lg text-gray-500"></i>
+                  My Orders
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setShowUserDropdown(false);
+                  }}
+                  className="flex items-center gap-3 w-full text-left px-5 py-2 text-sm text-red-600 font-medium hover:bg-red-50 transition-all duration-200"
+                >
+                  <i className="fas fa-sign-out-alt text-lg text-red-500"></i>
+                  Logout
+                </button>
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -161,10 +159,47 @@ const NavBar = ({ onLoginClick }) => {
               )}
             </div>
           </Link>
-          <FiUser
-            className="text-green-900 text-2xl cursor-pointer"
-            onClick={userLoggedIn ? handleLogout : onLoginClick}
-          />
+          <div className="relative">
+            <FiUser
+              className="text-green-900 text-2xl cursor-pointer"
+              onClick={handleUserIconClick}
+            />
+            {isAuthenticated && showUserDropdown && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl py-2 z-50 border border-gray-200"
+              >
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline"
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  <i className="fas fa-user-circle text-lg text-gray-500"></i>
+                  My Profile
+                </Link>
+                <Link
+                  to="/orders"
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline"
+                  onClick={() => setShowUserDropdown(false)}
+                >
+                  <i className="fas fa-box text-lg text-gray-500"></i>
+                  My Orders
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setShowUserDropdown(false);
+                  }}
+                  className="flex items-center gap-3 w-full text-left px-5 py-2 text-sm text-red-600 font-medium hover:bg-red-50 transition-all duration-200 no-underline"
+                >
+                  <i className="fas fa-sign-out-alt text-lg text-red-500"></i>
+                  Logout
+                </button>
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
 

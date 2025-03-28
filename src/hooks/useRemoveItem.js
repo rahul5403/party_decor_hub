@@ -15,7 +15,6 @@ const useRemoveItem = () => {
       quantity: item.quantity,
     };
 
-    // Remove item from local Redux store
     const updatedCart = cartItems.filter(
       (cartItem) => cartItem.product_id !== item.product_id
     );

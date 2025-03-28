@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import SimilarProductSection from "../components/SimilarProductSection";
+// import SimilarProductSection from "../components/SimilarProductSection";
 import axios from "axios";
 import { ShoppingCart, Truck, Shield, Clock, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 import useSetCartItems from "../hooks/useSetCartItems";
@@ -17,7 +17,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState("");
+  // const [newReview, setNewReview] = useState("");
   const [expandedSection, setExpandedSection] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [selectedColor, setSelectedColor] = useState("");

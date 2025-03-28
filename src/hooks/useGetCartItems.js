@@ -19,9 +19,9 @@ const useGetCartItems = () => {
         });
         const fullItems = res.data.items.map(item => ({
           ...item,
-          thumbnail: `https://partydecorhub.com${item.thumbnail}`, // Prepending the base URL
+          thumbnail: `https://partydecorhub.com${item.thumbnail}`,
         }));
-        dispatch(mergeCart(fullItems)); // Merge cart items from backend
+        dispatch(mergeCart(fullItems)); 
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
@@ -30,7 +30,7 @@ const useGetCartItems = () => {
     getItems();
   }, [dispatch]);
 
-  return null; // This hook doesn't return data; Redux handles it
+  return null; 
 };
 
 export default useGetCartItems;

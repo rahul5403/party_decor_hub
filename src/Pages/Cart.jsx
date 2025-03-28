@@ -2,27 +2,17 @@ import React from "react";
 import "../assets/styles/Cart.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  // addToCart,
-  removeFromCart,
-  updateQuantity,
-  // mergeCart,
-} from "../redux/cartSlice";
+import {removeFromCart,updateQuantity} from "../redux/cartSlice";
 import useGetCartItems from "../hooks/useGetCartItems";
 import useRemoveItem from "../hooks/useRemoveItem";
-// import useGetThumbnail from "../hooks/useGetThumbnail";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
-  // const thumbnails = useSelector((state) => state.cart.thumbnails);
   const removeItem = useRemoveItem();
-  // console.log(cartItems[0].thumbnail);
 
   useGetCartItems();
-  // useGetThumbnail(); 
-
 
   const calculateSubTotal = () => {
     return cartItems.reduce(
@@ -81,15 +71,6 @@ const Cart = () => {
                 {cartItems.map((item) => (
                   <tr key={item.product_id}>
                     <td>
-                      {/* <img
-                        src={`https://partydecorhub.com${
-                          thumbnails.find(
-                            (t) => t.product_id === item.product_id
-                          )?.thumbnail
-                        }`}
-                        alt={item.name}
-                        className="cart-product-img"
-                      /> */}
                       <img className="cart-product-img" src={item.thumbnail} alt={item.name} />
                     </td>
                     <td>{item.name || item.product_name}</td>
