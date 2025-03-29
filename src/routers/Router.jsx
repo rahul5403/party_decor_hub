@@ -17,6 +17,10 @@ import NotFound from "../Pages/Notfound";
 import Profile from "../Pages/Profile";
 import Orders from "../Pages/Orders";
 import DecorBook from "../components/DecorBook";
+import PrivacyPolicy from "../Pages/PrivacyPolicy";
+import RefundReturnPolicy from "../Pages/RefundReturnPolicy";
+import ShippingPolicy from "../Pages/ShippingPolicy";
+import TermsAndConditions from "../Pages/TermsCondition";
 
 const Router = () => {
   const location = useLocation();
@@ -54,6 +58,10 @@ const Router = () => {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundReturnPolicy />} />
+        <Route path="/shipping-policy" element={<ShippingPolicy />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/services/:product_id" element={<DecorBook />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

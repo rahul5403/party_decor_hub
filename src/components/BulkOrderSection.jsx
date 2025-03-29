@@ -1,7 +1,7 @@
 
 import React from "react";
 import "../assets/styles/BulkOrderSection.css";
-import bulk_image from "../assets/images/bulk_b.jpg";
+import bulk_image from "../assets/images/b_order.jpg";
 // import { WhatsApp } from "@mui/icons-material";
 
 import WhatsApp_icon from "../assets/images/whatsapp_icon.png";

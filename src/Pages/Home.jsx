@@ -60,6 +60,8 @@ function Home() {
             <HomeProductSection products={partyData} section={"Decoration Items"} />
             <HomeProductSection products={decorationServices} section={"Decoration Services"} />
             <HomeProductSection products={disposalData} section={"Disposable Items"} />
+            <HomeProductSection products={partyData} section={"Best Sellers"} />
+            <HomeProductSection products={decorationServices} section={"Neon Lights"} />
             <BulkOrderSection />
         </React.Fragment>
     );

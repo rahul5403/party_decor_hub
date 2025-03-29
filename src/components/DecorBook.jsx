@@ -435,13 +435,15 @@ const DecorBook = () => {
               )}
             </div>
           ))}
+
+          
         </div>
 
-        {/* <SimilarProductSection
+        <SimilarProductSection
           products={[]}
           section={"You might also like"}
           className="mt-12"
-        /> */}
+        />
       </div>
     </div>
   );
