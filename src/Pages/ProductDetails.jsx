@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 // import SimilarProductSection from "../components/SimilarProductSection";
 import axios from "axios";
 import { ShoppingCart, Truck, Shield, Clock, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
-import useSetCartItems from "../hooks/useSetCartItems";
+import useSetCartItems from "../hooks/cart/useSetCartItems";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { Check } from 'lucide-react';
@@ -20,8 +20,6 @@ const ProductDetails = () => {
   // const [newReview, setNewReview] = useState("");
   const [expandedSection, setExpandedSection] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
-  const [selectedColor, setSelectedColor] = useState("");
-  const [selectedSize, setSelectedSize] = useState("");
   const [isZoomed, setIsZoomed] = useState(false);
   const imageRef = useRef(null);
 
@@ -47,8 +45,6 @@ const ProductDetails = () => {
         };
 
         setProduct(updatedProduct);
-        setSelectedColor(updatedProduct.color || updatedProduct.available_colors?.[0] || "");
-        setSelectedSize(updatedProduct.size || updatedProduct.available_sizes?.[0] || "");
 
         const allProductsResponse = await axios.get(
           "https://partydecorhub.com/api/products"
@@ -91,8 +87,8 @@ const ProductDetails = () => {
         id: product_id,
         product_id,
         quantity,
-        color: selectedColor,
-        size: selectedSize,
+        color: product.colors,
+        size: product.sizes,
         price: product.price,
         name: product.name,
         thumbnail: product.thumbnail,
@@ -141,9 +137,9 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-0 lg:gap-8">
           {/* Image Gallery Section */}
-          <div className="md:col-span-3">
+          <div className="md:col-span-3 px-12">
             <div 
               ref={imageRef}
               className={`relative aspect-square overflow-hidden rounded-xl bg-gray-100 border-2 border-gray-200 ${
@@ -175,7 +171,7 @@ const ProductDetails = () => {
             </div>
             
             {/* Thumbnails */}
-            <div className="mt-4 flex justify-center flex-wrap gap-2 px-2">
+            <div className="mt-2 flex justify-center flex-wrap gap-2 px-2">
               {product.images.map((image, index) => (
                 <button
                   key={index}
@@ -197,7 +193,7 @@ const ProductDetails = () => {
           </div>
 
           {/* Product Info Section */}
-          <div className="md:col-span-3 flex flex-col px-2 md:px-6">
+          <div className="md:col-span-3 flex flex-col px-2 md:px-6 w-[90%]">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
             
             <div className="flex items-center gap-2 mb-6">
@@ -225,47 +221,23 @@ const ProductDetails = () => {
               )}
             </div>
 
-            {/* Color Selection */}
-            {(product.color || product.available_colors?.length > 0) && (
+            {/* Color Display */}
+            {product.colors && (
               <div className="mb-4 w-4/5">
                 <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Color:</label>
-                {product.color ? (
-                  <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
-                    {product.color}
-                  </div>
-                ) : (
-                  <select
-                    value={selectedColor}
-                    onChange={(e) => setSelectedColor(e.target.value)}
-                    className="w-full rounded-lg border border-gray-200 py-2 px-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
-                  >
-                    {product.available_colors.map((color) => (
-                      <option key={color} value={color}>{color}</option>
-                    ))}
-                  </select>
-                )}
+                <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  {product.colors}
+                </div>
               </div>
             )}
 
-            {/* Size Selection */}
-            {(product.size || product.available_sizes?.length > 0) && (
+            {/* Size Display */}
+            {product.sizes && (
               <div className="mb-6 w-4/5">
-                <label className="block text-sm font-medium text-gray-700 mb-2 text-left" >Size:</label>
-                {product.size ? (
-                  <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
-                    {product.size}
-                  </div>
-                ) : (
-                  <select
-                    value={selectedSize}
-                    onChange={(e) => setSelectedSize(e.target.value)}
-                    className="w-full rounded-lg border border-gray-200 py-2 px-3 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
-                  >
-                    {product.available_sizes.map((size) => (
-                      <option key={size} value={size}>{size}</option>
-                    ))}
-                  </select>
-                )}
+                <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Size:</label>
+                <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  {product.sizes}
+                </div>
               </div>
             )}
 
@@ -323,79 +295,80 @@ const ProductDetails = () => {
             </div>
           </div>
         </div>
-{/* Description & Reviews */}
-<div className="mt-12 space-y-4">
-  {["Description", "Reviews"].map((section, index) => (
-    <div 
-      key={index}
-      className="bg-white rounded-xl border border-gray-200 shadow-sm transition-all duration-200 hover:shadow-md"
-    >
-      <div 
-        className="p-3 cursor-pointer transition-colors duration-200 hover:bg-emerald-50 rounded-xl"
-        onClick={() => toggleSection(index)}
-      >
-        <h3 className="font-semibold flex justify-between items-center text-gray-800">
-          <span className="text-lg font-medium text-emerald-700">
-            {section}
-          </span>
-          <span className="text-emerald-600 text-xl font-light">
-            {expandedSection === index ? '−' : '+'}
-          </span>
-        </h3>
-      </div>
-      
-      {expandedSection === index && (
-        <div className="p-4 pt-2">
-          {section === "Reviews" ? (
-            reviews.length > 0 ? (
-              <div className="space-y-4">
-                {reviews.map((review, i) => (
-                  <div key={i} className="pt-3 border-t border-gray-100">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <span className="text-emerald-600 font-medium">U</span>
+
+        {/* Description & Reviews */}
+        <div className="mt-12 space-y-4">
+          {["Description", "Reviews"].map((section, index) => (
+            <div 
+              key={index}
+              className="bg-white rounded-xl border border-gray-200 shadow-sm transition-all duration-200 hover:shadow-md"
+            >
+              <div 
+                className="p-3 cursor-pointer transition-colors duration-200 hover:bg-emerald-50 rounded-xl"
+                onClick={() => toggleSection(index)}
+              >
+                <h3 className="font-semibold flex justify-between items-center text-gray-800">
+                  <span className="text-lg font-medium text-emerald-700">
+                    {section}
+                  </span>
+                  <span className="text-emerald-600 text-xl font-light">
+                    {expandedSection === index ? '−' : '+'}
+                  </span>
+                </h3>
+              </div>
+              
+              {expandedSection === index && (
+                <div className="p-4 pt-2">
+                  {section === "Reviews" ? (
+                    reviews.length > 0 ? (
+                      <div className="space-y-4">
+                        {reviews.map((review, i) => (
+                          <div key={i} className="pt-3 border-t border-gray-100">
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                                <span className="text-emerald-600 font-medium">U</span>
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-800">User {i+1}</p>
+                                <p className="text-xs text-gray-500">2 days ago</p>
+                              </div>
+                            </div>
+                            <p className="text-gray-700 text-sm leading-relaxed">
+                              {review}
+                            </p>
+                          </div>
+                        ))}
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-800">User {i+1}</p>
-                        <p className="text-xs text-gray-500">2 days ago</p>
+                    ) : (
+                      <div className="py-3 text-center">
+                        <p className="text-gray-500 italic">
+                          Be the first to review this product
+                        </p>
                       </div>
+                    )
+                  ) : (
+                    <div className="prose max-w-none text-gray-700">
+                      <p className="text-base leading-relaxed">
+                        {product.description}
+                      </p>
+                      {/* Dynamic features list from backend */}
+                      {product.features?.length > 0 && (
+                        <ul className="mt-4 space-y-2 pl-4">
+                          {product.features.map((feature, index) => (
+                            <li key={index} className="flex items-center gap-2">
+                              <Check className="w-4 h-4 text-emerald-600" />
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">
-                      {review}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="py-3 text-center">
-                <p className="text-gray-500 italic">
-                  Be the first to review this product
-                </p>
-              </div>
-            )
-          ) : (
-            <div className="prose max-w-none text-gray-700">
-              <p className="text-base leading-relaxed">
-                {product.description}
-              </p>
-              {/* Dynamic features list from backend */}
-              {product.features?.length > 0 && (
-                <ul className="mt-4 space-y-2 pl-4">
-                  {product.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-emerald-600" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                  )}
+                </div>
               )}
             </div>
-          )}
+          ))}
         </div>
-      )}
-    </div>
-  ))}
-</div>
 
         {/* <SimilarProductSection 
           products={similarProducts} 

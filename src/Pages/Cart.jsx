@@ -3,8 +3,8 @@ import "../assets/styles/Cart.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {removeFromCart,updateQuantity} from "../redux/cartSlice";
-import useGetCartItems from "../hooks/useGetCartItems";
-import useRemoveItem from "../hooks/useRemoveItem";
+import useGetCartItems from "../hooks/cart/useGetCartItems";
+import useRemoveItem from "../hooks/cart/useRemoveItem";
 
 const Cart = () => {
   const dispatch = useDispatch();

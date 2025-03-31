@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { mergeCart } from "../redux/cartSlice";
+import { mergeCart } from "../../redux/cartSlice";
 
 const useRemoveItem = () => {
   const accessToken = localStorage.getItem("accessToken");

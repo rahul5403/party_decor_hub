@@ -18,7 +18,7 @@ const Footer = () => {
     PARTY <span className="text-green-900">DECOR</span> HUB
   </h2>
   <div className="flex flex-col space-y-2 mt-2">
-    <p className="flex justify-center md:justify-start  md:items-start">
+    <p className="flex justify-center md:justify-start m-0 md:items-start">
       <FaMapMarkerAlt className="mt-1 mr-2 text-lg md:text-xl text-green-800" />
       A-800, GD Colony, Mayur Vihar Phase-3, DELHI -110096
     </p>
@@ -79,8 +79,11 @@ const Footer = () => {
         </p>
         <div className="flex space-x-6 text-green-800 mt-3">
           <a href="#" className="text-green-800 hover:text-red-600 transition"><FaFacebookF size={24} /></a>
-          <a href="https://www.instagram.com/partydecorhub_/?utm_source=qr#" target="_blank" className="text-green-800 hover:text-red-600 transition"><FaInstagram size={24} /></a>
+          <a href="https://www.instagram.com/partydecorhub?utm_source=qr&igsh=cGpreXh0bzM3Z3Nt" target="_blank" className="text-green-800 hover:text-red-600 transition"><FaInstagram size={24} /></a>
           <a href="#" className="text-green-800 hover:text-red-600 transition"><FaYoutube size={24} /></a>
+          <a href="mailto:partydecorhub.com@gmail.com" className="text-green-800 hover:text-red-600 transition">
+  <FaEnvelope size={24} />
+</a>
         </div>
       </div>
     </footer>

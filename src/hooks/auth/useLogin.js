@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { login } from "../redux/authSlice";
+import { login } from "../../redux/authSlice";
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);

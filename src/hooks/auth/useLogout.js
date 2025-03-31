@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { logout } from "../redux/authSlice";
-import { mergeCart } from "../redux/cartSlice";
+import { logout } from "../../redux/authSlice";
+import { mergeCart } from "../../redux/cartSlice";
 const useLogout = () => {
   const dispatch = useDispatch();
   const handleLogout = async () => {

@@ -4,7 +4,7 @@ import HeroSection from "../components/HeroSection";
 import Services from "../components/Services";
 import BulkOrderSection from "../components/BulkOrderSection";
 import HomeProductSection from "../components/HomeProductSection";
-import useGetCartItems from "../hooks/useGetCartItems";
+import useGetCartItems from "../hooks/cart/useGetCartItems";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
