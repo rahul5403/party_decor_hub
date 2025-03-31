@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-// import SimilarProductSection from "../components/SimilarProductSection";
 import axios from "axios";
 import { ShoppingCart, Truck, Shield, Clock, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 import useSetCartItems from "../hooks/cart/useSetCartItems";
@@ -17,10 +16,11 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
-  // const [newReview, setNewReview] = useState("");
   const [expandedSection, setExpandedSection] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const imageRef = useRef(null);
 
   const addItemToCart = useSetCartItems();
@@ -45,6 +45,23 @@ const ProductDetails = () => {
         };
 
         setProduct(updatedProduct);
+
+        // Initialize selected color and size
+        if (updatedProduct.colors) {
+          if (Array.isArray(updatedProduct.colors)) {
+            setSelectedColor(updatedProduct.colors[0]);
+          } else {
+            setSelectedColor(updatedProduct.colors);
+          }
+        }
+
+        if (updatedProduct.sizes) {
+          if (Array.isArray(updatedProduct.sizes)) {
+            setSelectedSize(updatedProduct.sizes[0]);
+          } else {
+            setSelectedSize(updatedProduct.sizes);
+          }
+        }
 
         const allProductsResponse = await axios.get(
           "https://partydecorhub.com/api/products"
@@ -87,8 +104,8 @@ const ProductDetails = () => {
         id: product_id,
         product_id,
         quantity,
-        color: product.colors,
-        size: product.sizes,
+        color: Array.isArray(product.colors) ? selectedColor : product.colors || null,
+        size: Array.isArray(product.sizes) ? selectedSize : product.sizes || null,
         price: product.price,
         name: product.name,
         thumbnail: product.thumbnail,
@@ -221,23 +238,51 @@ const ProductDetails = () => {
               )}
             </div>
 
-            {/* Color Display */}
+            {/* Color Selection */}
             {product.colors && (
               <div className="mb-4 w-4/5">
                 <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Color:</label>
-                <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
-                  {product.colors}
-                </div>
+                {Array.isArray(product.colors) ? (
+                  <select
+                    value={selectedColor}
+                    onChange={(e) => setSelectedColor(e.target.value)}
+                    className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 focus:ring-emerald-500 focus:border-emerald-500"
+                  >
+                    {product.colors.map((color, index) => (
+                      <option key={index} value={color}>
+                        {color}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                    {product.colors}
+                  </div>
+                )}
               </div>
             )}
 
-            {/* Size Display */}
+            {/* Size Selection */}
             {product.sizes && (
               <div className="mb-6 w-4/5">
                 <label className="block text-sm font-medium text-gray-700 mb-2 text-left">Size:</label>
-                <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
-                  {product.sizes}
-                </div>
+                {Array.isArray(product.sizes) ? (
+                  <select
+                    value={selectedSize}
+                    onChange={(e) => setSelectedSize(e.target.value)}
+                    className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 focus:ring-emerald-500 focus:border-emerald-500"
+                  >
+                    {product.sizes.map((size, index) => (
+                      <option key={index} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                    {product.sizes}
+                  </div>
+                )}
               </div>
             )}
 
@@ -369,12 +414,6 @@ const ProductDetails = () => {
             </div>
           ))}
         </div>
-
-        {/* <SimilarProductSection 
-          products={similarProducts} 
-          section={"You might also like"} 
-          className="mt-12"
-        /> */}
       </div>
     </div>
   );

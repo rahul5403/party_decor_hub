@@ -28,7 +28,7 @@ const Footer = () => {
     </p>
     <p className="flex justify-center md:justify-start">
       <FaEnvelope className="mr-2 text-lg md:text-xl text-green-800" />
-      <a href="mailto:info@gmail.com" className="text-green-700 no-underline hover:underline">info@gmail.com</a>
+      <a href="mailto:partydecorhub.com@gmail.com" className="text-green-700 no-underline hover:underline">partydecorhub.com@gmail.com</a>
     </p>
   </div>
 </div>
@@ -81,9 +81,7 @@ const Footer = () => {
           <a href="#" className="text-green-800 hover:text-red-600 transition"><FaFacebookF size={24} /></a>
           <a href="https://www.instagram.com/partydecorhub?utm_source=qr&igsh=cGpreXh0bzM3Z3Nt" target="_blank" className="text-green-800 hover:text-red-600 transition"><FaInstagram size={24} /></a>
           <a href="#" className="text-green-800 hover:text-red-600 transition"><FaYoutube size={24} /></a>
-          <a href="mailto:partydecorhub.com@gmail.com" className="text-green-800 hover:text-red-600 transition">
-  <FaEnvelope size={24} />
-</a>
+          
         </div>
       </div>
     </footer>

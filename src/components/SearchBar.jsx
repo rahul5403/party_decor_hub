@@ -112,7 +112,6 @@ const   SearchBar = ({ mobile }) => {
           </button>
         </div>
       ) : (
-        // Desktop view (new behavior)
         <div className="relative">
           <button
             onClick={toggleSearch}
@@ -149,83 +148,82 @@ const   SearchBar = ({ mobile }) => {
         </div>
       )}
 
-      {showDropdown && (
-        <motion.div
-          initial={{ opacity: 0, y: -10, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -10, scale: 0.95 }}
-          transition={{ duration: 0.2, ease: "easeInOut" }}
-          className={`absolute ${
-            mobile
-              ? "left-4 right-4"
-              : "left-auto right-auto w-96" // Changed from w-96 to w-64 to match input width
-          } top-full bg-white shadow-lg rounded-lg z-50 border border-gray-300 max-h-60 overflow-y-auto overflow-x-hidden `}
-        >
-          {totalResults > 0 ? (
-            <>
-              {results.products.length > 0 && (
-                <div className="px-1 py-2 bg-green-200 text-gray-600 text-xs font-semibold sticky top-0">
-                  Products
-                </div>
-              )}
-              {results.products.map((product) => (
-                <motion.div
-                  key={`product-${product.product_id}`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex justify-between items-center px-0 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer whitespace-nowrap overflow-hidden"
-                  onClick={() => setShowDropdown(false)}
-                >
-                  <Link
-                    to={`/products/${product.product_id}`}
-                    className="flex justify-between items-center w-full no-underline text-gray-800 hover:bg-green-50 hover:scale-105 transition-all duration-300 rounded-lg px-4 py-2"
-                    onClick={() => setShowDropdown(false)}
-                  >
-                    <span className="font-medium text-sm truncate">
-                      {product.name}
-                    </span>
-                    <span className="text-green-800 font-semibold text-sm ml-4">
-                      ₹{product.price}
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
+{showDropdown && (
+  <motion.div
+    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+    transition={{ duration: 0.2, ease: "easeInOut" }}
+    className={`absolute ${
+      mobile ? "left-4 right-4" : "left-auto right-auto w-96"
+    } top-full bg-white shadow-lg rounded-lg z-50 border border-gray-300 max-h-60 overflow-y-auto overflow-x-hidden`}
+  >
+    {totalResults > 0 ? (
+      <>
+        {results.products.length > 0 && (
+          <div className="px-3 py-2 bg-green-200 text-gray-600 text-xs font-semibold sticky top-0">
+            Products
+          </div>
+        )}
+        {results.products.map((product) => (
+          <Link
+            to={`/products/${product.product_id}`}
+            className="flex justify-between items-center w-full no-underline text-gray-800"
+            onClick={() => setShowDropdown(false)}
+          >
+          <motion.div
+            key={`product-${product.product_id}`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex items-center space-x-4 px-4 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer"
+            onClick={() => setShowDropdown(false)}
+          >
+            <img
+              src={`https://partydecorhub.com${product.image_url}`}
+              alt={product.name}
+              className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+            />
+              <span className="font-medium text-sm truncate flex-1">{product.name}</span>
+              <span className="text-green-800 font-semibold text-sm ml-4">₹{product.price}</span>
+          </motion.div>
+            </Link>
+        ))}
 
-              {results.decor_services.length > 0 && (
-                <div className="px-3 py-2 bg-green-200 text-gray-600 text-xs font-semibold sticky top-0">
-                  Services
-                </div>
-              )}
-              {results.decor_services.map((service) => (
-                <motion.div
-                  key={`service-${service.id}`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex justify-between items-center px-0 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer whitespace-nowrap overflow-hidden"
-                  onClick={() => setShowDropdown(false)}
-                >
-                  <Link
-                    to={`/services/${service.id}`}
-                    className="flex justify-between items-center w-full no-underline text-gray-800 hover:bg-green-50 hover:scale-105 transition-all duration-300 rounded-lg px-4 py-2"
-                    onClick={() => setShowDropdown(false)}
-                  >
-                    <span className="font-medium text-sm truncate">
-                      {service.name}
-                    </span>
-                    <span className="text-green-800 font-semibold text-sm ml-4">
-                      ₹{service.price}
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
-            </>
-          ) : (
-            <div className="px-4 py-2 text-gray-500 text-center text-sm">
-              No results found
-            </div>
-          )}
-        </motion.div>
-      )}
+        {results.decor_services.length > 0 && (
+          <div className="px-3 py-2 bg-green-200 text-gray-600 text-xs font-semibold sticky top-0">
+            Services
+          </div>
+        )}
+        {results.decor_services.map((service) => (
+          <Link
+            to={`/services/${service.id}`}
+            className="flex justify-between items-center w-full no-underline text-gray-800"
+            onClick={() => setShowDropdown(false)}
+          >
+          <motion.div
+            key={`service-${service.id}`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex items-center space-x-4 px-4 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer"
+            onClick={() => setShowDropdown(false)}
+          >
+            <img
+              src={`https://partydecorhub.com${service.image_url}`}
+              alt={service.name}
+              className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+            />
+              <span className="font-medium text-sm truncate flex-1">{service.name}</span>
+              <span className="text-green-800 font-semibold text-sm ml-4">₹{service.price}</span>
+          </motion.div>
+            </Link>
+        ))}
+      </>
+    ) : (
+      <div className="px-4 py-2 text-gray-500 text-center text-sm">No results found</div>
+    )}
+  </motion.div>
+)
+}
     </motion.div>
   );
 };
