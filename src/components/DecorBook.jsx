@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Clock, Shield, Truck, ZoomIn, ZoomOut, X } f
 import usePincode from "../hooks/Services/usePincode";
 import useServiceDetails from "../hooks/Services/useServiceDetails";
 import useHandleBooking from "../hooks/Services/useHandleBooking";
+import useFetchData from "../hooks/Home/useFetchData";
 
 const DecorBook = () => {
   const { product_id } = useParams();
@@ -24,6 +25,7 @@ const DecorBook = () => {
   const {pincodeMessage, handlePincodeCheck} = usePincode(pincode);
   const {service, loading} = useServiceDetails(service_id);
   const { handleBooking } = useHandleBooking(service, startDate, startTime, customerName, address, email, phone);
+  const { recommendedServices} = useFetchData();
 
   const handleMouseMove = (e) => {
     if (!isZoomed || !imageRef.current) return;
@@ -290,7 +292,16 @@ const DecorBook = () => {
           ))}
         </div>
 
-        <SimilarProductSection products={[]} section={"You might also like"} className="mt-12" />
+        {/* <SimilarProductSection products={[]} section={"You might also like"} className="mt-12" /> */}
+
+        {recommendedServices.length > 0 && (
+        <SimilarProductSection 
+          products={recommendedServices} 
+          section={"Recommended Services"} 
+          className="mt-12" 
+        />
+      )}
+
       </div>
     </div>
   );

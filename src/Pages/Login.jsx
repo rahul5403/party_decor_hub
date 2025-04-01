@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useLogin } from "../hooks/auth/useLogin";
+import { useLogin } from "../hooks/Auth/useLogin";
 import logo from "../assets/images/logo.png";
 import background from "../assets/images/header_bg.png";
 
