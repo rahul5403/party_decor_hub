@@ -207,7 +207,7 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          {/* Product Info Section */}
+          {/* Product Info Sections */}
           <div className="md:col-span-3 flex flex-col px-2 md:px-6 w-[90%]">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               {product.name}
