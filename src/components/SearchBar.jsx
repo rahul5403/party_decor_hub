@@ -167,26 +167,27 @@ const   SearchBar = ({ mobile }) => {
         )}
         {results.products.map((product) => (
           <Link
-            to={`/products/${product.product_id}`}
-            className="flex justify-between items-center w-full no-underline text-gray-800"
-            onClick={() => setShowDropdown(false)}
-          >
-          <motion.div
             key={`product-${product.product_id}`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center space-x-4 px-4 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer"
+            to={`/products/${product.product_id}`}
+            className="no-underline text-gray-800"
             onClick={() => setShowDropdown(false)}
           >
-            <img
-              src={`https://partydecorhub.com${product.image_url}`}
-              alt={product.name}
-              className="w-12 h-12 object-cover rounded-lg border border-gray-200"
-            />
-              <span className="font-medium text-sm truncate flex-1">{product.name}</span>
-              <span className="text-green-800 font-semibold text-sm ml-4">₹{product.price}</span>
-          </motion.div>
-            </Link>
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="flex items-center px-4 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer"
+            >
+              <img
+                src={`https://partydecorhub.com${product.image_url}`}
+                alt={product.name}
+                className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+              />
+              <div className="flex-1 min-w-0 px-2">
+                <span className="font-medium text-sm truncate block">{product.name}</span>
+              </div>
+              <span className="text-green-800 font-semibold text-sm ml-auto">₹{product.discounted_price}</span>
+            </motion.div>
+          </Link>
         ))}
 
         {results.decor_services.length > 0 && (
@@ -196,34 +197,35 @@ const   SearchBar = ({ mobile }) => {
         )}
         {results.decor_services.map((service) => (
           <Link
-            to={`/services/${service.id}`}
-            className="flex justify-between items-center w-full no-underline text-gray-800"
-            onClick={() => setShowDropdown(false)}
-          >
-          <motion.div
             key={`service-${service.id}`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center space-x-4 px-4 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer"
+            to={`/services/${service.id}`}
+            className="no-underline text-gray-800"
             onClick={() => setShowDropdown(false)}
           >
-            <img
-              src={`https://partydecorhub.com${service.image_url}`}
-              alt={service.name}
-              className="w-12 h-12 object-cover rounded-lg border border-gray-200"
-            />
-              <span className="font-medium text-sm truncate flex-1">{service.name}</span>
-              <span className="text-green-800 font-semibold text-sm ml-4">₹{service.price}</span>
-          </motion.div>
-            </Link>
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="flex items-center px-4 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer"
+            >
+              <img
+                src={`https://partydecorhub.com${service.image_url}`}
+                alt={service.name}
+                className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+              />
+              <div className="flex-1 min-w-0 px-2">
+                <span className="font-medium text-sm truncate block">{service.name}</span>
+              </div>
+              <span className="text-green-800 font-semibold text-sm ml-auto">₹{service.discounted_price}</span>
+            </motion.div>
+          </Link>
         ))}
       </>
     ) : (
       <div className="px-4 py-2 text-gray-500 text-center text-sm">No results found</div>
     )}
   </motion.div>
-)
-}
+)}
+
     </motion.div>
   );
 };

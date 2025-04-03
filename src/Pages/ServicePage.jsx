@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
-const Service2 = () => {
+const ServicePage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showSortOptions, setShowSortOptions] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
@@ -374,4 +374,4 @@ const Service2 = () => {
   );
 };
 
-export default Service2;
+export default ServicePage;

@@ -3,9 +3,9 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "../Pages/Home";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Service1 from "../Pages/Service1";
-import Service2 from "../Pages/Service2";
-import Service3 from "../Pages/Service3";
+import DecorPage from "../Pages/DecorPage";
+import ServicePage from "../Pages/ServicePage";
+import DisposePage from "../Pages/DisposePage";
 import ProductDetails from "../Pages/ProductDetails";
 import Cart from "../Pages/Cart";
 import About from "../Pages/About";
@@ -21,6 +21,7 @@ import PrivacyPolicy from "../Pages/PrivacyPolicy";
 import RefundReturnPolicy from "../Pages/RefundReturnPolicy";
 import ShippingPolicy from "../Pages/ShippingPolicy";
 import TermsAndConditions from "../Pages/TermsCondition";
+import InstagramButton from "../components/Insta";
 
 const Router = () => {
   const location = useLocation();
@@ -39,14 +40,14 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/home" element={<Home />}></Route>
-        <Route path="/party" element={<Service1/>}></Route>
+        <Route path="/party" element={<DecorPage/>}></Route>
         <Route
           path="/decoration"
-          element={<Service2/>}
+          element={<ServicePage/>}
         ></Route>
         <Route
           path="/disposable"
-          element={<Service3/>}
+          element={<DisposePage/>}
         ></Route>
         <Route
           path="/products/:product_id"
@@ -86,6 +87,8 @@ const Router = () => {
         />
       )}
 
+
+      {!hideHeaderFooter && <InstagramButton />}
       {!hideHeaderFooter && <WhatsAppButton />}
       {!hideHeaderFooter && <Footer />}
     </div>

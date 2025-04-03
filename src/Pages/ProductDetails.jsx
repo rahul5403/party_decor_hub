@@ -253,13 +253,13 @@ const ProductDetails = () => {
                     className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 focus:ring-emerald-500 focus:border-emerald-500"
                   >
                     {product.colors.map((color, index) => (
-                      <option key={index} value={color}>
+                      <option className="w-4/5" key={index} value={color}>
                         {color}
                       </option>
                     ))}
                   </select>
                 ) : (
-                  <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="w-4/5 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
                     {product.colors}
                   </div>
                 )}
@@ -279,13 +279,13 @@ const ProductDetails = () => {
                     className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 focus:ring-emerald-500 focus:border-emerald-500"
                   >
                     {product.sizes.map((size, index) => (
-                      <option key={index} value={size}>
+                      <option className="4/5" key={index} value={size}>
                         {size}
                       </option>
                     ))}
                   </select>
                 ) : (
-                  <div className="w-full px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="w-4/5 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
                     {product.sizes}
                   </div>
                 )}

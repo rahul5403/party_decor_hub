@@ -1,0 +1,57 @@
+.instagram-button {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out, bottom 0.3s ease-in-out;
+    border: none;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.instagram-button img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.instagram-button:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, #6a3093, #e1306c, #f77737);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .instagram-button {
+        bottom: 65px;
+        right: 15px;
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    .instagram-button img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 860px) {
+    .special-page {
+        bottom: 55px !important;
+        transition: bottom 0.3s ease-in-out;
+    }
+}
