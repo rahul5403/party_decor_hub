@@ -5,8 +5,8 @@ import { HiMenu, HiX } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logoh from "../assets/images/logo.png";
-import useGetCartItems from "../hooks/Cart/useGetCartItems";
-import useLogout from "../hooks/Auth/useLogout";
+import useGetCartItems from "../hooks/Cart/useGetCartItems.js";
+import useLogout from "../hooks/Auth/useLogout.js";
 import { motion } from "framer-motion";
 import SearchBar from "./SearchBar";
 

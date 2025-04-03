@@ -3,7 +3,7 @@ import HeroSection from "../components/HeroSection";
 import Services from "../components/Services";
 import BulkOrderSection from "../components/BulkOrderSection";
 import HomeProductSection from "../components/HomeProductSection";
-import useGetCartItems from "../hooks/Cart/useGetCartItems";
+import useGetCartItems from "../hooks/Cart/useGetCartItems.js";
 import LazyLoadVertical from "../components/LazyLoadVertical";
 import useHomeData from "../hooks/Home/useFetchData";
 

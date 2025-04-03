@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {ShoppingCart,Truck,Shield,Clock,RotateCcw,ChevronLeft,ChevronRight} from "lucide-react";
-import useSetCartItems from "../hooks/Cart/useSetCartItems";
+import useSetCartItems from "../hooks/Cart/useSetCartItems.js";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { Check } from "lucide-react";
