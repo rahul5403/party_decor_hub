@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useLogin } from "../hooks/Auth/useLogin.js";
+import { useLogin } from "../hooks/auth/useLogin.js";
 import logo from "../assets/images/logo.png";
 import background from "../assets/images/header_bg.png";
 
@@ -21,20 +21,37 @@ const Login = ({ onClose, onSignupClick }) => {
           <div className="flex flex-col md:flex-row">
             <div
               className="w-full md:w-2/5 flex flex-col items-center justify-center text-center p-8 text-white"
-              style={{ backgroundImage: `url(${background})`, backgroundSize: "cover", backgroundPosition: "center" }}
+              style={{
+                backgroundImage: `url(${background})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
             >
-              <img className="w-20 h-20 mb-4" src={logo} alt="Party Decor Hub" />
+              <img
+                className="w-20 h-20 mb-4"
+                src={logo}
+                alt="Party Decor Hub"
+              />
               <h2 className="text-2xl font-bold">Party Decor Hub</h2>
-              <p className="text-sm max-w-xs">Bringing Your Celebration to Life, One Décor at a Time!</p>
+              <p className="text-sm max-w-xs">
+                Bringing Your Celebration to Life, One Décor at a Time!
+              </p>
             </div>
 
             <div className="w-full md:w-3/5 p-6 relative">
-              <button className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl" onClick={onClose}>
+              <button
+                className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl"
+                onClick={onClose}
+              >
                 ×
               </button>
-              <h2 className="text-lg font-semibold text-center text-gray-800">Welcome Back</h2>
+              <h2 className="text-lg font-semibold text-center text-gray-800">
+                Welcome Back
+              </h2>
               <form onSubmit={handleSubmit} className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 text-left">Email</label>
+                <label className="block text-sm font-medium text-gray-700 text-left">
+                  Email
+                </label>
                 <input
                   type="email"
                   className="w-full p-2 border rounded"
@@ -44,7 +61,9 @@ const Login = ({ onClose, onSignupClick }) => {
                   required
                 />
 
-                <label className="block text-sm font-medium text-gray-700 text-left">Password</label>
+                <label className="block text-sm font-medium text-gray-700 text-left">
+                  Password
+                </label>
                 <input
                   type="password"
                   className="w-full p-2 border rounded"
@@ -63,8 +82,11 @@ const Login = ({ onClose, onSignupClick }) => {
                 </button>
 
                 <p className="text-sm text-center mt-2">
-                  New to Party Decor Hub? {" "}
-                  <span className="text-blue-500 cursor-pointer" onClick={onSignupClick}>
+                  New to Party Decor Hub?{" "}
+                  <span
+                    className="text-blue-500 cursor-pointer"
+                    onClick={onSignupClick}
+                  >
                     Create Account
                   </span>
                 </p>

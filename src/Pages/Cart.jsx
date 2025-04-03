@@ -2,9 +2,9 @@ import React from "react";
 import "../assets/styles/Cart.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {removeFromCart,updateQuantity} from "../redux/cartSlice";
-import useGetCartItems from "../hooks/Cart/useGetCartItems.js";
-import useRemoveItem from "../hooks/Cart/useRemoveItem.js";
+import { removeFromCart, updateQuantity } from "../redux/cartSlice";
+import useGetCartItems from "../hooks/cart/useGetCartItems.js";
+import useRemoveItem from "../hooks/cart/useRemoveItem.js";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -71,7 +71,11 @@ const Cart = () => {
                 {cartItems.map((item) => (
                   <tr key={item.product_id}>
                     <td>
-                      <img className="cart-product-img" src={item.thumbnail} alt={item.name} />
+                      <img
+                        className="cart-product-img"
+                        src={item.thumbnail}
+                        alt={item.name}
+                      />
                     </td>
                     <td>{item.name || item.product_name}</td>
                     <td>₹{item.price}</td>

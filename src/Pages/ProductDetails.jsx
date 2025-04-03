@@ -1,8 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import {ShoppingCart,Truck,Shield,Clock,RotateCcw,ChevronLeft,ChevronRight} from "lucide-react";
-import useSetCartItems from "../hooks/Cart/useSetCartItems.js";
+import {
+  ShoppingCart,
+  Truck,
+  Shield,
+  Clock,
+  RotateCcw,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import useSetCartItems from "../hooks/cart/useSetCartItems.js";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { Check } from "lucide-react";
@@ -22,7 +30,7 @@ const ProductDetails = () => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const { recommendedPartyItems, recommendedDisposalItems} = useFetchData();
+  const { recommendedPartyItems, recommendedDisposalItems } = useFetchData();
   const imageRef = useRef(null);
 
   const addItemToCart = useSetCartItems();
@@ -435,20 +443,22 @@ const ProductDetails = () => {
         </div>
 
         {/* <SimilarProductSection products={[]} section={"You might also like"} className="mt-12" /> */}
-        { product.category === "Party Decor" && recommendedPartyItems.length > 0 && (
-        <SimilarProductSection 
-          products={recommendedPartyItems} 
-          section={"Recommended Party Decor Items"} 
-          className="mt-12" 
-        />
-      )}
-      { product.category === "Disposable Items" && recommendedPartyItems.length > 0 && (
-        <SimilarProductSection 
-          products={recommendedDisposalItems} 
-          section={"Recommended Disposable Items"} 
-          className="mt-12" 
-        />
-      )}  
+        {product.category === "Party Decor" &&
+          recommendedPartyItems.length > 0 && (
+            <SimilarProductSection
+              products={recommendedPartyItems}
+              section={"Recommended Party Decor Items"}
+              className="mt-12"
+            />
+          )}
+        {product.category === "Disposable Items" &&
+          recommendedPartyItems.length > 0 && (
+            <SimilarProductSection
+              products={recommendedDisposalItems}
+              section={"Recommended Disposable Items"}
+              className="mt-12"
+            />
+          )}
       </div>
     </div>
   );

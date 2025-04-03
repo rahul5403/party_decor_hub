@@ -1,12 +1,12 @@
-import { useState,} from "react";
+import { useState } from "react";
 import { FiUser, FiSearch } from "react-icons/fi";
 import { BsCartFill } from "react-icons/bs";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logoh from "../assets/images/logo.png";
-import useGetCartItems from "../hooks/Cart/useGetCartItems.js";
-import useLogout from "../hooks/Auth/useLogout.js";
+import useGetCartItems from "../hooks/cart/useGetCartItems.js";
+import useLogout from "../hooks/auth/useLogout.js";
 import { motion } from "framer-motion";
 import SearchBar from "./SearchBar";
 
@@ -106,7 +106,7 @@ const NavBar = ({ onLoginClick }) => {
                 </Link>
                 <Link
                   to="/orders"
-                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline" 
+                  className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline"
                   onClick={() => setShowUserDropdown(false)}
                 >
                   <i className="fas fa-box text-lg text-gray-500"></i>
@@ -215,7 +215,12 @@ const NavBar = ({ onLoginClick }) => {
         >
           <ul className="space-y-4 text-center text-green-900 font-semibold p-0">
             {navLinks.map((link) => (
-              <NavLink key={link.to} to={link.to} mobile onClick={() => setIsOpen(false)}>
+              <NavLink
+                key={link.to}
+                to={link.to}
+                mobile
+                onClick={() => setIsOpen(false)}
+              >
                 {link.text}
               </NavLink>
             ))}
