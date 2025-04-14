@@ -50,8 +50,8 @@
 }
 
 @media (max-width: 860px) {
-    .special-page {
-        bottom: 55px !important;
+    .special-page-i {
+        bottom: 100px !important;
         transition: bottom 0.3s ease-in-out;
     }
 }

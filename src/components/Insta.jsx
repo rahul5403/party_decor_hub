@@ -14,7 +14,7 @@ const InstagramButton = () => {
   };
 
   return (
-    <button className={`instagram-button ${isSpecialPage ? "special-page" : ""}`} onClick={openInstagram}>
+    <button className={`instagram-button ${isSpecialPage ? "special-page-i" : ""}`} onClick={openInstagram}>
       <img
         src={Instagram_icon}
         alt="Instagram Profile"

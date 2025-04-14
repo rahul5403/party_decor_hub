@@ -103,9 +103,23 @@ const DecorPage = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 w-full">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Compact Desktop Filter Panel with Transitions */}
-          <div className="hidden lg:block w-60 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-sm p-4 sticky top-2 border border-gray-100 transition-all duration-200 hover:shadow-md">
-              <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
+          <div className="hidden lg:block w-65 flex-shrink-0">
+          <div
+  className="bg-white rounded-lg shadow-sm p-3 sticky top-2 border border-gray-100 transition-all duration-200 hover:shadow-md"
+  style={{
+    maxHeight: 'calc(100vh - 2rem)',
+    overflowY: 'auto',
+    scrollbarWidth: 'none', // For Firefox
+    msOverflowStyle: 'none', // For IE and Edge
+  }}
+>
+  <style>
+    {`
+      ::-webkit-scrollbar {
+        display: none; /* For Chrome, Safari, and Edge */
+      }
+    `}
+  </style>            <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-800 transition-colors duration-200">Filters</h3>
                 {selectedFilters.length > 0 && (
                   <button 
@@ -118,33 +132,33 @@ const DecorPage = () => {
               </div>
               
               <div className="space-y-2 mt-2">
-                {filters.map((item) => (
-                  <div 
-                    key={item.id} 
-                    className={`flex items-center p-2 rounded-md transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-50'}`}
-                  >
-                    <div className="relative flex items-center">
-                      <input
-                        type="checkbox"
-                        id={item.id}
-                        className="opacity-0 absolute h-4 w-4 cursor-pointer"
-                        checked={selectedFilters.includes(item.name)}
-                        onChange={() => handleFilterChange(item.name)}
-                      />
-                      <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300 hover:border-gray-400'}`}>
-                        {selectedFilters.includes(item.name) && (
-                          <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
-                        )}
-                      </div>
-                    </div>
-                    <label 
-                      htmlFor={item.id} 
-                      className={`ml-2 text-sm text-gray-700 cursor-pointer transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'hover:text-gray-900'}`}
-                    >
-                      {item.name}
-                    </label>
-                  </div>
-                ))}
+              {filters.map((item) => (
+  <label 
+    key={item.id} 
+    htmlFor={item.id} 
+    className={`flex items-center p-2 rounded-md transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-50'}`}
+  >
+    <div className="relative flex items-center">
+      <input
+        type="checkbox"
+        id={item.id}
+        className="opacity-0 absolute h-4 w-4 cursor-pointer"
+        checked={selectedFilters.includes(item.name)}
+        onChange={() => handleFilterChange(item.name)}
+      />
+      <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300 hover:border-gray-400'}`}>
+        {selectedFilters.includes(item.name) && (
+          <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+        )}
+      </div>
+    </div>
+    <span 
+      className={`ml-2 text-sm text-gray-700 transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'hover:text-gray-900'}`}
+    >
+      {item.name}
+    </span>
+  </label>
+))}
               </div>
             </div>
           </div>
@@ -264,35 +278,31 @@ const DecorPage = () => {
             </div>
             
             <div className="p-3 space-y-1">
-              {filters.map((item) => (
-                <div 
-                  key={item.id} 
-                  className={`flex items-center p-2 rounded transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}
-                  onClick={() => handleFilterChange(item.name)}
-                >
-                  <div className="relative flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`mobile-${item.id}`}
-                      className="opacity-0 absolute h-4 w-4 cursor-pointer"
-                      checked={selectedFilters.includes(item.name)}
-                      readOnly
-                    />
-                    <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
-                      {selectedFilters.includes(item.name) && (
-                        <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
-                      )}
-                    </div>
-                  </div>
-                  <label 
-                    htmlFor={`mobile-${item.id}`} 
-                    className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
-                  >
-                    {item.name}
-                  </label>
-                </div>
-              ))}
-            </div>
+  {filters.map((item) => (
+    <label 
+      key={item.id} 
+      className={`flex items-center p-2 rounded transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}
+    >
+      <input
+        type="checkbox"
+        id={`mobile-${item.id}`}
+        className="opacity-0 absolute h-4 w-4 cursor-pointer"
+        checked={selectedFilters.includes(item.name)}
+        onChange={() => handleFilterChange(item.name)}
+      />
+      <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
+        {selectedFilters.includes(item.name) && (
+          <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+        )}
+      </div>
+      <span 
+        className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
+      >
+        {item.name}
+      </span>
+    </label>
+  ))}
+</div>
             <div className="sticky bottom-0 bg-white p-2 border-t border-gray-200 flex justify-between">
               <button
                 onClick={clearAllFilters}

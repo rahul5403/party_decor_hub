@@ -1,8 +1,10 @@
+
 import React, { useState } from "react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { useLogin } from "../hooks/auth/useLogin.js";
 import logo from "../assets/images/logo.png";
 import background from "../assets/images/header_bg.png";
+import axios from "axios";
 
 const Login = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
@@ -14,8 +16,33 @@ const Login = ({ onClose, onSignupClick }) => {
     await handleLogin(email, password, onClose);
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    const id_token = credentialResponse.credential;
+    try {
+      console.log("Google ID Token:", id_token); // Debugging line
+      const res = await axios.post(
+        "https://crochetmumma.com/api/google-login",
+        { id_token },
+        { withCredentials: true } // So refresh cookie is stored
+      );
+      const accessToken = res.data.access;
+
+      // ✅ Store accessToken as needed (e.g. in localStorage or context)
+      localStorage.setItem("access_token", accessToken);
+
+      onClose(); // Close the modal on success
+    } catch (err) {
+      console.error("Google Login Error", err);
+      alert("Google login failed.");
+    }
+  };
+
+  const handleGoogleFailure = () => {
+    alert("Google login was unsuccessful. Try again.");
+  };
+
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+    <GoogleOAuthProvider clientId="74027685761-uao4u2m2ibpo6j5t2ate76ebf6e1knur.apps.googleusercontent.com">
       <div className="fixed z-30 inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
         <div className="bg-[#FAF3E0] rounded-xl overflow-hidden max-w-md md:max-w-3xl w-full mx-4 md:mx-8 lg:mx-auto shadow-2xl">
           <div className="flex flex-col md:flex-row">
@@ -61,7 +88,7 @@ const Login = ({ onClose, onSignupClick }) => {
                   required
                 />
 
-                <label className="block text-sm font-medium text-gray-700 text-left">
+                <label className="block text-sm font-medium text-gray-700 text-left mt-2">
                   Password
                 </label>
                 <input
@@ -80,17 +107,26 @@ const Login = ({ onClose, onSignupClick }) => {
                 >
                   {loading ? "Logging in..." : "Sign In"}
                 </button>
-
-                <p className="text-sm text-center mt-2">
-                  New to Party Decor Hub?{" "}
-                  <span
-                    className="text-blue-500 cursor-pointer"
-                    onClick={onSignupClick}
-                  >
-                    Create Account
-                  </span>
-                </p>
               </form>
+
+              {/* 🔐 Google Login Button */}
+              <div className="mt-4 text-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleFailure}
+                  width="100%"
+                />
+              </div>
+
+              <p className="text-sm text-center mt-2">
+                New to Party Decor Hub?{" "}
+                <span
+                  className="text-blue-500 cursor-pointer"
+                  onClick={onSignupClick}
+                >
+                  Create Account
+                </span>
+              </p>
             </div>
           </div>
         </div>
