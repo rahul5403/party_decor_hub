@@ -114,6 +114,8 @@ const ProductDetails = () => {
     }
   };
 
+  
+
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
   };

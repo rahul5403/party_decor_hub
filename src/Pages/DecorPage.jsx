@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { FaFilter, FaSortAmountDown, FaTimes, FaRupeeSign, FaCheck } from "react-icons/fa";
+import { FaFilter, FaSortAmountDown, FaTimes, FaRupeeSign, FaCheck, FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { addToCart } from "../redux/cartSlice";
+import { useDispatch } from "react-redux";
+import useSetCartItems from "../hooks/cart/useSetCartItems.js";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -13,7 +16,17 @@ const DecorPage = () => {
   const [selectedFilters, setSelectedFilters] = useState([]);
   const navigate = useNavigate();
   const [filters, setFilters] = useState([]);
-
+  const dispatch = useDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+  const addItemToCart = useSetCartItems();
+  const [expandedComboFilter, setExpandedComboFilter] = useState(false);
+  const [hoveredCombo, setHoveredCombo] = useState(false);
+  const [comboFilters, setComboFilters] = useState([]);
+  const [regularFilters, setRegularFilters] = useState([]);
+  
+  // Refs for positioning
+  const comboFilterRef = useRef(null);
+  const comboDropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,6 +47,8 @@ const DecorPage = () => {
           description: product.category,
           image: BASE_IMAGE_URL + product.thumbnail,
           images: [BASE_IMAGE_URL + product.thumbnail],
+          colors: product.colors || [],
+          sizes: product.sizes || [],
         }));
 
         if (selectedFilters.length === 0) {
@@ -57,7 +72,6 @@ const DecorPage = () => {
     fetchProducts();
   }, [selectedFilters, sortOrder]);
 
-
   useEffect(() => {
     const fetchFilters = async () => {
       try {
@@ -65,8 +79,19 @@ const DecorPage = () => {
         const data = await response.json();
 
         const partyDecorFilters = data.find(category => category.category === "Party Decor")?.filters || [];
-
-        setFilters(partyDecorFilters);
+        
+        // Separate combo filters from regular filters
+        const comboFiltersList = partyDecorFilters.filter(filter => 
+          filter.name.toLowerCase().includes('combo')
+        );
+        
+        const regularFiltersList = partyDecorFilters.filter(filter => 
+          !filter.name.toLowerCase().includes('combo')
+        );
+        
+        setComboFilters(comboFiltersList);
+        setRegularFilters(regularFiltersList);
+        setFilters(regularFiltersList); // Initially show only regular filters
       } catch (error) {
         console.error("Error fetching filters:", error);
       }
@@ -75,6 +100,33 @@ const DecorPage = () => {
     fetchFilters();
   }, []);
 
+  // Handle click outside to close combo dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        comboDropdownRef.current && 
+        !comboDropdownRef.current.contains(event.target) &&
+        comboFilterRef.current &&
+        !comboFilterRef.current.contains(event.target)
+      ) {
+        setHoveredCombo(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [comboDropdownRef, comboFilterRef]);
+
+  // Add useEffect to position dropdown correctly
+  useEffect(() => {
+    if (hoveredCombo && comboFilterRef.current && comboDropdownRef.current) {
+      const filterRect = comboFilterRef.current.getBoundingClientRect();
+      comboDropdownRef.current.style.left = `${filterRect.right + 10}px`;
+      comboDropdownRef.current.style.top = `${filterRect.top}px`;
+    }
+  }, [hoveredCombo]);
 
   const handleFilterChange = (filterName) => {
     setSelectedFilters((prevFilters) =>
@@ -97,6 +149,62 @@ const DecorPage = () => {
     setShowSortOptions(false);
   };
 
+  const handleAddToCart = (product) => {
+    const item = [
+      {
+        id: String(product.id),
+        product_id: String(product.id),
+        quantity: 1,
+        color: Array.isArray(product.colors) && product.colors.length > 0
+          ? product.colors[0]
+          : null,
+        size: Array.isArray(product.sizes) && product.sizes.length > 0
+          ? product.sizes[0]
+          : null,
+        price: product.price,
+        name: product.name,
+        thumbnail: product.images[0],
+        images: product.images,
+      },
+    ];
+
+    if (!accessToken) {
+      dispatch(addToCart(item[0]));
+    } else {
+      addItemToCart(item);
+    }
+  };
+
+  const toggleExpandComboFilter = () => {
+    setExpandedComboFilter(!expandedComboFilter);
+  };
+
+  // Desktop hover/click handlers
+  const handleComboInteraction = () => {
+    setHoveredCombo(!hoveredCombo);
+  };
+
+  // Modified filter change handler to prevent incorrect behavior
+  const handleComboFilterChange = (e, filterName) => {
+    e.stopPropagation(); // Prevent event bubbling
+    handleFilterChange(filterName);
+  };
+
+  const handleRegularFilterChange = (e, filterName) => {
+    e.stopPropagation(); // Prevent event bubbling
+    handleFilterChange(filterName);
+  };
+
+  // Function to check if any combo filter is selected
+  const isAnyComboFilterSelected = () => {
+    return comboFilters.some(filter => selectedFilters.includes(filter.name));
+  };
+
+  // Count of selected combo filters
+  const selectedComboCount = comboFilters.filter(filter => 
+    selectedFilters.includes(filter.name)
+  ).length;
+
   return (
     <div className="min-h-screen bg-gray-50 pb-14 lg:pb-0">
       {/* Desktop Layout */}
@@ -104,22 +212,53 @@ const DecorPage = () => {
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Compact Desktop Filter Panel with Transitions */}
           <div className="hidden lg:block w-65 flex-shrink-0">
-          <div
-  className="bg-white rounded-lg shadow-sm p-3 sticky top-2 border border-gray-100 transition-all duration-200 hover:shadow-md"
-  style={{
-    maxHeight: 'calc(100vh - 2rem)',
-    overflowY: 'auto',
-    scrollbarWidth: 'none', // For Firefox
-    msOverflowStyle: 'none', // For IE and Edge
-  }}
->
-  <style>
-    {`
-      ::-webkit-scrollbar {
-        display: none; /* For Chrome, Safari, and Edge */
-      }
-    `}
-  </style>            <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
+            <div
+              className="bg-white rounded-lg shadow-sm p-3 sticky top-2 border border-gray-100 transition-all duration-200 hover:shadow-md overflow-visible"
+              style={{
+                maxHeight: 'calc(100vh - 2rem)',
+                overflowY: 'auto',
+                scrollbarWidth: 'none', // For Firefox
+                msOverflowStyle: 'none', // For IE and Edge
+                position: 'relative',
+              }}
+            >
+              <style>
+                {`
+                  .filter-panel::-webkit-scrollbar {
+                    display: none; /* For Chrome, Safari, and Edge */
+                  }
+                  .combo-dropdown {
+                    transform: translateX(10px);
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all 0.3s ease-in-out;
+                    position: fixed !important;
+                    z-index: 9999;
+                  }
+                  .combo-dropdown.active {
+                    transform: translateX(0);
+                    opacity: 1;
+                    visibility: visible;
+                  }
+                  .combo-filter-item {
+                    transition: all 0.2s ease;
+                  }
+                  .combo-filter-item:hover {
+                    background-color: #f3f4f6;
+                  }
+                  .selected-combo {
+                    background-color: #ecfdf5;
+                    border-color: #d1fae5;
+                  }
+                  .combo-chevron {
+                    transition: transform 0.3s ease;
+                  }
+                  .combo-chevron.active {
+                    transform: rotate(90deg);
+                  }
+                `}
+              </style>
+              <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-800 transition-colors duration-200">Filters</h3>
                 {selectedFilters.length > 0 && (
                   <button 
@@ -131,34 +270,103 @@ const DecorPage = () => {
                 )}
               </div>
               
-              <div className="space-y-2 mt-2">
-              {filters.map((item) => (
-  <label 
-    key={item.id} 
-    htmlFor={item.id} 
-    className={`flex items-center p-2 rounded-md transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-50'}`}
-  >
-    <div className="relative flex items-center">
-      <input
-        type="checkbox"
-        id={item.id}
-        className="opacity-0 absolute h-4 w-4 cursor-pointer"
-        checked={selectedFilters.includes(item.name)}
-        onChange={() => handleFilterChange(item.name)}
-      />
-      <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300 hover:border-gray-400'}`}>
-        {selectedFilters.includes(item.name) && (
-          <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
-        )}
-      </div>
-    </div>
-    <span 
-      className={`ml-2 text-sm text-gray-700 transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'hover:text-gray-900'}`}
-    >
-      {item.name}
-    </span>
-  </label>
-))}
+              <div className="space-y-2 mt-2 filter-panel">
+                {/* Combo filter category with hover/click effect */}
+                <div className="relative" ref={comboFilterRef}>
+                  <div 
+                    className={`flex items-center justify-between p-2 rounded-md transition-all duration-200 cursor-pointer ${isAnyComboFilterSelected() ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-50'}`}
+                    onClick={handleComboInteraction}
+                  >
+                    <div className="flex items-center">
+                      <span 
+                        className={`text-sm transition-all duration-200 ${isAnyComboFilterSelected() ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
+                      >
+                        Combo Products
+                        {selectedComboCount > 0 && (
+                          <span className="ml-2 bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded-full">
+                            {selectedComboCount}
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                    <FaChevronRight className={`h-3 w-3 text-gray-500 combo-chevron ${hoveredCombo ? 'active' : ''}`} />
+                  </div>
+                  
+                  {/* Combo filters dropdown (desktop) */}
+                  <div 
+                    ref={comboDropdownRef}
+                    className={`fixed bg-white rounded-lg shadow-lg border border-gray-100 p-2 z-50 w-70 combo-dropdown ${hoveredCombo ? 'active' : ''}`}
+                    style={{ 
+                      left: comboFilterRef.current ? comboFilterRef.current.getBoundingClientRect().right + 10 : 'auto',
+                      top: comboFilterRef.current ? comboFilterRef.current.getBoundingClientRect().top : 'auto'
+                    }}
+                    onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                  >
+                    <div className="space-y-1 py-1">
+                      <div className="border-b border-gray-100 pb-2 mb-1">
+                        <h4 className="text-sm font-medium text-green-800 px-2">Combo Filters</h4>
+                      </div>
+                      {comboFilters.map((item) => (
+                        <label 
+                          key={item.id} 
+                          htmlFor={`combo-${item.id}`} 
+                          className={`flex items-center p-2 rounded-md transition-all duration-200 cursor-pointer combo-filter-item ${selectedFilters.includes(item.name) ? 'selected-combo' : ''}`}
+                          onClick={(e) => handleComboFilterChange(e, item.name)}
+                        >
+                          <div className="relative flex items-center">
+                            <input
+                              type="checkbox"
+                              id={`combo-${item.id}`}
+                              className="h-4 w-4 cursor-pointer opacity-0 absolute"
+                              checked={selectedFilters.includes(item.name)}
+                              onChange={() => handleFilterChange(item.name)}
+                            />
+                            <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300 hover:border-gray-400'}`}>
+                              {selectedFilters.includes(item.name) && (
+                                <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+                              )}
+                            </div>
+                          </div>
+                          <span 
+                            className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
+                          >
+                            {item.name}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Regular filters */}
+                  {regularFilters.map((item) => (
+                  <label 
+                    key={item.id} 
+                    htmlFor={item.id} 
+                    className={`flex items-center p-2 rounded-md transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-50'}`}
+                    onClick={(e) => handleRegularFilterChange(e, item.name)}
+                  >
+                    <div className="relative flex items-center">
+                      <input
+                        type="checkbox"
+                        id={item.id}
+                        className="h-4 w-4 cursor-pointer opacity-0 absolute"
+                        checked={selectedFilters.includes(item.name)}
+                        onChange={() => handleFilterChange(item.name)}
+                      />
+                      <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300 hover:border-gray-400'}`}>
+                        {selectedFilters.includes(item.name) && (
+                          <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+                        )}
+                      </div>
+                    </div>
+                    <span 
+                      className={`ml-2 text-sm text-gray-700 transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'hover:text-gray-900'}`}
+                    >
+                      {item.name}
+                    </span>
+                  </label>
+                ))}
               </div>
             </div>
           </div>
@@ -207,23 +415,14 @@ const DecorPage = () => {
                   className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105"
                   onClick={() => handleProductClick(product)}
                 >
-      {/* <div className="relative overflow-hidden h-64 min-h-[300px]">
-        <img 
-          src={product.image} 
-          alt={product.name} 
-          className="absolute h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-          loading="lazy"
-        />
-      </div> */}
-
-<div className="relative aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
-  <img 
-    src={product.image} 
-    alt={product.name} 
-    className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 hover:scale-105"
-    loading="lazy"
-  />
-</div>
+                  <div className="relative aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
                   <div className="p-2.5">
                     <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1 transition-colors duration-200">
                       {product.name}
@@ -236,7 +435,13 @@ const DecorPage = () => {
                       </span>
                     </div>
 
-                    <button className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                      className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]"
+                    >
                       Add to Cart
                     </button>
                   </div>
@@ -266,7 +471,7 @@ const DecorPage = () => {
             className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out" 
             onClick={() => setShowFilters(false)}
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg max-h-[70vh] overflow-y-auto transform transition-transform duration-300 ease-out">
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg max-h-[70vh] overflow-y-auto transform transition-transform duration-300 ease-out animate-slide-up">
             <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center">
               <h3 className="text-lg font-semibold transition-colors duration-200">Filters</h3>
               <button 
@@ -278,31 +483,84 @@ const DecorPage = () => {
             </div>
             
             <div className="p-3 space-y-1">
-  {filters.map((item) => (
-    <label 
-      key={item.id} 
-      className={`flex items-center p-2 rounded transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}
-    >
-      <input
-        type="checkbox"
-        id={`mobile-${item.id}`}
-        className="opacity-0 absolute h-4 w-4 cursor-pointer"
-        checked={selectedFilters.includes(item.name)}
-        onChange={() => handleFilterChange(item.name)}
-      />
-      <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
-        {selectedFilters.includes(item.name) && (
-          <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
-        )}
-      </div>
-      <span 
-        className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
-      >
-        {item.name}
-      </span>
-    </label>
-  ))}
-</div>
+              {/* Mobile Combo Filter with dropdown */}
+              <div className="border-b border-gray-100 pb-2 mb-2">
+                <button
+                  onClick={toggleExpandComboFilter}
+                  className={`w-full flex items-center justify-between p-2 rounded transition-all duration-200 ${isAnyComboFilterSelected() ? 'bg-green-50' : 'hover:bg-gray-50'}`}
+                >
+                  <span className={`text-sm ${isAnyComboFilterSelected() ? 'font-medium text-green-800' : 'text-gray-700'}`}>
+                    Combo Products
+                    {selectedComboCount > 0 && (
+                      <span className="ml-2 bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded-full">
+                        {selectedComboCount}
+                      </span>
+                    )}
+                  </span>
+                  <FaChevronDown 
+                    className={`h-3 w-3 text-gray-500 transition-transform duration-300 ${expandedComboFilter ? 'transform rotate-180' : ''}`} 
+                  />
+                </button>
+                
+                {/* Combo filter options */}
+                <div 
+                  className={`pl-4 space-y-1 mt-1 overflow-hidden transition-all duration-300 ${expandedComboFilter ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                >
+                  {comboFilters.map((item) => (
+                    <label 
+                      key={item.id}
+                      className={`flex items-center p-2 rounded transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50' : 'hover:bg-gray-100'}`}
+                      onClick={(e) => handleRegularFilterChange(e, item.name)}
+                    >
+                      <input
+                        type="checkbox"
+                        id={`mobile-combo-${item.id}`}
+                        className="h-4 w-4 cursor-pointer opacity-0 absolute"
+                        checked={selectedFilters.includes(item.name)}
+                        onChange={() => handleFilterChange(item.name)}
+                      />
+                      <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
+                        {selectedFilters.includes(item.name) && (
+                          <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+                        )}
+                      </div>
+                      <span 
+                        className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
+                      >
+                        {item.name}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Regular filters for mobile */}
+              {regularFilters.map((item) => (
+                <label 
+                  key={item.id} 
+                  className={`flex items-center p-2 rounded transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}
+                  onClick={(e) => handleRegularFilterChange(e, item.name)}
+                >
+                  <input
+                    type="checkbox"
+                    id={`mobile-${item.id}`}
+                    className="h-4 w-4 cursor-pointer opacity-0 absolute"
+                    checked={selectedFilters.includes(item.name)}
+                    onChange={() => handleFilterChange(item.name)}
+                  />
+                  <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
+                    {selectedFilters.includes(item.name) && (
+                      <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+                    )}
+                  </div>
+                  <span 
+                    className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
+                  >
+                    {item.name}
+                  </span>
+                </label>
+              ))}
+            </div>
             <div className="sticky bottom-0 bg-white p-2 border-t border-gray-200 flex justify-between">
               <button
                 onClick={clearAllFilters}
@@ -328,7 +586,7 @@ const DecorPage = () => {
             className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out" 
             onClick={() => setShowSortOptions(false)}
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg max-h-[50vh] overflow-y-auto transform transition-transform duration-300 ease-out">
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg max-h-[50vh] overflow-y-auto transform transition-transform duration-300 ease-out animate-slide-up">
             <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center">
               <h3 className="text-lg font-semibold transition-colors duration-200">Sort By</h3>
               <button 
@@ -370,7 +628,7 @@ const DecorPage = () => {
           <FaFilter className="text-xs transition-transform duration-200" /> 
           <span className="transition-colors duration-200">Filters</span>
           {selectedFilters.length > 0 && (
-            <span className="ml-0.5 bg-white text-green-700 rounded-full h-4 w-4 flex items-center justify-center text-2xs transition-all duration-200">
+            <span className="ml-0.5 bg-white text-green-700 rounded-full h-4 w-4 flex items-center justify-center text-xs transition-all duration-200">
               {selectedFilters.length}
             </span>
           )}

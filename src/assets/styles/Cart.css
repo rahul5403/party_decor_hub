@@ -86,10 +86,6 @@
     font-weight: bold;
 }
 
-.cart-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
 /* Product Image */
 .cart-product-img {
     width: 60px;

@@ -1,4 +1,3 @@
-// hooks/useBooking.js
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -41,13 +40,15 @@ const useHandleBooking = (service, startDate, startTime, customerName, address, 
 
       if (response.status === 201) {
         toast.success(`Booking confirmed for ${service.name} from ${startDate} at ${startTime}`);
+        const productUrl = `https://partydecorhub.com/services/${service.id}`;
         const whatsappMessage = `*New Booking Details*\n\n` +
           `➤  *Service:* ${service.name}\n` +
           `➤  *Customer Name:* ${customerName}\n` +
           `➤  *Address:* ${address}\n` +
           `➤  *Email:* ${email}\n` +
           `➤  *Phone:* ${phone}\n` +
-          `➤  *Start Date:* ${formatDateTime(startDate, startTime)}`;
+          `➤  *Start Date:* ${formatDateTime(startDate, startTime)}`+
+          `➤  *Service Link:* ${productUrl}`;
 
         const whatsappUrl = `https://wa.me/7011676961?text=${encodeURIComponent(whatsappMessage)}`;
         window.open(whatsappUrl, "_blank");

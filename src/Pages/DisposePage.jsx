@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaFilter, FaSortAmountDown, FaTimes, FaRupeeSign, FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cartSlice";
+import useSetCartItems from "../hooks/cart/useSetCartItems";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -13,6 +16,9 @@ const DisposePage = () => {
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filters, setFilters] = useState([]);
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
+  const dispatch = useDispatch();
+  const addItemToCart = useSetCartItems();
 
   useEffect(() => {
     const fetchDisposableItems = async () => {
@@ -90,14 +96,42 @@ const DisposePage = () => {
     setShowSortOptions(false);
   };
 
+  const handleAddToCart = (product, e) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    
+    const item = {
+      id: String(product.id),
+      product_id: String(product.id),
+      quantity: 1,
+      color: Array.isArray(product.colors) && product.colors.length > 0
+        ? product.colors[0]
+        : null,
+      size: Array.isArray(product.sizes) && product.sizes.length > 0
+        ? product.sizes[0]
+        : null,
+      price: product.price,
+      name: product.name,
+      thumbnail: product.image,
+      images: product.images || [product.image],
+    };
+
+    if (!accessToken) {
+      dispatch(addToCart(item));
+    } else {
+      addItemToCart([item]);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-14 lg:pb-0">
       {/* Desktop Layout */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 w-full">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Compact Desktop Filter Panel with Transitions */}
-          <div className="hidden lg:block w-60 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-sm p-4 sticky top-2 border border-gray-100 transition-all duration-200 hover:shadow-md">
+          <div className="hidden lg:block w-70 flex-shrink-0">
+            <div className="bg-white rounded-lg shadow-sm p-3 sticky top-2 border border-gray-100 transition-all duration-200 hover:shadow-md">
               <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-800 transition-colors duration-200">Filters</h3>
                 {selectedFilters.length > 0 && (
@@ -216,7 +250,12 @@ const DisposePage = () => {
                       </span>
                     </div>
 
-                    <button className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]">
+                    <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                    className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]">
                       Add to cart
                     </button>
                   </div>
