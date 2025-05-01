@@ -23,8 +23,8 @@ const Checkout = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 min-h-screen">
-      <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-700 mb-8 relative inline-block">
+    <div className="max-w-6xl mx-auto px-2 py-2 min-h-screen">
+      <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-700 mb-4 relative inline-block">
   Checkout
   <span className="block w-16 h-1 bg-green-500 mx-auto mt-2 rounded-full"></span>
 </h1>
@@ -57,7 +57,7 @@ const Checkout = () => {
                 <div className="flex justify-between w-full">
                   <div>
                     <h3 className="text-sm font-medium text-gray-800">{item.name || item.product_name}</h3>
-                    <p className="text-xs text-gray-500 mt-1">Qty: {item.quantity}</p>
+                    <p className="text-xs text-gray-500 mt-1 text-left">Qty: {item.quantity}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-green-600">₹{item.price.toFixed(2)}</p>
