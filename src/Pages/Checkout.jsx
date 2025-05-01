@@ -32,7 +32,7 @@ const Checkout = () => {
       <div className="flex flex-col md:flex-row gap-6">
         {/* Shipping Form */}
         <form onSubmit={handleSubmit} className="w-full md:w-[45%] bg-white border rounded-lg p-6 space-y-4 shadow-sm">
-          <h4 className="text-lg font-semibold mb-2">Shipping Information</h4>
+          <h4 className="text-lg font-semibold mb-4 text-green-700 border-b border-green-200 pb-1">Shipping Information</h4>
           <div className="grid grid-cols-1 gap-4">
             <input name="fullName" type="text" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required className="input input-bordered input-sm w-full" />
             <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} required className="input input-bordered input-sm w-full" />
@@ -44,12 +44,12 @@ const Checkout = () => {
             </div>
             <input name="postalCode" type="text" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} required className="input input-bordered input-sm w-full" />
           </div>
-          <button type="button" onClick={() => navigate(-1)} className="text-sm text-green-600 hover:underline mt-2">← Return to Cart</button>
+          <button type="button" onClick={() => navigate(-1)} className="text-sm text-green-600 hover:underline mt-2 bg-green-50 px-2 py-1 rounded">← Return to Cart</button>
         </form>
 
         {/* Order Summary */}
         <div className="w-full md:w-[55%] bg-white border rounded-lg p-6 shadow-sm">
-          <h4 className="text-lg font-semibold mb-4">Order Summary</h4>
+          <h4 className="text-lg font-semibold mb-4 text-green-700 border-b border-green-200 pb-1">Order Summary</h4>
           <div className="max-h-72 overflow-y-auto space-y-4 mb-4 pr-1">
             {cartItems.map((item) => (
               <div key={item.id} className="flex items-center gap-4 border-b pb-3">
