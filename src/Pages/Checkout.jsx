@@ -23,47 +23,55 @@ const Checkout = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      <h1 className="text-xl font-bold text-center text-gray-800 mb-6">Checkout</h1>
-      <div className="flex flex-col md:flex-row gap-4">
+    <div className="max-w-6xl mx-auto px-4 py-8 min-h-screen">
+      <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-700 mb-8 relative inline-block">
+  Checkout
+  <span className="block w-16 h-1 bg-green-500 mx-auto mt-2 rounded-full"></span>
+</h1>
+
+      <div className="flex flex-col md:flex-row gap-6">
         {/* Shipping Form */}
-        <form onSubmit={handleSubmit} className="w-full md:w-1/2 bg-white border rounded-lg p-4 space-y-3">
-          <h4 className="text-md font-semibold mb-1">Shipping Information</h4>
-          <div className="grid grid-cols-1 gap-3">
-            <input name="fullName" type="text" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required className="input input-sm" />
-            <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} required className="input input-sm" />
-            <input name="phone" type="text" placeholder="Phone" value={formData.phone} onChange={handleChange} required className="input input-sm" />
-            <input name="address" type="text" placeholder="Address" value={formData.address} onChange={handleChange} required className="input input-sm" />
-            <div className="grid grid-cols-2 gap-3">
-              <input name="city" type="text" placeholder="City" value={formData.city} onChange={handleChange} required className="input input-sm" />
-              <input name="country" type="text" placeholder="Country" value={formData.country} onChange={handleChange} required className="input input-sm" />
+        <form onSubmit={handleSubmit} className="w-full md:w-[45%] bg-white border rounded-lg p-6 space-y-4 shadow-sm">
+          <h4 className="text-lg font-semibold mb-2">Shipping Information</h4>
+          <div className="grid grid-cols-1 gap-4">
+            <input name="fullName" type="text" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required className="input input-bordered input-sm w-full" />
+            <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} required className="input input-bordered input-sm w-full" />
+            <input name="phone" type="text" placeholder="Phone" value={formData.phone} onChange={handleChange} required className="input input-bordered input-sm w-full" />
+            <input name="address" type="text" placeholder="Address" value={formData.address} onChange={handleChange} required className="input input-bordered input-sm w-full" />
+            <div className="grid grid-cols-2 gap-4">
+              <input name="city" type="text" placeholder="City" value={formData.city} onChange={handleChange} required className="input input-bordered input-sm w-full" />
+              <input name="country" type="text" placeholder="Country" value={formData.country} onChange={handleChange} required className="input input-bordered input-sm w-full" />
             </div>
-            <input name="postalCode" type="text" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} required className="input input-sm" />
+            <input name="postalCode" type="text" placeholder="Postal Code" value={formData.postalCode} onChange={handleChange} required className="input input-bordered input-sm w-full" />
           </div>
-          <button type="button" onClick={() => navigate(-1)} className="text-xs text-green-600 hover:underline mt-1">← Return to Cart</button>
+          <button type="button" onClick={() => navigate(-1)} className="text-sm text-green-600 hover:underline mt-2">← Return to Cart</button>
         </form>
 
         {/* Order Summary */}
-        <div className="w-full md:w-1/2 bg-white border rounded-lg p-4">
-          <h4 className="text-md font-semibold mb-3">Order Summary</h4>
-          <div className="max-h-60 overflow-y-auto space-y-2 mb-3">
+        <div className="w-full md:w-[55%] bg-white border rounded-lg p-6 shadow-sm">
+          <h4 className="text-lg font-semibold mb-4">Order Summary</h4>
+          <div className="max-h-72 overflow-y-auto space-y-4 mb-4 pr-1">
             {cartItems.map((item) => (
-              <div key={item.id} className="flex items-center gap-2 pb-2 border-b">
-                <img src={item.thumbnail} alt={item.name} className="w-12 h-12 rounded object-cover" />
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-medium text-gray-800 truncate">{item.name || item.product_name}</h3>
-                  <div className="flex items-center text-xs mt-0.5">
-                    <span className="text-green-600 font-semibold">₹{item.price.toFixed(2)}</span>
+              <div key={item.id} className="flex items-center gap-4 border-b pb-3">
+                <img src={item.thumbnail} alt={item.name} className="w-16 h-16 rounded-md object-cover" />
+                <div className="flex justify-between w-full">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-800">{item.name || item.product_name}</h3>
+                    <p className="text-xs text-gray-500 mt-1">Qty: {item.quantity}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-green-600">₹{item.price.toFixed(2)}</p>
                     {item.originalPrice && item.originalPrice > item.price && (
-                      <span className="ml-1.5 text-gray-400 line-through">₹{item.originalPrice.toFixed(2)}</span>
+                      <p className="text-xs text-gray-400 line-through">₹{item.originalPrice.toFixed(2)}</p>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="space-y-1.5 text-sm text-gray-700 mb-3">
+
+          {/* Summary */}
+          <div className="space-y-2 text-sm text-gray-700 mb-4">
             <div className="flex justify-between">
               <span>Subtotal</span>
               <span>₹{subtotal.toFixed(2)}</span>
@@ -72,12 +80,14 @@ const Checkout = () => {
               <span>Shipping</span>
               <span>₹{shippingCost.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between font-semibold text-sm border-t pt-1.5 mt-1.5">
+            <div className="flex justify-between font-semibold border-t pt-2">
               <span>Total</span>
               <span>₹{totalCost.toFixed(2)}</span>
             </div>
           </div>
-          <div className="bg-gray-100 p-2 rounded text-xs text-gray-600 flex items-center gap-1.5 mb-3">
+
+          {/* Secure Note + Pay */}
+          <div className="bg-gray-100 p-3 rounded text-xs text-gray-600 flex items-center gap-2 mb-4">
             <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
