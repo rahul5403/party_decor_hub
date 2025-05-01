@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from 'react-markdown';
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -36,6 +37,19 @@ const ProductDetails = () => {
   const addItemToCart = useSetCartItems();
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem("accessToken");
+
+
+  const processMarkdown = (text) => {
+    if (!text) return '';
+    
+    // Replace literal "\r\n" strings with actual line breaks
+    let processed = text
+      .replace(/\\r\\n/g, '\n')
+      .replace(/\\n/g, '\n');
+      
+    return processed;
+  };
+  
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -421,10 +435,19 @@ const ProductDetails = () => {
                       </div>
                     )
                   ) : (
-                    <div className="prose max-w-none text-gray-700">
-                      <p className="text-base leading-relaxed">
+                    <div className="prose max-w-none text-gray-700 text-left">
+                      {/* <p className="text-base leading-relaxed">
                         {product.description}
-                      </p>
+                      </p> */}
+                      {/* <ReactMarkdown className="prose max-w-none text-gray-700">
+  {product.description}
+</ReactMarkdown> */}
+
+<ReactMarkdown>
+    {processMarkdown(product.description)}
+  </ReactMarkdown>
+
+{/* {console.log(product)} */}
                       {/* Dynamic features list from backend */}
                       {product.features?.length > 0 && (
                         <ul className="mt-4 space-y-2 pl-4">
