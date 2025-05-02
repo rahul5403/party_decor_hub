@@ -47,7 +47,7 @@ const useHandleBooking = (service, startDate, startTime, customerName, address, 
           `➤  *Address:* ${address}\n` +
           `➤  *Email:* ${email}\n` +
           `➤  *Phone:* ${phone}\n` +
-          `➤  *Start Date:* ${formatDateTime(startDate, startTime)}`+
+          `➤  *Start Date:* ${formatDateTime(startDate, startTime)}\n`+
           `➤  *Service Link:* ${productUrl}`;
 
         const whatsappUrl = `https://wa.me/7011676961?text=${encodeURIComponent(whatsappMessage)}`;

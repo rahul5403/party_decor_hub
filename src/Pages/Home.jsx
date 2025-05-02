@@ -6,6 +6,7 @@ import HomeProductSection from "../components/HomeProductSection";
 import useGetCartItems from "../hooks/cart/useGetCartItems.js";
 import LazyLoadVertical from "../components/LazyLoadVertical";
 import useHomeData from "../hooks/Home/useFetchData";
+import DeliveryBanner from "../components/DeliveryBanner.jsx";
 
 const PRODUCTS_PER_LOAD = 10;
 
@@ -16,6 +17,7 @@ function Home() {
   const [visibleCounts, setVisibleCounts] = useState({
     decorationItems: PRODUCTS_PER_LOAD,
     disposableItems: PRODUCTS_PER_LOAD,
+    decorationServices: PRODUCTS_PER_LOAD, 
     bestSellers: PRODUCTS_PER_LOAD,
     neonLights: PRODUCTS_PER_LOAD,
   });
@@ -31,15 +33,13 @@ function Home() {
 
   return (
     <React.Fragment>
-      {/* Hero Section - Load immediately (above the fold) */}
       <HeroSection />
 
-      {/* Services - Vertical Lazy Loading */}
       <LazyLoadVertical height="400px">
         <Services />
       </LazyLoadVertical>
+      <DeliveryBanner />
 
-      {/* Decoration Items - Vertical Lazy Loading + Horizontal Lazy Loading */}
       <LazyLoadVertical height="300px">
         <HomeProductSection
           products={partyData.slice(0, visibleCounts.decorationItems)}
@@ -51,11 +51,12 @@ function Home() {
 
       {/* Decoration Services - Vertical Lazy Loading */}
       <LazyLoadVertical height="300px">
-        <HomeProductSection
-          products={decorationServices}
-          section={"Decoration Services"}
-          isLoading={loading.services}
-        />
+      <HomeProductSection
+        products={decorationServices.slice(0, visibleCounts.decorationServices)}
+        section={"Decoration Services"}
+        isLoading={loading.services}
+        onScrollEnd={() => handleScrollEnd("decorationServices")}
+/>
       </LazyLoadVertical>
 
       {/* Disposable Items - Vertical + Horizontal Lazy Loading */}

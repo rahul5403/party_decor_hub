@@ -27,7 +27,7 @@ const HomeProductSection = ({ products, section, isLoading, onScrollEnd }) => {
   }, [onScrollEnd]);
 
   return (
-    <div className="decoration-section">
+    <div className="decoration-section ">
       <h2 className="decoration-title">{section}</h2>
       <div className="decoration-scroll" ref={scrollRef}>
         {isLoading ? (

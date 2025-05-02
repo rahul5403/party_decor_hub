@@ -107,10 +107,13 @@ const Login = ({ onClose, onSignupClick }) => {
                 >
                   {loading ? "Logging in..." : "Sign In"}
                 </button>
-              </form>
 
+                <div className="mb-0 ">or</div>
+              </form>
+                
               {/* 🔐 Google Login Button */}
-              <div className="mt-4 text-center">
+             
+              <div className="mt-2 text-center">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={handleGoogleFailure}

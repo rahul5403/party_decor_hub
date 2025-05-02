@@ -33,7 +33,15 @@ const cartSlice = createSlice({
       const { id, quantity } = action.payload;
       const itemIndex = state.cartItems.findIndex((item) => item.id === id);
       if (itemIndex !== -1) {
-        state.cartItems[itemIndex].quantity = quantity; 
+        // Calculate the difference between new and old quantity
+        const oldQuantity = state.cartItems[itemIndex].quantity;
+        const quantityDifference = quantity - oldQuantity;
+        
+        // Update the item quantity
+        state.cartItems[itemIndex].quantity = quantity;
+        
+        // Update the total cart count
+        state.cartCount += quantityDifference;
       }
     },
     mergeCart: (state, action) => {

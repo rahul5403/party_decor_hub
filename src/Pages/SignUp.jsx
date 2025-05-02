@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import useSignUp from "../hooks/auth/useSignUp.js";
 import logo from "../assets/images/logo.png";
 import background from "../assets/images/header_bg.png";
+import axios from "axios";
 
 const SignUp = ({ onClose, onLoginClick }) => {
   const [username, setUsername] = useState("");
@@ -25,6 +26,31 @@ const SignUp = ({ onClose, onLoginClick }) => {
         onLoginClick();
       }, 1000);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    const id_token = credentialResponse.credential;
+    try {
+      console.log("Google ID Token:", id_token); // Debugging line
+      const res = await axios.post(
+        "https://crochetmumma.com/api/google-login",
+        { id_token },
+        { withCredentials: true } // So refresh cookie is stored
+      );
+      const accessToken = res.data.access;
+
+      // ✅ Store accessToken as needed (e.g. in localStorage or context)
+      localStorage.setItem("access_token", accessToken);
+
+      onClose(); // Close the modal on success
+    } catch (err) {
+      console.error("Google Login Error", err);
+      alert("Google login failed.");
+    }
+  };
+
+  const handleGoogleFailure = () => {
+    alert("Google login was unsuccessful. Try again.");
   };
 
   return (
@@ -117,6 +143,16 @@ const SignUp = ({ onClose, onLoginClick }) => {
                 >
                   {loading ? "Signing Up..." : "Sign Up"}
                 </button>
+
+                <div className="mb-0 ">or</div>
+
+                <div className="mt-2 text-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleFailure}
+                  width="100%"
+                />
+              </div>
 
                 <p className="text-sm text-center mt-2">
                   Already have an account?{" "}
