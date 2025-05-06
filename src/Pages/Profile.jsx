@@ -142,7 +142,7 @@ const ProfilePage = () => {
               <strong>Address:</strong></p>
             
             <span className="address-content">
-              {Object.values(profile.address).some((value) => value) // ✅ Koi bhi field filled hai?
+              {Object.values(profile.address).some((value) => value) 
                 ? [
                     profile.address.line1,
                     profile.address.line2,

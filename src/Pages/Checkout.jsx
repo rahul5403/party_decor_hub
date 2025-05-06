@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -17,6 +18,9 @@ const Checkout = () => {
   
   const [deliveryMethod, setDeliveryMethod] = useState("standard");
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [profileError, setProfileError] = useState('');
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   
@@ -32,6 +36,82 @@ const Checkout = () => {
   
   const shippingCost = getShippingCost();
   const totalCost = subtotal + shippingCost;
+
+  // Fetch user profile on component mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        setProfileError("Please login to continue");
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        setLoading(true);
+        
+        // First check if user is logged in
+        const authCheckResponse = await axios.get(
+          "https://partydecorhub.com/api/check-auth",
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        
+        if (!authCheckResponse.data.is_logged_in) {
+          setProfileError("Please login to continue");
+          setLoading(false);
+          return;
+        }
+        
+        // If logged in, fetch profile data
+        const profileResponse = await axios.get(
+          "https://partydecorhub.com/api/profile",
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        
+        const userProfile = profileResponse.data;
+        
+        // Handle different API response structures
+        let formattedAddress = '';
+        if (userProfile.address) {
+          if (typeof userProfile.address === 'string') {
+            formattedAddress = userProfile.address;
+          } else if (typeof userProfile.address === 'object') {
+            // Combine address fields if they exist
+            const addressParts = [];
+            if (userProfile.address.line1) addressParts.push(userProfile.address.line1);
+            if (userProfile.address.line2) addressParts.push(userProfile.address.line2);
+            if (userProfile.address.city) addressParts.push(userProfile.address.city);
+            if (userProfile.address.state) addressParts.push(userProfile.address.state);
+            formattedAddress = addressParts.join(', ');
+          }
+        }
+        
+        // Map user profile data to form fields
+        setFormData({
+          fullName: userProfile.name || userProfile.full_name || '',
+          email: userProfile.email || '',
+          phone: userProfile.phone || userProfile.mobile || '',
+          address: formattedAddress || '',
+          city: userProfile.address?.city || userProfile.city || '',
+          country: userProfile.address?.country || userProfile.country || '',
+          postalCode: userProfile.address?.pincode || userProfile.pincode || userProfile.zip_code || '',
+        });
+        
+        setProfileError('');
+      } catch (err) {
+        setProfileError(err.response?.data?.message || 'Failed to fetch user profile');
+        console.error('Error fetching profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProfile();
+  }, []);
 
   // Check if form is complete
   useEffect(() => {
@@ -57,12 +137,44 @@ const Checkout = () => {
     navigate("/order-confirmation");
   };
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto px-2 py-2 min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full border-green-500 border-t-transparent" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-2 text-gray-600">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-2 py-2 min-h-screen bg-gray-50">
       <h1 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-700 mb-6 relative inline-block">
         Checkout
         <span className="block w-16 h-1 bg-green-500 mx-auto mt-2 rounded-full"></span>
       </h1>
+
+      {/* Show profile error message */}
+      {profileError && (
+        <div className="max-w-6xl mx-auto mb-6">
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{profileError}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row gap-6">
         {/* Shipping Form */}
