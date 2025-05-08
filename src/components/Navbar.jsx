@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiUser, FiSearch } from "react-icons/fi";
 import { BsCartFill } from "react-icons/bs";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -31,7 +31,16 @@ const NavBar = ({ onLoginClick }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const handleLogout = useLogout();
-  useGetCartItems();
+  
+  // Include the useGetCartItems hook in component
+  const getItems = useGetCartItems();
+  
+  // Use effect to call the fetcher function when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      getItems();
+    }
+  }, [isAuthenticated, getItems]);
 
   const handleUserIconClick = () => {
     if (isAuthenticated) {

@@ -121,6 +121,7 @@ const DisposePage = () => {
       dispatch(addToCart(item));
     } else {
       addItemToCart([item]);
+      dispatch(addToCart(item));
     }
   };
 

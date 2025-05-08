@@ -10,6 +10,8 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState({
     email: "",
     username: "",
+    first_name: "",
+    last_name: "",
     phone: "",
     address: {
       line1: "",
@@ -119,6 +121,13 @@ const ProfilePage = () => {
     return name ? name.slice(0, 2).toUpperCase() : "";
   };
 
+  const getFullName = () => {
+    if (!profile) return "";
+    return profile.first_name && profile.last_name 
+      ? `${profile.first_name} ${profile.last_name}` 
+      : profile.first_name || "";
+  };
+
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">Error: {error}</div>;
 
@@ -127,7 +136,10 @@ const ProfilePage = () => {
       <h1 className="heading-profile-page">Profile Page</h1>
       {!editMode ? (
         <div className="profile-details">
-          <div className="profile-picture">{getInitials(profile.username)}</div>
+          <div className="profile-picture">{getInitials(profile.first_name)}</div>
+          <p>
+            <strong>Full Name:</strong> {getFullName() || "N/A"}
+          </p>
           <p>
             <strong>Email:</strong> {profile.email}
           </p>
@@ -166,6 +178,27 @@ const ProfilePage = () => {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="profile-form">
+          <div className="name-fields" style={{ display: "flex", gap: "10px" }}>
+            <label style={{ flex: "1 0 50%" }}>
+              First Name: *
+              <input
+                type="text"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <label style={{ flex: "1 0 50%" }}>
+              Last Name:
+              <input
+                type="text"
+                name="last_name"
+                value={formData.last_name || ""}
+                onChange={handleInputChange}
+              />
+            </label>
+          </div>
           <label>
             Email:
             <input

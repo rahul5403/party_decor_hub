@@ -4,12 +4,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, updateQuantity } from "../redux/cartSlice";
 import useGetCartItems from "../hooks/cart/useGetCartItems.js";
 import useRemoveItem from "../hooks/cart/useRemoveItem.js";
+import useUpdateQuantity from "../hooks/cart/useUpdateCartItems.js";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const removeItem = useRemoveItem();
+  const updateQuantity = useUpdateQuantity();
+
 
   // Fetch cart items once on component mount
   useGetCartItems();
@@ -34,17 +37,23 @@ const Cart = () => {
   }, [navigate]);
 
   const handleQuantityChange = useCallback(
-    (itemId, newQuantity) => {
+    async (itemId, newQuantity) => {
       if (newQuantity > 0) {
-        dispatch(updateQuantity({ id: itemId, quantity: newQuantity }));
+        const result = await updateQuantity(itemId, newQuantity);
+        
+        // Check if we need to handle a decrement
+        if (result && result.shouldDecrement) {
+          await removeItem(result.decrementData);
+        }
       } else {
+        // Remove the entire item if quantity is 0 or negative
         const itemToRemove = cartItems.find(item => item.id === itemId);
         if (itemToRemove) {
-          removeItem(itemToRemove);
+          await removeItem(itemToRemove);
         }
       }
     },
-    [dispatch, cartItems, removeItem]
+    [cartItems, removeItem, updateQuantity]
   );
 
   if (cartItems.length === 0) {
@@ -94,9 +103,16 @@ const Cart = () => {
                         alt={item.name}
                       />
                     </td>
-                    <td className="py-3 px-4 font-medium text-gray-800 text-left">
+                    {/* <td className="py-3 px-4 font-medium text-gray-800 text-left">
                       {item.name || item.product_name}
-                    </td>
+                    </td> */}
+                    <td className="py-3 px-4 font-medium text-gray-800 text-left">
+  {item.name || item.product_name}
+  <div className="text-sm text-gray-500 font-normal p-1">
+    {item.color?.length > 0 && `Color: ${item.color.join(', ')}`}
+    {item.size && ` | Size: ${item.size}`}
+  </div>
+</td>
                     <td className="py-3 px-4 text-gray-700">₹{item.price}</td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center space-x-3">

@@ -104,7 +104,7 @@ const   SearchBar = ({ mobile }) => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => totalResults > 0 && setShowDropdown(true)}
-            onBlur={handleBlur}
+            // onBlur={handleBlur}
             className="w-full m-0 outline-none bg-transparent text-gray-700 border-none h-full px-4"
           />
           <button className="w-10  bg-green-900 flex items-center justify-center rounded-r-full hover:bg-green-600 transition h-full">
@@ -136,7 +136,7 @@ const   SearchBar = ({ mobile }) => {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onFocus={() => totalResults > 0 && setShowDropdown(true)}
-                  onBlur={handleBlur}
+                  // onBlur={handleBlur}
                   className="w-44 m-0 outline-none bg-transparent text-gray-700 border-none h-full px-4"
                 />
                 <button className="w-10 bg-green-900 flex items-center justify-center hover:bg-green-600 transition h-full">

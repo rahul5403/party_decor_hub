@@ -37,9 +37,9 @@ const SimilarProductSection = ({ products, section }) => {
     <div className="decoration-section-similar">
       <h2 className="decoration-title-similar">{section}</h2>
       <Slider {...settings}>
-        {products.map((product) => (
-          <ProductCard product={product} />
-        ))}
+      {products.map((product) => (
+      <ProductCard key={product.product_id || product.id} product={product} />
+    ))}
       </Slider>
     </div>
   );

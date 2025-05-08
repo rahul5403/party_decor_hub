@@ -171,6 +171,7 @@ const ProductCard = ({ product, section }) => {
       dispatch(addToCart(item[0]));
     } else {
       addItemToCart(item);
+      dispatch(addToCart(item[0]));
     }
   };
 

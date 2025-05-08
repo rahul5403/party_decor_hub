@@ -22,7 +22,7 @@ function Home() {
     neonLights: PRODUCTS_PER_LOAD,
   });
 
-  useGetCartItems();
+  // useGetCartItems();
 
   const handleScrollEnd = (section) => {
     setVisibleCounts((prev) => ({

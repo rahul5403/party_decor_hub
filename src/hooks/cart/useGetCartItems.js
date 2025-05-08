@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { mergeCart } from "../../redux/cartSlice";
@@ -6,31 +6,31 @@ import { mergeCart } from "../../redux/cartSlice";
 const useGetCartItems = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const getItems = useCallback(async () => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) return;
 
-    const getItems = async () => {
-      try {
-        const res = await axios.get("https://partydecorhub.com/api/cart", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        const fullItems = res.data.items.map(item => ({
-          ...item,
-          thumbnail: `https://partydecorhub.com${item.thumbnail}`,
-        }));
-        dispatch(mergeCart(fullItems)); 
-      } catch (error) {
-        console.error("Error fetching cart items:", error);
-      }
-    };
-
-    getItems();
+    try {
+      const res = await axios.get("https://partydecorhub.com/api/cart", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const fullItems = res.data.items.map(item => ({
+        ...item,
+        thumbnail: `https://partydecorhub.com${item.thumbnail}`,
+      }));
+      dispatch(mergeCart(fullItems));
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+    }
   }, [dispatch]);
 
-  return null; 
+  useEffect(() => {
+    getItems();
+  }, [getItems]);
+
+  return getItems; // Now it's accessible to be called manually
 };
 
 export default useGetCartItems;

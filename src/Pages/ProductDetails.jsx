@@ -116,8 +116,8 @@ const ProductDetails = () => {
           : product.sizes || null,
         price: product.price,
         name: product.name,
-        thumbnail: product.thumbnail,
-        images: product.images,
+        // thumbnail: product.thumbnail,
+        // images: product.images,
       },
     ];
 
@@ -125,6 +125,7 @@ const ProductDetails = () => {
       dispatch(addToCart(item[0]));
     } else {
       addItemToCart(item);
+      dispatch(addToCart(item[0]));
     }
   };
 
