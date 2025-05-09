@@ -116,7 +116,7 @@ const ProductDetails = () => {
           : product.sizes || null,
         price: product.price,
         name: product.name,
-        // thumbnail: product.thumbnail,
+        thumbnail: product.thumbnail,
         // images: product.images,
       },
     ];

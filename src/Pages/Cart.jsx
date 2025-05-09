@@ -103,16 +103,16 @@ const Cart = () => {
                         alt={item.name}
                       />
                     </td>
-                    {/* <td className="py-3 px-4 font-medium text-gray-800 text-left">
-                      {item.name || item.product_name}
-                    </td> */}
                     <td className="py-3 px-4 font-medium text-gray-800 text-left">
-  {item.name || item.product_name}
-  <div className="text-sm text-gray-500 font-normal p-1">
-    {item.color?.length > 0 && `Color: ${item.color.join(', ')}`}
-    {item.size && ` | Size: ${item.size}`}
-  </div>
-</td>
+                      {item.name || item.product_name}
+                      <div className="text-sm text-gray-500 font-normal p-1">
+                        {item.color && Array.isArray(item.color) && item.color.length > 0 && 
+                          `Color: ${item.color.join(', ')}`}
+                        {item.color && !Array.isArray(item.color) && 
+                          `Color: ${item.color}`}
+                        {item.size && ` | Size: ${item.size}`}
+                      </div>
+                    </td>
                     <td className="py-3 px-4 text-gray-700">₹{item.price}</td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center space-x-3">

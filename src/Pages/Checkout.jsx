@@ -8,8 +8,6 @@ import paytm from "../assets/images/paytm_logo.png";
 import phonepe from "../assets/images/phonepe_logo.png";
 import razorpay from "../assets/images/razorpay_logo.png";
 
-
-
 const Checkout = () => {
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -32,6 +30,8 @@ const Checkout = () => {
   const [checkingShipping, setCheckingShipping] = useState(false);
   const [shippingError, setShippingError] = useState('');
   const [shippingMessage, setShippingMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [checkoutError, setCheckoutError] = useState('');
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   
@@ -207,9 +207,92 @@ const Checkout = () => {
     setDeliveryMethod(method);
   };
 
+  // New function to submit order to API
+  const submitOrder = async () => {
+    setIsSubmitting(true);
+    setCheckoutError('');
+    
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      setCheckoutError("Please login to continue");
+      setIsSubmitting(false);
+      return;
+    }
+    
+    try {
+      // Find the shipping method ID based on the selected delivery method name
+      const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
+      const shippingMethodId = selectedShippingOption ? selectedShippingOption.id : 0;
+      
+      // Split the address into lines if needed
+      const addressLines = formData.address.split(',');
+      const line1 = addressLines[0] || '';
+      const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
+      
+      // Prepare the API request payload
+      const checkoutPayload = {
+        shipping_method_id: shippingMethodId,
+        delivery_pincode: formData.postalCode,
+        delivery_address_line1: line1,
+        delivery_address_line2: line2,
+        delivery_city: formData.city,
+        delivery_state: "", // This needs to be added to your form if required
+        contact_phone: formData.phone,
+        contact_email: formData.email,
+        delivery_instructions: "" // This could be added to your form if needed
+      };
+      
+      // Make the API call to create the order
+      const response = await axios.post(
+        "https://partydecorhub.com/api/cart/checkout",
+        checkoutPayload,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      
+      // Handle successful response
+      if (response.data) {
+        // Redirect to order confirmation page and pass order details if needed
+        navigate("/order-confirmation", { 
+          state: { 
+            orderDetails: response.data,
+            orderTotal: totalCost
+          } 
+        });
+      } else {
+        throw new Error("No data received from checkout API");
+      }
+    } catch (err) {
+      // Handle errors
+      const errorMessage = err.response?.data?.message || err.message || "Failed to process your order";
+      setCheckoutError(errorMessage);
+      console.error("Checkout error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Updated handleSubmit function
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate("/order-confirmation");
+    
+    // Validate form before submission
+    if (!isFormComplete) {
+      setCheckoutError("Please complete all required fields");
+      return;
+    }
+    
+    if (!deliveryMethod) {
+      setCheckoutError("Please select a delivery method");
+      return;
+    }
+    
+    // Submit the order
+    submitOrder();
   };
 
   // Show loading state
@@ -244,8 +327,26 @@ const Checkout = () => {
                 </svg>
               </div>
               <div className="ml-3 flex items-center">
-  <div className="text-sm text-red-700">{profileError}</div>
-</div>
+                <div className="text-sm text-red-700">{profileError}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Show checkout error message */}
+      {checkoutError && (
+        <div className="max-w-6xl mx-auto mb-2 items-center">
+          <div className="bg-red-50 border-l-4 border-red-500 rounded items-center p-2">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3 flex items-center">
+                <div className="text-sm text-red-700">{checkoutError}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -405,16 +506,23 @@ const Checkout = () => {
                   className="w-16 h-16 rounded-md object-cover shadow-sm transition-transform duration-300 hover:scale-105" 
                 />
                 <div className="flex justify-between w-full">
-                <div>
-  <h3 className="text-sm font-medium text-gray-800">
-    {item.name || item.product_name}
-  </h3>
-  <div className="mt-1 space-y-1 text-xs text-gray-500 text-left">
-    <p className="m-0">Qty: {item.quantity}</p>
-    {item.color?.length > 0 && <p>Color: {item.color.join(', ')}</p>}
-    {item.size && <p>Size: {item.size}</p>}
-  </div>
-</div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-800">
+                      {item.name || item.product_name}
+                    </h3>
+                    <div className="mt-1 space-y-1 text-xs text-gray-500 text-left">
+                      <p className="m-0">Qty: {item.quantity}</p>
+                      {/* Fix for the item.color.join issue - check if color is an array before using join */}
+                      {item.color && Array.isArray(item.color) && item.color.length > 0 && (
+                        <p>Color: {item.color.join(', ')}</p>
+                      )}
+                      {/* If color is a string, just display it directly */}
+                      {item.color && typeof item.color === 'string' && item.color.trim() !== '' && (
+                        <p>Color: {item.color}</p>
+                      )}
+                      {item.size && <p>Size: {item.size}</p>}
+                    </div>
+                  </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-green-600">₹{item.price.toFixed(2)}</p>
                     {item.originalPrice && item.originalPrice > item.price && (
@@ -486,21 +594,21 @@ const Checkout = () => {
           </div>
 
           {/* Secure Note + Pay */}
-           <div className="bg-green-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center justify-between mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
-      <div className="flex items-center gap-2">
-        <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
-        All transactions are secure and encrypted.
-      </div>
-      <div className="flex items-center gap-3 bg-transparent">
-  <img src={mastercard} alt="Mastercard" className="h-7 object-contain bg-transparent" />
-  <img src={visa} alt="Visa" className="h-7 object-contain bg-transparent" />
-  <img src={paytm} alt="Paytm" className="h-7 object-contain bg-transparent" />
-  <img src={phonepe} alt="PhonePe" className="h-7 object-contain bg-transparent" />
-  <img src={razorpay} alt="Razorpay" className="h-7 object-contain bg-transparent" />
-</div>
-    </div>
+          <div className="bg-green-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center justify-between mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              All transactions are secure and encrypted.
+            </div>
+            <div className="flex items-center gap-3 bg-transparent">
+              <img src={mastercard} alt="Mastercard" className="h-7 object-contain bg-transparent" />
+              <img src={visa} alt="Visa" className="h-7 object-contain bg-transparent" />
+              <img src={paytm} alt="Paytm" className="h-7 object-contain bg-transparent" />
+              <img src={phonepe} alt="PhonePe" className="h-7 object-contain bg-transparent" />
+              <img src={razorpay} alt="Razorpay" className="h-7 object-contain bg-transparent" />
+            </div>
+          </div>
 
           <div className="bg-indigo-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center gap-2 mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -518,16 +626,29 @@ const Checkout = () => {
           
           <button 
             onClick={handleSubmit} 
+            disabled={isSubmitting || !isFormComplete || !deliveryMethod}
             className={`w-full relative overflow-hidden py-2.5 rounded-md text-sm font-semibold transition-all duration-300 
-              ${isFormComplete && deliveryMethod
+              ${isFormComplete && deliveryMethod && !isSubmitting
                 ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-102" 
                 : "bg-gray-300 cursor-not-allowed text-gray-500"}`}
           >
-            <span className="relative z-10">Pay Now</span>
-            {isFormComplete && deliveryMethod && (
-              <span className="absolute inset-0 rounded-md overflow-hidden">
-                <span className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-700 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              </span>
+            {isSubmitting ? (
+              <div className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
+              </div>
+            ) : (
+              <>
+                <span className="relative z-10">Pay Now</span>
+                {isFormComplete && deliveryMethod && (
+                  <span className="absolute inset-0 rounded-md overflow-hidden">
+                    <span className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-700 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  </span>
+                )}
+              </>
             )}
           </button>
           
@@ -573,16 +694,6 @@ const Checkout = () => {
                 </svg>
                 Privacy Policy
               </a>
-              {/* <a 
-                href="/terms-of-service" 
-                target="_blank"
-                className="text-green-600 hover:text-green-800 hover:underline transition-all duration-200 flex items-center gap-1"
-              >
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Terms of Service
-              </a> */}
             </div>
           </div>
         </div>
