@@ -22,6 +22,7 @@ import RefundReturnPolicy from "../Pages/RefundReturnPolicy";
 import ShippingPolicy from "../Pages/ShippingPolicy";
 import TermsAndConditions from "../Pages/TermsCondition";
 import InstagramButton from "../components/Insta";
+import OrderConfirmation from "../Pages/OrderConfirmation";
 
 const Router = () => {
   const location = useLocation();
@@ -59,6 +60,7 @@ const Router = () => {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundReturnPolicy />} />
         <Route path="/shipping-policy" element={<ShippingPolicy />} />

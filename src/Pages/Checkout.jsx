@@ -7,6 +7,7 @@ import visa from "../assets/images/visa_logo.png";
 import paytm from "../assets/images/paytm_logo.png";
 import phonepe from "../assets/images/phonepe_logo.png";
 import razorpay from "../assets/images/razorpay_logo.png";
+import { initiateRazorpayPayment } from "./RazorpayPayment"; 
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -207,7 +208,7 @@ const Checkout = () => {
     setDeliveryMethod(method);
   };
 
-  // New function to submit order to API
+  // Create order and proceed to payment
   const submitOrder = async () => {
     setIsSubmitting(true);
     setCheckoutError('');
@@ -254,15 +255,73 @@ const Checkout = () => {
         }
       );
       
-      // Handle successful response
-      if (response.data) {
-        // Redirect to order confirmation page and pass order details if needed
-        navigate("/order-confirmation", { 
-          state: { 
+      // Handle successful response - initiate Razorpay payment
+      if (response.data && response.data.order_id) {
+        // Get Razorpay order details from the API
+        const razorpayResponse = await axios.post(
+          "https://partydecorhub.com/api/payments/razorpay/create",
+          { order_id: response.data.order_id },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        
+        if (razorpayResponse.data && razorpayResponse.data.razorpay_order_id) {
+          // Initiate Razorpay payment with customer details
+          const paymentResult = await initiateRazorpayPayment({
+            // key: razorpayResponse.data.razorpay_key_id,
+            key:process.env.REACT_APP_RAZORPAY_KEY,
+            amount: razorpayResponse.data.amount,
+            currency: razorpayResponse.data.currency,
+            orderId: razorpayResponse.data.razorpay_order_id,
+            customerName: formData.fullName,
+            customerEmail: formData.email,
+            customerPhone: formData.phone,
             orderDetails: response.data,
             orderTotal: totalCost
-          } 
-        });
+          });          
+          if (paymentResult.success) {
+            // If payment verification succeeded, fetch the final order details
+            try {
+              // Get updated order details with payment status
+              const orderDetailsResponse = await axios.get(
+                `https://partydecorhub.com/api/orders/${response.data.order_id}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  }
+                }
+              );
+              
+              // Navigate to order confirmation with complete details
+              navigate("/order-confirmation", { 
+                state: { 
+                  orderDetails: orderDetailsResponse.data, // Use updated order details
+                  orderTotal: totalCost,
+                  paymentDetails: paymentResult.data
+                } 
+              });
+            } catch (error) {
+              console.error("Error fetching final order details:", error);
+              // Even if getting updated details fails, still navigate to confirmation with what we have
+              navigate("/order-confirmation", { 
+                state: { 
+                  orderDetails: response.data,
+                  orderTotal: totalCost,
+                  paymentDetails: paymentResult.data
+                } 
+              });
+            }
+          } else {
+            // Payment failed or was cancelled
+            setCheckoutError(paymentResult.error || "Payment failed or was cancelled");
+          }
+        } else {
+          throw new Error("Failed to create Razorpay order");
+        }
       } else {
         throw new Error("No data received from checkout API");
       }
@@ -577,10 +636,6 @@ const Checkout = () => {
 
           {/* Summary */}
           <div className="space-y-2 text-sm text-gray-700 mb-4">
-            <div className="flex justify-between items-center py-1 transition-all duration-200 hover:bg-gray-50 px-2 rounded">
-              <span>Subtotal</span>
-              <span>₹{subtotal.toFixed(2)}</span>
-            </div>
             <div className="flex justify-between items-center py-1 transition-all duration-200 hover:bg-gray-50 px-2 rounded">
               <span>Shipping</span>
               <span className={shippingCost === 0 ? "text-green-600 font-medium" : ""}>
