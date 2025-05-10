@@ -7,7 +7,7 @@ import visa from "../assets/images/visa_logo.png";
 import paytm from "../assets/images/paytm_logo.png";
 import phonepe from "../assets/images/phonepe_logo.png";
 import razorpay from "../assets/images/razorpay_logo.png";
-import { initiateRazorpayPayment } from "./RazorpayPayment"; 
+import { initiateRazorpayPayment } from "./RazorpayPayment"; // Import the new function
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -209,44 +209,215 @@ const Checkout = () => {
   };
 
   // Create order and proceed to payment
-  const submitOrder = async () => {
-    setIsSubmitting(true);
-    setCheckoutError('');
+//   const submitOrder = async () => {
+//   setIsSubmitting(true);
+//   setCheckoutError('');
+  
+//   const accessToken = localStorage.getItem("accessToken");
+//   if (!accessToken) {
+//     setCheckoutError("Please login to continue");
+//     setIsSubmitting(false);
+//     return;
+//   }
+  
+//   try {
+//     // Find the shipping method ID based on the selected delivery method name
+//     const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
+//     const shippingMethodId = selectedShippingOption ? selectedShippingOption.id : 0;
     
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      setCheckoutError("Please login to continue");
-      setIsSubmitting(false);
-      return;
-    }
+//     // Split the address into lines if needed
+//     const addressLines = formData.address.split(',');
+//     const line1 = addressLines[0] || '';
+//     const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
     
-    try {
-      // Find the shipping method ID based on the selected delivery method name
-      const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
-      const shippingMethodId = selectedShippingOption ? selectedShippingOption.id : 0;
+//     // Prepare the API request payload
+//     const checkoutPayload = {
+//       shipping_method_id: shippingMethodId,
+//       delivery_pincode: formData.postalCode,
+//       delivery_address_line1: line1,
+//       delivery_address_line2: line2,
+//       delivery_city: formData.city,
+//       delivery_state: "", // This needs to be added to your form if required
+//       contact_phone: formData.phone,
+//       contact_email: formData.email,
+//       delivery_instructions: "" // This could be added to your form if needed
+//     };
+    
+//     // Make the API call to create the order
+//     const response = await axios.post(
+//       "https://partydecorhub.com/api/cart/checkout",
+//       checkoutPayload,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//           "Content-Type": "application/json"
+//         }
+//       }
+//     );
+    
+//     // Handle successful response - initiate Razorpay payment
+//     if (response.data && response.data.order_id) {
+//       // Get Razorpay order details from the API
+//       const razorpayResponse = await axios.post(
+//         "https://partydecorhub.com/api/payments/razorpay/create",
+//         { order_id: response.data.order_id },
+//         {
+//           headers: {
+//             Authorization: `Bearer ${accessToken}`,
+//             "Content-Type": "application/json"
+//           }
+//         }
+//       );
       
-      // Split the address into lines if needed
-      const addressLines = formData.address.split(',');
-      const line1 = addressLines[0] || '';
-      const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
-      
-      // Prepare the API request payload
-      const checkoutPayload = {
-        shipping_method_id: shippingMethodId,
-        delivery_pincode: formData.postalCode,
-        delivery_address_line1: line1,
-        delivery_address_line2: line2,
-        delivery_city: formData.city,
-        delivery_state: "", // This needs to be added to your form if required
-        contact_phone: formData.phone,
-        contact_email: formData.email,
-        delivery_instructions: "" // This could be added to your form if needed
-      };
-      
-      // Make the API call to create the order
-      const response = await axios.post(
-        "https://partydecorhub.com/api/cart/checkout",
-        checkoutPayload,
+//       if (razorpayResponse.data && razorpayResponse.data.razorpay_order_id) {
+//         // Initiate Razorpay payment with customer details
+//         const paymentResult = await initiateRazorpayPayment({
+//           // key: razorpayResponse.data.razorpay_key_id,
+//           key: process.env.REACT_APP_RAZORPAY_KEY,
+//           amount: razorpayResponse.data.amount,
+//           currency: razorpayResponse.data.currency,
+//           orderId: razorpayResponse.data.razorpay_order_id,
+//           customerName: formData.fullName,
+//           customerEmail: formData.email,
+//           customerPhone: formData.phone,
+//           orderDetails: response.data,
+//           orderTotal: totalCost
+//         });          
+        
+//         // Always set isSubmitting to false before navigating
+//         setIsSubmitting(false);
+        
+//         if (paymentResult.success) {
+//           // If payment verification succeeded, fetch the final order details
+//           // Get updated order details with payment status
+//           const completeOrderDetails = {
+//             ...response.data,
+//             payment_status: "completed", // Assuming payment was successful
+//             order_status: "confirmed",   // Setting initial order status
+//             created_at: new Date().toISOString(),
+//             shipping_details: {
+//               name: formData.fullName,
+//               email: formData.email,
+//               phone: formData.phone,
+//               address_line1: line1,
+//               address_line2: line2,
+//               city: formData.city,
+//               country: formData.country,
+//               postal_code: formData.postalCode
+//             },
+//             shipping_method: {
+//               name: deliveryMethod,
+//               price: shippingCost,
+//               estimated_days: selectedShippingOption ? selectedShippingOption.estimated_days : "3-5 business days"
+//             },
+//             items: cartItems.map(item => ({
+//               id: item.id,
+//               name: item.name || item.product_name,
+//               price: item.price,
+//               quantity: item.quantity,
+//               thumbnail: item.thumbnail,
+//               color: item.color,
+//               size: item.size
+//             })),
+//             payment_details: {
+//               method: "Razorpay",
+//               transaction_id: paymentResult.data?.razorpay_payment_id || "unknown",
+//               amount_paid: totalCost
+//             },
+//             order_summary: {
+//               subtotal: subtotal,
+//               shipping: shippingCost,
+//               total: totalCost
+//             }
+//           };
+          
+//           // Navigate to order confirmation with complete details
+//           navigate("/order-confirmation", { 
+//             state: { 
+//               orderDetails: completeOrderDetails, // Use updated order details
+//               orderTotal: totalCost,
+//               paymentDetails: paymentResult.data
+//             } 
+//           });
+//         } else {
+//           // Payment failed or was cancelled
+//           setCheckoutError(paymentResult.error || "Payment failed or was cancelled");
+//         }
+//       } else {
+//         throw new Error("Failed to create Razorpay order");
+//       }
+//     } else {
+//       throw new Error("No data received from checkout API");
+//     }
+//   } catch (err) {
+//     // Handle errors
+//     const errorMessage = err.response?.data?.message || err.message || "Failed to process your order";
+//     setCheckoutError(errorMessage);
+//     console.error("Checkout error:", err);
+//     // Make sure to set isSubmitting to false in case of errors
+//     setIsSubmitting(false);
+//   }
+// };
+
+const submitOrder = async () => {
+  setIsSubmitting(true);
+  setCheckoutError('');
+  
+  console.log("Submit order function started");
+  
+  const accessToken = localStorage.getItem("accessToken");
+  if (!accessToken) {
+    console.log("No access token found");
+    setCheckoutError("Please login to continue");
+    setIsSubmitting(false);
+    return;
+  }
+  
+  try {
+    // Find the shipping method ID based on the selected delivery method name
+    const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
+    const shippingMethodId = selectedShippingOption ? selectedShippingOption.id : 0;
+    
+    // Split the address into lines if needed
+    const addressLines = formData.address.split(',');
+    const line1 = addressLines[0] || '';
+    const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
+    
+        // Prepare the API request payload
+    const checkoutPayload = {
+      shipping_method_id: shippingMethodId,
+      delivery_pincode: formData.postalCode,
+      delivery_address_line1: line1,
+      delivery_address_line2: line2,
+      delivery_city: formData.city,
+      delivery_state: "", // This needs to be added to your form if required
+      contact_phone: formData.phone,
+      contact_email: formData.email,
+      delivery_instructions: "" // This could be added to your form if needed
+    };
+    
+    console.log("Making checkout API call");
+    // Make the API call to create the order
+    const response = await axios.post(
+      "https://partydecorhub.com/api/cart/checkout",
+      checkoutPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    
+    console.log("Checkout API response:", response.data);
+    
+    // Handle successful response - initiate Razorpay payment
+    if (response.data && response.data.order_id) {
+      console.log("Getting Razorpay order details");
+      // Get Razorpay order details from the API
+      const razorpayResponse = await axios.post(
+        "https://partydecorhub.com/api/payments/razorpay/create",
+        { order_id: response.data.order_id },
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -255,85 +426,116 @@ const Checkout = () => {
         }
       );
       
-      // Handle successful response - initiate Razorpay payment
-      if (response.data && response.data.order_id) {
-        // Get Razorpay order details from the API
-        const razorpayResponse = await axios.post(
-          "https://partydecorhub.com/api/payments/razorpay/create",
-          { order_id: response.data.order_id },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json"
-            }
-          }
-        );
+      console.log("Razorpay API response:", razorpayResponse.data);
+      
+      if (razorpayResponse.data && razorpayResponse.data.razorpay_order_id) {
+        console.log("Initiating Razorpay payment");
+        // Initiate Razorpay payment with customer details
+        const paymentResult = await initiateRazorpayPayment({
+          key: process.env.REACT_APP_RAZORPAY_KEY,
+          amount: razorpayResponse.data.amount,
+          currency: razorpayResponse.data.currency,
+          orderId: razorpayResponse.data.razorpay_order_id,
+          customerName: formData.fullName,
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
+          orderDetails: response.data,
+          orderTotal: totalCost
+        });
         
-        if (razorpayResponse.data && razorpayResponse.data.razorpay_order_id) {
-          // Initiate Razorpay payment with customer details
-          const paymentResult = await initiateRazorpayPayment({
-            // key: razorpayResponse.data.razorpay_key_id,
-            key:process.env.REACT_APP_RAZORPAY_KEY,
-            amount: razorpayResponse.data.amount,
-            currency: razorpayResponse.data.currency,
-            orderId: razorpayResponse.data.razorpay_order_id,
-            customerName: formData.fullName,
-            customerEmail: formData.email,
-            customerPhone: formData.phone,
-            orderDetails: response.data,
-            orderTotal: totalCost
-          });          
-          if (paymentResult.success) {
-            // If payment verification succeeded, fetch the final order details
-            try {
-              // Get updated order details with payment status
-              const orderDetailsResponse = await axios.get(
-                `https://partydecorhub.com/api/orders/${response.data.order_id}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                  }
-                }
-              );
-              
-              // Navigate to order confirmation with complete details
-              navigate("/order-confirmation", { 
-                state: { 
-                  orderDetails: orderDetailsResponse.data, // Use updated order details
-                  orderTotal: totalCost,
-                  paymentDetails: paymentResult.data
-                } 
-              });
-            } catch (error) {
-              console.error("Error fetching final order details:", error);
-              // Even if getting updated details fails, still navigate to confirmation with what we have
-              navigate("/order-confirmation", { 
-                state: { 
-                  orderDetails: response.data,
-                  orderTotal: totalCost,
-                  paymentDetails: paymentResult.data
-                } 
-              });
+        console.log("Payment result:", paymentResult);
+        
+        // CRITICAL FIX: Set isSubmitting to false BEFORE any navigation or further processing
+        setIsSubmitting(false);
+        
+                if (paymentResult.success) {
+          // If payment verification succeeded, fetch the final order details
+          // Get updated order details with payment status
+          const completeOrderDetails = {
+            ...response.data,
+            payment_status: "completed", // Assuming payment was successful
+            order_status: "confirmed",   // Setting initial order status
+            created_at: new Date().toISOString(),
+            shipping_details: {
+              name: formData.fullName,
+              email: formData.email,
+              phone: formData.phone,
+              address_line1: line1,
+              address_line2: line2,
+              city: formData.city,
+              country: formData.country,
+              postal_code: formData.postalCode
+            },
+            shipping_method: {
+              name: deliveryMethod,
+              price: shippingCost,
+              estimated_days: selectedShippingOption ? selectedShippingOption.estimated_days : "3-5 business days"
+            },
+            items: cartItems.map(item => ({
+              id: item.id,
+              name: item.name || item.product_name,
+              price: item.price,
+              quantity: item.quantity,
+              thumbnail: item.thumbnail,
+              color: item.color,
+              size: item.size
+            })),
+            payment_details: {
+              method: "Razorpay",
+              transaction_id: paymentResult.data?.razorpay_payment_id || "unknown",
+              amount_paid: totalCost
+            },
+            order_summary: {
+              subtotal: subtotal,
+              shipping: shippingCost,
+              total: totalCost
             }
-          } else {
-            // Payment failed or was cancelled
-            setCheckoutError(paymentResult.error || "Payment failed or was cancelled");
-          }
+          };
+          // Then navigate...
+          navigate("/order-confirmation", { 
+            state: { 
+              orderDetails: completeOrderDetails,
+              orderTotal: totalCost,
+              paymentDetails: paymentResult.data
+            } 
+          });
         } else {
-          throw new Error("Failed to create Razorpay order");
+          console.log("Payment failed or cancelled:", paymentResult.error);
+          setCheckoutError(paymentResult.error || "Payment failed or was cancelled");
         }
       } else {
-        throw new Error("No data received from checkout API");
+        throw new Error("Failed to create Razorpay order");
       }
-    } catch (err) {
-      // Handle errors
-      const errorMessage = err.response?.data?.message || err.message || "Failed to process your order";
-      setCheckoutError(errorMessage);
-      console.error("Checkout error:", err);
-    } finally {
-      setIsSubmitting(false);
+    } else {
+      throw new Error("No data received from checkout API");
     }
+  } catch (err) {
+    console.error("Checkout error:", err);
+    const errorMessage = err.response?.data?.message || err.message || "Failed to process your order";
+    setCheckoutError(errorMessage);
+    
+    // Always make sure to reset isSubmitting on error
+    setIsSubmitting(false);
+  }
+};
+
+
+useEffect(() => {
+  let timeoutId;
+  
+  if (isSubmitting) {
+    // After 30 seconds, force reset the submitting state if it's still true
+    timeoutId = setTimeout(() => {
+      console.log("Safety timeout: Forcing reset of submitting state after timeout");
+      setIsSubmitting(false);
+      setCheckoutError("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
+    }, 30000); // 30 seconds timeout
+  }
+  
+  return () => {
+    if (timeoutId) clearTimeout(timeoutId);
   };
+}, [isSubmitting]);
 
   // Updated handleSubmit function
   const handleSubmit = (e) => {
@@ -680,32 +882,30 @@ const Checkout = () => {
           </div>
           
           <button 
-            onClick={handleSubmit} 
-            disabled={isSubmitting || !isFormComplete || !deliveryMethod}
-            className={`w-full relative overflow-hidden py-2.5 rounded-md text-sm font-semibold transition-all duration-300 
-              ${isFormComplete && deliveryMethod && !isSubmitting
-                ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-102" 
-                : "bg-gray-300 cursor-not-allowed text-gray-500"}`}
-          >
-            {isSubmitting ? (
-              <div className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Processing...
-              </div>
-            ) : (
-              <>
-                <span className="relative z-10">Pay Now</span>
-                {isFormComplete && deliveryMethod && (
-                  <span className="absolute inset-0 rounded-md overflow-hidden">
-                    <span className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-700 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                  </span>
-                )}
-              </>
-            )}
-          </button>
+  onClick={handleSubmit} 
+  disabled={isSubmitting || !isFormComplete || !deliveryMethod}
+  className={`w-full relative overflow-hidden py-2.5 rounded-md text-sm font-semibold transition-all duration-300 
+    ${isFormComplete && deliveryMethod && !isSubmitting
+      ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-102" 
+      : "bg-gray-300 cursor-not-allowed text-gray-500"}`}
+>
+  {isSubmitting ? (
+    <div className="flex items-center justify-center">
+      <div className="animate-spin -ml-1 mr-2 h-4 w-4 text-white rounded-full border-2 border-white border-t-transparent"></div>
+      Processing...
+    </div>
+  ) : (
+    <>
+      <span className="relative z-10">Pay Now</span>
+      {isFormComplete && deliveryMethod && (
+        <span className="absolute inset-0 rounded-md overflow-hidden">
+          <span className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-700 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+        </span>
+      )}
+    </>
+  )}
+</button>
+
           
           {!isFormComplete && (
             <p className="text-xs text-center mt-2 text-red-500">Please complete shipping information first</p>
