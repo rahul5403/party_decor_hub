@@ -5,41 +5,61 @@ import { useLogin } from "../hooks/auth/useLogin.js";
 import logo from "../assets/images/logo.png";
 import background from "../assets/images/header_bg.png";
 import axios from "axios";
+import { login } from "../redux/authSlice.js";
+import { useDispatch } from "react-redux";
 
 const Login = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { loading, handleLogin } = useLogin();
-
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     await handleLogin(email, password, onClose);
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    const id_token = credentialResponse.credential;
-    try {
-      console.log("Google ID Token:", id_token); // Debugging line
-      const res = await axios.post(
-        "https://crochetmumma.com/api/google-login",
-        { id_token },
-        { withCredentials: true } // So refresh cookie is stored
-      );
-      const accessToken = res.data.access;
+const handleGoogleSuccess = async (credentialResponse) => {
+  const id_token = credentialResponse.credential;
+  try {
+    console.log("Google ID Token:", id_token); // Debugging line
+    
+    // First, authenticate with Google
+    const res = await axios.post(
+      "https://partydecorhub.com/api/google-auth",
+      { token: id_token },
+      { withCredentials: true } // So refresh cookie is stored
+    );
+    
+    const accessToken = res.data.access;
+    // Store accessToken in localStorage
+    localStorage.setItem("accessToken", accessToken);
+    
+    // Now call the check-auth API to get user data
+    const checkAuthRes = await axios.get(
+      "https://partydecorhub.com/api/check-auth",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+    
+    // Get user data from the response
+    const userData = checkAuthRes.data;
+    
+    // Dispatch login action with user data
+    dispatch(login(userData));
+    
+    onClose(); // Close the modal on success
+  } catch (err) {
+    console.error("Google Login Error", err);
+    alert("Google login failed.");
+  }
+};
 
-      // ✅ Store accessToken as needed (e.g. in localStorage or context)
-      localStorage.setItem("access_token", accessToken);
-
-      onClose(); // Close the modal on success
-    } catch (err) {
-      console.error("Google Login Error", err);
-      alert("Google login failed.");
-    }
-  };
-
-  const handleGoogleFailure = () => {
-    alert("Google login was unsuccessful. Try again.");
-  };
+const handleGoogleFailure = () => {
+  alert("Google login was unsuccessful. Try again.");
+};
 
   return (
     <GoogleOAuthProvider clientId="74027685761-uao4u2m2ibpo6j5t2ate76ebf6e1knur.apps.googleusercontent.com">

@@ -29,8 +29,18 @@ const OrderConfirmation = () => {
       return formatDate(orderDetails.estimated_delivery_date);
     }
     
+    // Handle both string and object shipping_method
+    let isExpressShipping = false;
+    if (orderDetails?.shipping_method) {
+      if (typeof orderDetails.shipping_method === 'string') {
+        isExpressShipping = orderDetails.shipping_method.toLowerCase().includes('express');
+      } else if (typeof orderDetails.shipping_method === 'object' && orderDetails.shipping_method.name) {
+        isExpressShipping = orderDetails.shipping_method.name.toLowerCase().includes('express');
+      }
+    }
+    
     // If no delivery date in the order details, calculate based on order date and shipping method
-    const shippingDays = orderDetails?.shipping_method?.toLowerCase().includes('express') ? 3 : 7;
+    const shippingDays = isExpressShipping ? 3 : 7;
     const orderDate = orderDetails?.created_at ? new Date(orderDetails.created_at) : new Date();
     const deliveryDate = new Date(orderDate);
     deliveryDate.setDate(deliveryDate.getDate() + shippingDays);
@@ -64,7 +74,7 @@ const OrderConfirmation = () => {
           
           // Make API call to check order status
           const response = await axios.get(
-            `https://partydecorhub.com/api/orders/${orderDetails.order_id}`,
+            `https://partydecorhub.com/api/payments/${orderDetails.order_id}`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -227,7 +237,11 @@ const OrderConfirmation = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-gray-50 rounded-md p-3">
               <p className="text-xs text-gray-500">Shipping Method</p>
-              <p className="text-sm font-medium">{finalOrderDetails.shipping_method || 'Standard Delivery'}</p>
+              <p className="text-sm font-medium">
+                {typeof finalOrderDetails.shipping_method === 'object' 
+                  ? finalOrderDetails.shipping_method.name 
+                  : finalOrderDetails.shipping_method || 'Standard Delivery'}
+              </p>
             </div>
             <div className="bg-gray-50 rounded-md p-3">
               <p className="text-xs text-gray-500">Estimated Delivery</p>
@@ -266,11 +280,16 @@ const OrderConfirmation = () => {
           <div className="mt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Subtotal</span>
-              <span>₹{finalOrderDetails.subtotal?.toFixed(2) || (orderTotal - finalOrderDetails.shipping_price)?.toFixed(2)}</span>
+              <span>₹{finalOrderDetails.subtotal?.toFixed(2) || (orderTotal - (typeof finalOrderDetails.shipping_price === 'number' ? finalOrderDetails.shipping_price : 0))?.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Shipping</span>
-              <span>{finalOrderDetails.shipping_price === 0 ? 'Free' : `₹${finalOrderDetails.shipping_price?.toFixed(2)}`}</span>
+              <span>
+                {finalOrderDetails.shipping_price === 0 ? 'Free' : 
+                 typeof finalOrderDetails.shipping_price === 'number' ? `₹${finalOrderDetails.shipping_price.toFixed(2)}` : 
+                 typeof finalOrderDetails.shipping_method === 'object' && finalOrderDetails.shipping_method.price ? 
+                 `₹${finalOrderDetails.shipping_method.price.toFixed(2)}` : 'Calculated at checkout'}
+              </span>
             </div>
             <div className="flex justify-between font-medium pt-2 border-t">
               <span>Total</span>

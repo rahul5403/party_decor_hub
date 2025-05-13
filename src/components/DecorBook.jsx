@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import ReactMarkdown from 'react-markdown';
 import { useParams } from "react-router-dom";
 import SimilarProductSection from "./SimilarProductSection";
 import { ChevronLeft, ChevronRight, Clock, Shield, Truck, ZoomIn, ZoomOut, X } from "lucide-react";
@@ -6,6 +7,7 @@ import usePincode from "../hooks/Services/usePincode";
 import useServiceDetails from "../hooks/Services/useServiceDetails";
 import useHandleBooking from "../hooks/Services/useHandleBooking";
 import useFetchData from "../hooks/Home/useFetchData";
+import rehypeRaw from "rehype-raw";
 
 const DecorBook = () => {
   const { product_id } = useParams();
@@ -26,6 +28,17 @@ const DecorBook = () => {
   const {service, loading} = useServiceDetails(service_id);
   const { handleBooking } = useHandleBooking(service, startDate, startTime, customerName, address, email, phone);
   const { recommendedServices} = useFetchData();
+  
+  const processMarkdown = (text) => {
+    if (!text) return '';
+    
+    // Replace literal "\r\n" strings with actual line breaks
+    let processed = text
+      .replace(/\\r\\n/g, '\n')
+      .replace(/\\n/g, '\n');
+      
+    return processed;
+  };
 
   const handleMouseMove = (e) => {
     if (!isZoomed || !imageRef.current) return;
@@ -259,38 +272,35 @@ const DecorBook = () => {
         </div>
 
         <div className="mt-12 space-y-4">
-          {[
-            { title: "Inclusions", content: service.inclusions },
-            { title: "Description", content: service.description },
-            { title: "Must Know", content: service.must_know },
-            { title: "Cancellation Policy", content: service.cancellation_policy },
-          ].map((section, index) => (
-            <div key={index} className="bg-white rounded-xl border border-gray-200 shadow-sm transition-all duration-200 hover:shadow-md">
-              <div
-                className="p-4 md:p-5 cursor-pointer transition-colors duration-200 hover:bg-emerald-50 rounded-xl"
-                onClick={() => setExpandedSection(expandedSection === index ? null : index)}>
-                <h3 className="font-semibold flex justify-between items-center text-gray-800">
-                  <span className="text-lg md:text-xl font-medium text-emerald-700">{section.title}</span>
-                  <span className="text-emerald-600 text-xl font-light">{expandedSection === index ? "-" : "+"}</span>
-                </h3>
-              </div>
+  {[
+    { title: "Inclusions", content: service.inclusions },
+    { title: "Description", content: service.description },
+    { title: "Must Know", content: service.must_know },
+    { title: "Cancellation Policy", content: service.cancellation_policy },
+  ].map((section, index) => (
+    <div key={index} className="bg-white rounded-xl border border-gray-200 shadow-sm transition-all duration-200 hover:shadow-md">
+      <div
+        className="p-4 md:p-5 cursor-pointer transition-colors duration-200 hover:bg-emerald-50 rounded-xl"
+        onClick={() => setExpandedSection(expandedSection === index ? null : index)}
+      >
+        <h3 className="font-semibold flex justify-between items-center text-gray-800">
+          <span className="text-lg md:text-xl font-medium text-emerald-700">{section.title}</span>
+          <span className="text-emerald-600 text-xl font-light">{expandedSection === index ? "-" : "+"}</span>
+        </h3>
+      </div>
 
-              {expandedSection === index && (
-                <div className="p-4 md:p-6 pt-0">
-                  <div className="text-gray-700 space-y-3 text-base leading-relaxed text-left">
-                    {section.content?.split('\n').map((line, i) => (
-                      line.trim() && (
-                        <p key={i} className={`text-justify md:text-left ${line.startsWith("•") ? "block" : ""}`}>
-                          {line.trim()}
-                        </p>
-                      )
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+      {expandedSection === index && (
+        <div className="p-4 md:p-6 pt-0">
+          <div className="text-gray-700 text-base leading-relaxed text-left prose prose-p:my-1 prose-li:my-1 max-w-none">
+            <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+  {processMarkdown(section.content || "")}
+</ReactMarkdown>
+          </div>
         </div>
+      )}
+    </div>
+  ))}
+</div>
 
         {/* <SimilarProductSection products={[]} section={"You might also like"} className="mt-12" /> */}
 

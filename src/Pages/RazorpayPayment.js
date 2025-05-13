@@ -139,7 +139,7 @@ export const initiateRazorpayPayment = async (options) => {
             
             console.log("Payment verification response:", verificationResponse.data);
             
-            if (verificationResponse.data.success) {
+            if (verificationResponse.data.status === "success") {
               // Payment successfully verified by backend
               console.log("Payment verified successfully");
               resolve({
