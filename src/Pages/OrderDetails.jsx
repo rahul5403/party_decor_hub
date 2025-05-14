@@ -1,72 +1,61 @@
-import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import confetti from "canvas-confetti";
-import { mergeCart } from "../redux/cartSlice";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const OrderConfirmation = () => {
-  const location = useLocation();
+const OrderDetails = () => {
+  const { orderId } = useParams();
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const API_BASE_URL_IMAGE = "https://partydecorhub.com";
 
-  // Get order details from location state
-  const { orderDetails, orderTotal, paymentDetails } = location.state || {};
-
-  // If no order details, redirect to home
   useEffect(() => {
-    if (!orderDetails) {
-      navigate("/");
-      return;
-    }
-
-    // Clear the cart after successful order
-    dispatch(mergeCart([]));
-
-    // Launch confetti effect
-    const duration = 3 * 1000;
-    const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-    function randomInRange(min, max) {
-      return Math.random() * (max - min) + min;
-    }
-
-    const interval = setInterval(function () {
-      const timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
+    const fetchOrderDetails = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("accessToken");
+        // API call to fetch specific order details
+        const response = await axios.get(`https://partydecorhub.com/api/orders/${orderId}`,{
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+        });
+        setOrderDetails(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch order details. Please try again later.");
+        setLoading(false);
       }
+    };
 
-      const particleCount = 50 * (timeLeft / duration);
+    fetchOrderDetails();
+  }, [orderId]);
 
-      // Launch confetti from both sides
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-      });
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-      });
-    }, 250);
-
-    // Clean up the interval
-    return () => clearInterval(interval);
-  }, [orderDetails, navigate, dispatch]);
-
-  // Format date
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("en-US", options);
   };
 
-  // If no order details, show loading
-  if (!orderDetails) {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "ORDER_DELIVERED":
+        return "bg-green-100 text-green-700";
+      case "ORDER_SHIPPED":
+        return "bg-blue-100 text-blue-700";
+      case "ORDER_PROCESSING":
+        return "bg-yellow-100 text-yellow-700";
+      case "ORDER_CANCELLED":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-2 py-2 min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="max-w-6xl mx-auto px-4 py-8 min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div
             className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full border-green-500 border-t-transparent"
@@ -80,14 +69,13 @@ const OrderConfirmation = () => {
     );
   }
 
-  return (
-    <div className="max-w-6xl mx-auto px-2 py-2 min-h-screen bg-gray-50">
-      {/* Success Header */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-green-500 transform transition-all hover:shadow-lg">
-        <div className="flex flex-col items-center text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+  if (error || !orderDetails) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-8 min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="mb-4 text-red-500">
             <svg
-              className="w-10 h-10 text-green-500"
+              className="w-12 h-12 mx-auto"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -96,76 +84,65 @@ const OrderConfirmation = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M5 13l4 4L19 7"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
               />
             </svg>
           </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-700 mb-2">
-            Order Confirmed!
-          </h1>
-          <p className="text-gray-600 mb-4">
-            Thank you for your purchase! Your order has been confirmed and is
-            being processed.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 mt-2">
-            <button
-              onClick={() => navigate(`/track-order/${orderDetails.order_id}`)}
-              className="px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-200 transition-all duration-200 flex items-center gap-1"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-              Track Order
-            </button>
-            <button
-              onClick={() => navigate("/my-orders")}
-              className="px-4 py-2 bg-green-100 text-green-600 rounded-full text-sm font-medium hover:bg-green-200 transition-all duration-200 flex items-center gap-1"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-              My Orders
-            </button>
-            <button
-              onClick={() => navigate("/")}
-              className="px-4 py-2 bg-indigo-100 text-indigo-600 rounded-full text-sm font-medium hover:bg-indigo-200 transition-all duration-200 flex items-center gap-1"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                />
-              </svg>
-              Continue Shopping
-            </button>
+          <p className="text-lg text-gray-700">{error || "Order not found"}</p>
+          <button
+            onClick={() => navigate("/my-orders")}
+            className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+          >
+            Back to My Orders
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8 min-h-screen bg-gray-50">
+      {/* Back Button */}
+      <div className="mb-6">
+        <button
+          onClick={() => navigate("/my-orders")}
+          className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          <svg
+            className="w-5 h-5 mr-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          Back to My Orders
+        </button>
+      </div>
+
+      {/* Header */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-green-500">
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+              Order #{orderDetails.order_id}
+            </h1>
+            <p className="text-gray-600">
+              Placed on {formatDate(orderDetails.order_date)}
+            </p>
           </div>
+          <span
+            className={`mt-4 md:mt-0 px-4 py-1 rounded-full text-sm font-semibold ${getStatusColor(
+              orderDetails.status
+            )}`}
+          >
+            {orderDetails.status_display}
+          </span>
         </div>
       </div>
 
@@ -177,9 +154,6 @@ const OrderConfirmation = () => {
             <h2 className="text-lg font-semibold text-green-700">
               Order Details
             </h2>
-            <span className="text-sm bg-green-100 text-green-600 px-3 py-1 rounded-full">
-              {orderDetails.order_status || "Confirmed"}
-            </span>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
@@ -190,19 +164,19 @@ const OrderConfirmation = () => {
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">Date</span>
               <span className="font-medium">
-                {formatDate(orderDetails.created_at)}
+                {formatDate(orderDetails.order_date)}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">Payment Method</span>
               <span className="font-medium">
-                {orderDetails.payment_details?.method || "Razorpay"}
+                {orderDetails.payment_method}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm text-gray-500">Payment Status</span>
               <span className="font-medium text-green-600">
-                {orderDetails.payment_status || "Completed"}
+                {orderDetails.payment_status_display}
               </span>
             </div>
           </div>
@@ -211,35 +185,26 @@ const OrderConfirmation = () => {
           <div className="max-h-64 overflow-y-auto space-y-4 mb-4 pr-1 custom-scrollbar">
             {orderDetails.items.map((item) => (
               <div
-                key={item.id}
+                key={item.product_id}
                 className="flex items-center gap-4 border-b pb-3 last:border-b-0 transition-all duration-300 hover:bg-green-50 rounded-md p-2"
               >
                 <img
-                  src={item.thumbnail}
-                  alt={item.name}
+                  src={`${API_BASE_URL_IMAGE}${item.image_url}`}
+                  alt={item.product_name}
                   className="w-16 h-16 rounded-md object-cover shadow-sm transition-transform duration-300 hover:scale-105"
                 />
                 <div className="flex justify-between w-full">
                   <div>
                     <h3 className="text-sm font-medium text-gray-800">
-                      {item.name}
+                      {item.product_name}
                     </h3>
                     <div className="mt-1 space-y-1 text-xs text-gray-500 text-left">
                       <p className="m-0">Qty: {item.quantity}</p>
-                      {item.color &&
-                        Array.isArray(item.color) &&
-                        item.color.length > 0 && (
-                          <p>Color: {item.color.join(", ")}</p>
-                        )}
-                      {item.color &&
-                        typeof item.color === "string" &&
-                        item.color.trim() !== "" && <p>Color: {item.color}</p>}
-                      {item.size && <p>Size: {item.size}</p>}
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-semibold text-green-600">
-                      ₹{item.price.toFixed(2)}
+                      ₹{item.price_at_purchase.toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -251,51 +216,63 @@ const OrderConfirmation = () => {
           <div className="border-t pt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Subtotal</span>
-              <span>₹{orderDetails.order_summary.subtotal.toFixed(2)}</span>
+              <span>₹{(orderDetails.total_price * 0.9).toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Shipping</span>
               <span>
-                {orderDetails.order_summary.shipping === 0
+                {orderDetails.shipping_price === 0
                   ? "Free"
-                  : `₹${orderDetails.order_summary.shipping.toFixed(2)}`}
+                  : `₹${orderDetails.shipping_price?.toFixed(2) || "70.00"}`}
               </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Tax</span>
+              <span>₹{(orderDetails.total_price * 0.1).toFixed(2)}</span>
             </div>
             <div className="flex justify-between font-semibold pt-2 border-t">
               <span>Total</span>
               <span className="text-green-600">
-                ₹{orderDetails.order_summary.total.toFixed(2)}
+                ₹{orderDetails.total_price.toFixed(2)}
               </span>
             </div>
           </div>
 
           {/* Payment Info */}
-          {paymentDetails && (
-            <div className="mt-6 pt-4 border-t border-dashed">
-              <h3 className="font-medium text-gray-700 mb-3">
-                Payment Information
-              </h3>
-              <div className="bg-gray-50 p-3 rounded-md text-sm space-y-2">
+          <div className="mt-6 pt-4 border-t border-dashed">
+            <h3 className="font-medium text-gray-700 mb-3">
+              Payment Information
+            </h3>
+            <div className="bg-gray-50 p-3 rounded-md text-sm space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Payment Method</span>
+                <span className="font-medium">{orderDetails.payment_method}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Payment Status</span>
+                <span className="font-medium text-green-600">
+                  {orderDetails.payment_status_display}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Payment Date</span>
+                <span className="font-medium">
+                  {formatDate(orderDetails.payment_date)}
+                </span>
+              </div>
+              {orderDetails.transaction_id && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Transaction ID</span>
-                  <span className="font-mono">
-                    {paymentDetails.razorpay_payment_id}
-                  </span>
+                  <span className="font-mono">{orderDetails.transaction_id}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Order ID</span>
-                  <span className="font-mono">
-                    {paymentDetails.razorpay_order_id}
-                  </span>
-                </div>
-              </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Right Column - Shipping Info & Tracking - IMPROVED COMPACT DESIGN */}
+        {/* Right Column - Shipping Info & Tracking */}
         <div className="w-full md:w-[40%] space-y-4">
-          {/* Shipping Information - MORE COMPACT & ALIGNED */}
+          {/* Shipping Information */}
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             {/* Header with gradient */}
             <div className="bg-gradient-to-r from-green-500 to-teal-500 py-2 px-4">
@@ -317,9 +294,9 @@ const OrderConfirmation = () => {
               </h4>
             </div>
 
-            {/* Content - More compact */}
+            {/* Content */}
             <div className="p-4">
-              {/* Shipping Method - Compact inline design */}
+              {/* Shipping Method */}
               <div className="flex items-center px-3 py-2 bg-green-50 rounded-md mb-3 border border-green-100">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-2 flex-shrink-0">
                   <svg
@@ -339,10 +316,10 @@ const OrderConfirmation = () => {
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
                     <h3 className="text-xs font-medium text-green-700">
-                      {orderDetails.shipping_method.name}
+                      {orderDetails.shipping_method || "Standard Shipping"}
                     </h3>
                     <span className="text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full text-xs">
-                      {orderDetails.shipping_method.estimated_days}
+                      {orderDetails.estimated_delivery_date ? formatDate(orderDetails.estimated_delivery_date) : "3-5 Business Days"}
                     </span>
                   </div>
                 </div>
@@ -374,24 +351,22 @@ const OrderConfirmation = () => {
                     </svg>
                   </div>
                   <div>
-  <h3 className="text-xs font-medium text-gray-700 mb-1">Delivery Address</h3>
-  <div className="text-xs text-gray-600 leading-tight">
-    <p className="font-medium">
-      {orderDetails.shipping_details.name}
-    </p>
-    <p>
-      {orderDetails.shipping_details.address_line1}
-      {orderDetails.shipping_details.address_line2 && (
-        <>,&nbsp;{orderDetails.shipping_details.address_line2}</>
-      )}
-      ,&nbsp;{orderDetails.shipping_details.city},&nbsp;
-      {orderDetails.shipping_details.postal_code},&nbsp;
-      {orderDetails.shipping_details.country}
-    </p>
-  </div>
-</div>
-
-
+                    <h3 className="text-xs font-medium text-gray-700 mb-1">Delivery Address</h3>
+                    <div className="text-xs text-gray-600 leading-tight">
+                      <p className="font-medium">
+                        {orderDetails.contact_name || "Customer Name"}
+                      </p>
+                      <p>
+                        {orderDetails.delivery_address_line1},
+                        {orderDetails.delivery_address_line2 && (
+                          <>,&nbsp;{orderDetails.delivery_address_line2}</>
+                        )}
+                        &nbsp;{orderDetails.delivery_city},&nbsp;
+                        {orderDetails.delivery_pincode},&nbsp;
+                        {orderDetails.delivery_state || "Chhattisgarh"}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Contact Info - Horizontal layout */}
@@ -417,7 +392,7 @@ const OrderConfirmation = () => {
                         Email
                       </p>
                       <p className="text-xs font-medium truncate">
-                        {orderDetails.shipping_details.email}
+                        {orderDetails.contact_email || "customer@example.com"}
                       </p>
                     </div>
                   </div>
@@ -440,7 +415,7 @@ const OrderConfirmation = () => {
                     <div>
                       <p className="text-xs text-gray-500">Phone</p>
                       <p className="text-xs font-medium">
-                        {orderDetails.shipping_details.phone}
+                        {orderDetails.contact_phone || "+91 9876543210"}
                       </p>
                     </div>
                   </div>
@@ -449,7 +424,7 @@ const OrderConfirmation = () => {
             </div>
           </div>
 
-          {/* Track Order Card - More compact */}
+          {/* Track Order Card */}
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 py-2 px-4 relative">
               <div className="absolute top-0 right-0 opacity-20">
@@ -482,29 +457,42 @@ const OrderConfirmation = () => {
             </div>
             <div className="p-4">
               <p className="text-xs text-gray-600 mb-2">
-                Your order is currently being processed. Follow its journey to
+                Your order is currently being {orderDetails.status_display.toLowerCase()}. Follow its journey to
                 your doorstep!
               </p>
+              
+              {/* Progress bar */}
               <div className="w-full bg-gray-100 h-1.5 rounded-full mb-2">
                 <div
                   className="bg-blue-500 h-1.5 rounded-full"
-                  style={{ width: "25%" }}
+                  style={{ width: getOrderProgressWidth(orderDetails.status) }}
                 ></div>
               </div>
+              
               <div className="flex justify-between text-xs text-gray-500 mb-3">
-                <span className="text-[10px]">Placed</span>
-                <span className="text-[10px] font-medium text-blue-600">
+                <span className={`text-[10px] ${orderDetails.status === "ORDER_PLACED" || orderDetails.status === "ORDER_PROCESSING" || orderDetails.status === "ORDER_SHIPPED" || orderDetails.status === "ORDER_DELIVERED" ? "font-medium text-blue-600" : ""}`}>
+                  Placed
+                </span>
+                <span className={`text-[10px] ${orderDetails.status === "ORDER_PROCESSING" || orderDetails.status === "ORDER_SHIPPED" || orderDetails.status === "ORDER_DELIVERED" ? "font-medium text-blue-600" : ""}`}>
                   Processing
                 </span>
-                <span className="text-[10px]">Shipped</span>
-                <span className="text-[10px]">Delivered</span>
+                <span className={`text-[10px] ${orderDetails.status === "ORDER_SHIPPED" || orderDetails.status === "ORDER_DELIVERED" ? "font-medium text-blue-600" : ""}`}>
+                  Shipped
+                </span>
+                <span className={`text-[10px] ${orderDetails.status === "ORDER_DELIVERED" ? "font-medium text-blue-600" : ""}`}>
+                  Delivered
+                </span>
               </div>
+              
+              {orderDetails.tracking_number && (
+                <div className="mb-3 p-2 bg-gray-50 rounded-md">
+                  <p className="text-xs text-gray-500">Tracking Number</p>
+                  <p className="font-mono text-sm">{orderDetails.tracking_number}</p>
+                </div>
+              )}
+              
               <button
-                onClick={() =>
-                  navigate(`/track-order/${orderDetails.order_id}`, {
-                    state: { orderDetails, paymentDetails },
-                  })
-                }
+                onClick={() => navigate(`/track-order/${orderDetails.order_id}`)}
                 className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs font-medium transition-colors duration-200 flex items-center justify-center gap-1"
               >
                 <svg
@@ -525,7 +513,7 @@ const OrderConfirmation = () => {
             </div>
           </div>
 
-          {/* Customer Support - More compact */}
+          {/* Customer Support */}
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="bg-gradient-to-r from-indigo-500 to-purple-500 py-2 px-4">
               <h4 className="text-md font-semibold text-white flex items-center">
@@ -592,6 +580,22 @@ const OrderConfirmation = () => {
               </div>
             </div>
           </div>
+          
+          {/* Action Buttons */}
+          <div className="flex flex-col space-y-2 mt-4">
+            <button
+              onClick={() => navigate("/my-orders")}
+              className="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition-colors duration-200"
+            >
+              Return to My Orders
+            </button>
+            <button
+              onClick={() => navigate("/")}
+              className="w-full py-2 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 rounded-md text-sm font-medium transition-colors duration-200"
+            >
+              Continue Shopping
+            </button>
+          </div>
         </div>
       </div>
 
@@ -611,18 +615,25 @@ const OrderConfirmation = () => {
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: #4ade80;
         }
-        @keyframes pulse {
-          0%,
-          100% {
-            opacity: 0.6;
-          }
-          50% {
-            opacity: 0.4;
-          }
-        }
       `}</style>
     </div>
   );
 };
 
-export default OrderConfirmation;
+// Helper function to determine progress bar width based on order status
+const getOrderProgressWidth = (status) => {
+  switch (status) {
+    case "ORDER_DELIVERED":
+      return "100%";
+    case "ORDER_SHIPPED":
+      return "75%";
+    case "ORDER_PROCESSING":
+      return "50%";
+    case "ORDER_PLACED":
+      return "25%";
+    default:
+      return "25%";
+  }
+};
+
+export default OrderDetails;

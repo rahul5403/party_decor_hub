@@ -35,23 +35,27 @@ export const checkAuthStatus = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      
+
       if (!accessToken) {
         return rejectWithValue("No access token found");
       }
-      
+
       const response = await axios.get(
         "https://partydecorhub.com/api/check-auth",
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
-      
-      return response.data;
+
+      if (response.data.is_logged_in) {
+        return response.data; // success
+      } else {
+        localStorage.removeItem("accessToken");
+        return rejectWithValue("Not logged in");
+      }
     } catch (error) {
-      // If token is invalid or expired, clean up localStorage
       localStorage.removeItem("accessToken");
       return rejectWithValue(error.response?.data || "Authentication failed");
     }
@@ -90,11 +94,13 @@ const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
-        state.isAuthenticated = true;
-        state.user = action.payload;
-        state.status = "succeeded";
-        state.error = null;
-      })
+  state.isAuthenticated = true;
+  // Optional: remove is_logged_in key if not needed in state
+  const { is_logged_in, ...userData } = action.payload;
+  state.user = userData;
+  state.status = "succeeded";
+  state.error = null;
+})
       .addCase(checkAuthStatus.rejected, (state, action) => {
         state.isAuthenticated = false;
         state.user = null;

@@ -23,6 +23,9 @@ import ShippingPolicy from "../Pages/ShippingPolicy";
 import TermsAndConditions from "../Pages/TermsCondition";
 import InstagramButton from "../components/Insta";
 import OrderConfirmation from "../Pages/OrderConfirmation";
+import TrackOrder from '../Pages/TrackOrder';
+import MyOrders from "../Pages/MyOrders";
+import OrderDetails from "../Pages/OrderDetails";
 
 const Router = () => {
   const location = useLocation();
@@ -61,6 +64,9 @@ const Router = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/track-order/:orderId" element={<TrackOrder />} />
+        <Route path="/my-orders" element={<MyOrders />} />
+        <Route path="/order/:orderId" element={<OrderDetails />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundReturnPolicy />} />
         <Route path="/shipping-policy" element={<ShippingPolicy />} />

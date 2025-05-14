@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import {
@@ -17,6 +17,8 @@ import { addToCart } from "../redux/cartSlice";
 import { Check } from "lucide-react";
 import SimilarProductSection from "../components/SimilarProductSection";
 import useFetchData from "../hooks/Home/useFetchData";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -38,18 +40,12 @@ const ProductDetails = () => {
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem("accessToken");
 
+  // const processMarkdown = (text) => {
+  //   if (!text) return "";
+  //   let processed = text.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n");
 
-  const processMarkdown = (text) => {
-    if (!text) return '';
-    
-    // Replace literal "\r\n" strings with actual line breaks
-    let processed = text
-      .replace(/\\r\\n/g, '\n')
-      .replace(/\\n/g, '\n');
-      
-    return processed;
-  };
-  
+  //   return processed;
+  // };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -128,8 +124,6 @@ const ProductDetails = () => {
       dispatch(addToCart(item[0]));
     }
   };
-
-  
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
@@ -436,31 +430,30 @@ const ProductDetails = () => {
                       </div>
                     )
                   ) : (
-                    <div className="prose max-w-none text-gray-700 text-left">
-                      {/* <p className="text-base leading-relaxed">
-                        {product.description}
-                      </p> */}
-                      {/* <ReactMarkdown className="prose max-w-none text-gray-700">
-  {product.description}
-</ReactMarkdown> */}
-
-<ReactMarkdown>
-    {processMarkdown(product.description)}
+<div className="prose max-w-none text-gray-700 text-left">
+  <ReactMarkdown 
+    rehypePlugins={[rehypeRaw]} 
+    remarkPlugins={[remarkGfm]}
+    components={{
+      ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-1 my-2" {...props} />,
+      li: ({node, ...props}) => <li className="pl-1" {...props} />
+    }}
+  >
+    {product.description?.replace(/\u2022\t/g, '- ') || ""}
   </ReactMarkdown>
 
-{/* {console.log(product)} */}
-                      {/* Dynamic features list from backend */}
-                      {product.features?.length > 0 && (
-                        <ul className="mt-4 space-y-2 pl-4">
-                          {product.features.map((feature, index) => (
-                            <li key={index} className="flex items-center gap-2">
-                              <Check className="w-4 h-4 text-emerald-600" />
-                              {feature}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
+  {/* Dynamic features list from backend */}
+  {product.features?.length > 0 && (
+    <ul className="mt-4 space-y-2 pl-5 list-disc">
+      {product.features.map((feature, index) => (
+        <li key={index} className="flex items-start gap-2">
+          <Check className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+          <span>{feature}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
                   )}
                 </div>
               )}

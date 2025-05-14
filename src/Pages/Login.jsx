@@ -7,12 +7,14 @@ import background from "../assets/images/header_bg.png";
 import axios from "axios";
 import { login } from "../redux/authSlice.js";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ onClose, onSignupClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { loading, handleLogin } = useLogin();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     await handleLogin(email, password, onClose);
@@ -51,6 +53,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
     dispatch(login(userData));
     
     onClose(); // Close the modal on success
+    navigate("/home");
   } catch (err) {
     console.error("Google Login Error", err);
     alert("Google login failed.");
