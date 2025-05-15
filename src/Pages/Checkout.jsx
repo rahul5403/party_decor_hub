@@ -1220,23 +1220,23 @@ const Checkout = () => {
     }
   };
 
-  useEffect(() => {
-    let timeoutId;
+  // useEffect(() => {
+  //   let timeoutId;
     
-    if (isSubmitting) {
-      // After 30 seconds, force reset the submitting state if it's still true
-      timeoutId = setTimeout(() => {
-        console.log("Safety timeout: Forcing reset of submitting state after timeout");
-        setIsSubmitting(false);
-        setCheckoutError("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
-        toast.error("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
-      }, 30000); // 30 seconds timeout
-    }
+  //   if (isSubmitting) {
+  //     // After 30 seconds, force reset the submitting state if it's still true
+  //     timeoutId = setTimeout(() => {
+  //       console.log("Safety timeout: Forcing reset of submitting state after timeout");
+  //       setIsSubmitting(false);
+  //       setCheckoutError("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
+  //       toast.error("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
+  //     }, 60000); // 30 seconds timeout
+  //   }
     
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [isSubmitting]);
+  //   return () => {
+  //     if (timeoutId) clearTimeout(timeoutId);
+  //   };
+  // }, [isSubmitting]);
 
   // Updated handleSubmit function
   const handleSubmit = (e) => {
