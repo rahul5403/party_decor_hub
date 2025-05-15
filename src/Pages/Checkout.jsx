@@ -2,6 +2,7 @@
 // import { useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom";
 // import axios from "axios";
+// import { toast } from "react-toastify";
 // import mastercard from "../assets/images/mastercard_logo.png";
 // import visa from "../assets/images/visa_logo.png";
 // import paytm from "../assets/images/paytm_logo.png";
@@ -56,6 +57,7 @@
 //   const fetchShippingOptions = async () => {
 //     if (!isPincodeAvailable()) {
 //       setShippingError("Please enter a pincode first");
+//       toast.error("Please enter a pincode first");
 //       setShippingMessage("");
 //       return;
 //     }
@@ -67,6 +69,7 @@
 //     const accessToken = localStorage.getItem("accessToken");
 //     if (!accessToken) {
 //       setShippingError("Please login to check delivery options");
+//       toast.error("Please login to check delivery options");
 //       setCheckingShipping(false);
 //       return;
 //     }
@@ -99,12 +102,15 @@
 //           }
 //         } else {
 //           setShippingError("No shipping options available for this location");
+//           toast.error("No shipping options available for this location");
 //         }
 //       } else {
 //         setShippingError("No shipping options available for this location");
+//         toast.error("No shipping options available for this location");
 //       }
 //     } catch (err) {
 //       setShippingError(err.response?.data?.message || "Failed to fetch shipping options");
+//       toast.error(err.response?.data?.message || "Failed to fetch shipping options");
 //       console.error("Error fetching shipping options:", err);
 //     } finally {
 //       setCheckingShipping(false);
@@ -117,6 +123,7 @@
 //       const accessToken = localStorage.getItem("accessToken");
 //       if (!accessToken) {
 //         setProfileError("Please login to continue");
+//         toast.error("Please login to continue");
 //         setLoading(false);
 //         return;
 //       }
@@ -134,6 +141,7 @@
         
 //         if (!authCheckResponse.data.is_logged_in) {
 //           setProfileError("Please login to continue");
+//           toast.error("Please login to continue");
 //           setLoading(false);
 //           return;
 //         }
@@ -185,6 +193,7 @@
 //         setProfileError('');
 //       } catch (err) {
 //         setProfileError(err.response?.data?.message || 'Failed to fetch user profile');
+//         toast.error(err.response?.data?.message || 'Failed to fetch user profile');
 //         console.error('Error fetching profile:', err);
 //       } finally {
 //         setLoading(false);
@@ -208,65 +217,49 @@
 //     setDeliveryMethod(method);
 //   };
 
-// const submitOrder = async () => {
-//   setIsSubmitting(true);
-//   setCheckoutError('');
-  
-//   console.log("Submit order function started");
-  
-//   const accessToken = localStorage.getItem("accessToken");
-//   if (!accessToken) {
-//     console.log("No access token found");
-//     setCheckoutError("Please login to continue");
-//     setIsSubmitting(false);
-//     return;
-//   }
-  
-//   try {
-//     // Find the shipping method ID based on the selected delivery method name
-//     const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
-//     const shippingMethodId = selectedShippingOption ? selectedShippingOption.id : 0;
+//   const submitOrder = async () => {
+//     setIsSubmitting(true);
+//     setCheckoutError('');
     
-//     // Split the address into lines if needed
-//     const addressLines = formData.address.split(',');
-//     const line1 = addressLines[0] || '';
-//     const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
+//     console.log("Submit order function started");
     
-//         // Prepare the API request payload
-//     const checkoutPayload = {
-//       shipping_method_id: shippingMethodId,
-//       delivery_pincode: formData.postalCode,
-//       delivery_address_line1: line1,
-//       delivery_address_line2: line2,
-//       delivery_city: formData.city,
-//       delivery_state: "", // This needs to be added to your form if required
-//       contact_phone: formData.phone,
-//       contact_email: formData.email,
-//       delivery_instructions: "" // This could be added to your form if needed
-//     };
+//     const accessToken = localStorage.getItem("accessToken");
+//     if (!accessToken) {
+//       console.log("No access token found");
+//       setCheckoutError("Please login to continue");
+//       toast.error("Please login to continue");
+//       setIsSubmitting(false);
+//       return;
+//     }
     
-//     console.log("Making checkout API call");
-//     // Make the API call to create the order
-//     const response = await axios.post(
-//       "https://partydecorhub.com/api/cart/checkout",
-//       checkoutPayload,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//           "Content-Type": "application/json"
-//         }
-//       }
-//     );
-    
-//     console.log("Checkout API response:", response.data);
-    
-//     // Handle successful response - initiate Razorpay payment
-//     if (response.data && response.data.order_id) {
-//       console.log("Getting Razorpay order details");
-//       // Get Razorpay order details from the API
-//       const razorpayResponse = await axios.post(
-//         "https://partydecorhub.com/api/payments/razorpay/create",
-//         { order_id: response.data.order_id },
+//     try {
+//       // Find the shipping method ID based on the selected delivery method name
+//       const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
+//       const shippingMethodId = selectedShippingOption ? selectedShippingOption.id : 0;
+      
+//       // Split the address into lines if needed
+//       const addressLines = formData.address.split(',');
+//       const line1 = addressLines[0] || '';
+//       const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
+      
+//       // Prepare the API request payload
+//       const checkoutPayload = {
+//         shipping_method_id: shippingMethodId,
+//         delivery_pincode: formData.postalCode,
+//         delivery_address_line1: line1,
+//         delivery_address_line2: line2,
+//         delivery_city: formData.city,
+//         delivery_state: "", // This needs to be added to your form if required
+//         contact_phone: formData.phone,
+//         contact_email: formData.email,
+//         delivery_instructions: "" // This could be added to your form if needed
+//       };
+      
+//       console.log("Making checkout API call");
+//       // Make the API call to create the order
+//       const response = await axios.post(
+//         "https://partydecorhub.com/api/cart/checkout",
+//         checkoutPayload,
 //         {
 //           headers: {
 //             Authorization: `Bearer ${accessToken}`,
@@ -275,116 +268,135 @@
 //         }
 //       );
       
-//       console.log("Razorpay API response:", razorpayResponse.data);
+//       console.log("Checkout API response:", response.data);
       
-//       if (razorpayResponse.data && razorpayResponse.data.razorpay_order_id) {
-//         console.log("Initiating Razorpay payment");
-//         // Initiate Razorpay payment with customer details
-//         const paymentResult = await initiateRazorpayPayment({
-//           key: process.env.REACT_APP_RAZORPAY_KEY,
-//           amount: razorpayResponse.data.amount,
-//           currency: razorpayResponse.data.currency,
-//           orderId: razorpayResponse.data.razorpay_order_id,
-//           customerName: formData.fullName,
-//           customerEmail: formData.email,
-//           customerPhone: formData.phone,
-//           orderDetails: response.data,
-//           orderTotal: totalCost
-//         });
-        
-//         console.log("Payment result:", paymentResult);
-        
-//         // CRITICAL FIX: Set isSubmitting to false BEFORE any navigation or further processing
-//         setIsSubmitting(false);
-        
-//                 if (paymentResult.success) {
-//           // If payment verification succeeded, fetch the final order details
-//           // Get updated order details with payment status
-//           const completeOrderDetails = {
-//             ...response.data,
-//             payment_status: "completed", // Assuming payment was successful
-//             order_status: "confirmed",   // Setting initial order status
-//             created_at: new Date().toISOString(),
-//             shipping_details: {
-//               name: formData.fullName,
-//               email: formData.email,
-//               phone: formData.phone,
-//               address_line1: line1,
-//               address_line2: line2,
-//               city: formData.city,
-//               country: formData.country,
-//               postal_code: formData.postalCode
-//             },
-//             shipping_method: {
-//               name: deliveryMethod,
-//               price: shippingCost,
-//               estimated_days: selectedShippingOption ? selectedShippingOption.estimated_days : "3-5 business days"
-//             },
-//             items: cartItems.map(item => ({
-//               id: item.id,
-//               name: item.name || item.product_name,
-//               price: item.price,
-//               quantity: item.quantity,
-//               thumbnail: item.thumbnail,
-//               color: item.color,
-//               size: item.size
-//             })),
-//             payment_details: {
-//               method: "Razorpay",
-//               transaction_id: paymentResult.data?.razorpay_payment_id || "unknown",
-//               amount_paid: totalCost
-//             },
-//             order_summary: {
-//               subtotal: subtotal,
-//               shipping: shippingCost,
-//               total: totalCost
+//       // Handle successful response - initiate Razorpay payment
+//       if (response.data && response.data.order_id) {
+//         console.log("Getting Razorpay order details");
+//         // Get Razorpay order details from the API
+//         const razorpayResponse = await axios.post(
+//           "https://partydecorhub.com/api/payments/razorpay/create",
+//           { order_id: response.data.order_id },
+//           {
+//             headers: {
+//               Authorization: `Bearer ${accessToken}`,
+//               "Content-Type": "application/json"
 //             }
-//           };
-//           // Then navigate...
-//           navigate("/order-confirmation", { 
-//             state: { 
-//               orderDetails: completeOrderDetails,
-//               orderTotal: totalCost,
-//               paymentDetails: paymentResult.data
-//             } 
+//           }
+//         );
+        
+//         console.log("Razorpay API response:", razorpayResponse.data);
+        
+//         if (razorpayResponse.data && razorpayResponse.data.razorpay_order_id) {
+//           console.log("Initiating Razorpay payment");
+//           // Initiate Razorpay payment with customer details
+//           const paymentResult = await initiateRazorpayPayment({
+//             key: process.env.REACT_APP_RAZORPAY_KEY,
+//             amount: razorpayResponse.data.amount,
+//             currency: razorpayResponse.data.currency,
+//             orderId: razorpayResponse.data.razorpay_order_id,
+//             customerName: formData.fullName,
+//             customerEmail: formData.email,
+//             customerPhone: formData.phone,
+//             orderDetails: response.data,
+//             orderTotal: totalCost
 //           });
+          
+//           console.log("Payment result:", paymentResult);
+          
+//           // CRITICAL FIX: Set isSubmitting to false BEFORE any navigation or further processing
+//           setIsSubmitting(false);
+          
+//           if (paymentResult.success) {
+//             // If payment verification succeeded, fetch the final order details
+//             // Get updated order details with payment status
+//             const completeOrderDetails = {
+//               ...response.data,
+//               payment_status: "completed", // Assuming payment was successful
+//               order_status: "confirmed",   // Setting initial order status
+//               created_at: new Date().toISOString(),
+//               shipping_details: {
+//                 name: formData.fullName,
+//                 email: formData.email,
+//                 phone: formData.phone,
+//                 address_line1: line1,
+//                 address_line2: line2,
+//                 city: formData.city,
+//                 country: formData.country,
+//                 postal_code: formData.postalCode
+//               },
+//               shipping_method: {
+//                 name: deliveryMethod,
+//                 price: shippingCost,
+//                 estimated_days: selectedShippingOption ? selectedShippingOption.estimated_days : "3-5 business days"
+//               },
+//               items: cartItems.map(item => ({
+//                 id: item.id,
+//                 name: item.name || item.product_name,
+//                 price: item.price,
+//                 quantity: item.quantity,
+//                 thumbnail: item.thumbnail,
+//                 color: item.color,
+//                 size: item.size
+//               })),
+//               payment_details: {
+//                 method: "Razorpay",
+//                 transaction_id: paymentResult.data?.razorpay_payment_id || "unknown",
+//                 amount_paid: totalCost
+//               },
+//               order_summary: {
+//                 subtotal: subtotal,
+//                 shipping: shippingCost,
+//                 total: totalCost
+//               }
+//             };
+//             // Then navigate...
+//             navigate("/order-confirmation", { 
+//               state: { 
+//                 orderDetails: completeOrderDetails,
+//                 orderTotal: totalCost,
+//                 paymentDetails: paymentResult.data
+//               } 
+//             });
+//           } else {
+//             console.log("Payment failed or cancelled:", paymentResult.error);
+//             setCheckoutError(paymentResult.error || "Payment failed or was cancelled");
+//             toast.error(paymentResult.error || "Payment failed or was cancelled");
+//           }
 //         } else {
-//           console.log("Payment failed or cancelled:", paymentResult.error);
-//           setCheckoutError(paymentResult.error || "Payment failed or was cancelled");
+//           throw new Error("Failed to create Razorpay order");
 //         }
 //       } else {
-//         throw new Error("Failed to create Razorpay order");
+//         throw new Error("No data received from checkout API");
 //       }
-//     } else {
-//       throw new Error("No data received from checkout API");
-//     }
-//   } catch (err) {
-//     console.error("Checkout error:", err);
-//     const errorMessage = err.response?.data?.message || err.message || "Failed to process your order";
-//     setCheckoutError(errorMessage);
-    
-//     // Always make sure to reset isSubmitting on error
-//     setIsSubmitting(false);
-//   }
-// };
-
-
-// useEffect(() => {
-//   let timeoutId;
-  
-//   if (isSubmitting) {
-//     // After 30 seconds, force reset the submitting state if it's still true
-//     timeoutId = setTimeout(() => {
-//       console.log("Safety timeout: Forcing reset of submitting state after timeout");
+//     } catch (err) {
+//       console.error("Checkout error:", err);
+//       const errorMessage = err.response?.data?.message || err.message || "Failed to process your order";
+//       setCheckoutError(errorMessage);
+//       toast.error(errorMessage);
+      
+//       // Always make sure to reset isSubmitting on error
 //       setIsSubmitting(false);
-//       setCheckoutError("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
-//     }, 30000); // 30 seconds timeout
-//   }
-  
-//   return () => {
-//     if (timeoutId) clearTimeout(timeoutId);
+//     }
 //   };
-// }, [isSubmitting]);
+
+//   // useEffect(() => {
+//   //   let timeoutId;
+    
+//   //   if (isSubmitting) {
+//   //     // After 30 seconds, force reset the submitting state if it's still true
+//   //     timeoutId = setTimeout(() => {
+//   //       console.log("Safety timeout: Forcing reset of submitting state after timeout");
+//   //       setIsSubmitting(false);
+//   //       setCheckoutError("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
+//   //       toast.error("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
+//   //     }, 60000); // 30 seconds timeout
+//   //   }
+    
+//   //   return () => {
+//   //     if (timeoutId) clearTimeout(timeoutId);
+//   //   };
+//   // }, [isSubmitting]);
 
 //   // Updated handleSubmit function
 //   const handleSubmit = (e) => {
@@ -393,11 +405,13 @@
 //     // Validate form before submission
 //     if (!isFormComplete) {
 //       setCheckoutError("Please complete all required fields");
+//       toast.error("Please complete all required fields");
 //       return;
 //     }
     
 //     if (!deliveryMethod) {
 //       setCheckoutError("Please select a delivery method");
+//       toast.error("Please select a delivery method");
 //       return;
 //     }
     
@@ -419,48 +433,17 @@
 //     );
 //   }
 
+//   const resetCheckoutState = () => {
+//   setIsSubmitting(false);
+//   setCheckoutError('');
+// };
+
 //   return (
 //     <div className="max-w-6xl mx-auto px-2 py-2 min-h-screen bg-gray-50">
 //       <h1 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-700 mb-6 relative inline-block">
 //         Checkout
 //         <span className="block w-16 h-1 bg-green-500 mx-auto mt-2 rounded-full"></span>
 //       </h1>
-
-//       {/* Show profile error message */}
-//       {profileError && (
-//         <div className="max-w-6xl mx-auto mb-2 items-center">
-//           <div className="bg-red-50 border-l-4 border-red-500 rounded items-center p-2">
-//             <div className="flex items-center">
-//               <div className="flex-shrink-0">
-//                 <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-//                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-//                 </svg>
-//               </div>
-//               <div className="ml-3 flex items-center">
-//                 <div className="text-sm text-red-700">{profileError}</div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Show checkout error message */}
-//       {checkoutError && (
-//         <div className="max-w-6xl mx-auto mb-2 items-center">
-//           <div className="bg-red-50 border-l-4 border-red-500 rounded items-center p-2">
-//             <div className="flex items-center">
-//               <div className="flex-shrink-0">
-//                 <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-//                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-//                 </svg>
-//               </div>
-//               <div className="ml-3 flex items-center">
-//                 <div className="text-sm text-red-700">{checkoutError}</div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       )}
 
 //       <div className="flex flex-col md:flex-row gap-6">
 //         {/* Shipping Form */}
@@ -576,10 +559,6 @@
 //             </div>
 //           </div>
           
-//           {shippingError && (
-//             <div className="text-xs text-red-500 mt-1">{shippingError}</div>
-//           )}
-          
 //           {shippingMessage && (
 //             <div className="text-xs text-green-600 font-medium mt-2 bg-green-50 p-2 rounded-md border border-green-200 flex items-center">
 //               <svg className="w-4 h-4 mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -687,159 +666,159 @@
 
 //           {/* Summary */}
 //           <div className="space-y-2 text-sm text-gray-700 mb-4">
-//             <div className="flex justify-between items-center py-1 transition-all duration-200 hover:bg-gray-50 px-2 rounded">
-//               <span>Shipping</span>
-//               <span className={shippingCost === 0 ? "text-green-600 font-medium" : ""}>
-//                 {shippingCost === 0 ? (deliveryMethod ? 'Free' : '-') : `₹${shippingCost.toFixed(2)}`}
-//               </span>
-//             </div>
-//             <div className="flex justify-between font-semibold border-t pt-2 mt-2">
-//               <span>Total</span>
-//               <span className="text-lg text-green-600">₹{totalCost.toFixed(2)}</span>
-//             </div>
-//           </div>
+//              <div className="flex justify-between items-center py-1 transition-all duration-200 hover:bg-gray-50 px-2 rounded">
+//                <span>Shipping</span>
+//                <span className={shippingCost === 0 ? "text-green-600 font-medium" : ""}>
+//                  {shippingCost === 0 ? (deliveryMethod ? 'Free' : '-') : `₹${shippingCost.toFixed(2)}`}
+//                </span>
+//              </div>
+//              <div className="flex justify-between font-semibold border-t pt-2 mt-2">
+//                <span>Total</span>
+//                <span className="text-lg text-green-600">₹{totalCost.toFixed(2)}</span>
+//              </div>
+//            </div>
 
-//           {/* Secure Note + Pay */}
-//           <div className="bg-green-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center justify-between mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
-//             <div className="flex items-center gap-2">
-//               <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-//               </svg>
-//               All transactions are secure and encrypted.
-//             </div>
-//             <div className="flex items-center gap-3 bg-transparent">
-//               <img src={mastercard} alt="Mastercard" className="h-7 object-contain bg-transparent" />
-//               <img src={visa} alt="Visa" className="h-7 object-contain bg-transparent" />
-//               <img src={paytm} alt="Paytm" className="h-7 object-contain bg-transparent" />
-//               <img src={phonepe} alt="PhonePe" className="h-7 object-contain bg-transparent" />
-//               <img src={razorpay} alt="Razorpay" className="h-7 object-contain bg-transparent" />
-//             </div>
-//           </div>
+//          {/* Secure Note + Pay */}
+//          <div className="bg-green-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center justify-between mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
+//            <div className="flex items-center gap-2">
+//              <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+//              </svg>
+//              All transactions are secure and encrypted.
+//            </div>
+//            <div className="flex items-center gap-3 bg-transparent">
+//              <img src={mastercard} alt="Mastercard" className="h-7 object-contain bg-transparent" />
+//              <img src={visa} alt="Visa" className="h-7 object-contain bg-transparent" />
+//              <img src={paytm} alt="Paytm" className="h-7 object-contain bg-transparent" />
+//              <img src={phonepe} alt="PhonePe" className="h-7 object-contain bg-transparent" />
+//              <img src={razorpay} alt="Razorpay" className="h-7 object-contain bg-transparent" />
+//            </div>
+//          </div>
 
-//           <div className="bg-indigo-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center gap-2 mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
-//             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-//               <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-//             </svg>
-//             Express delivery available exclusively in Delhi NCR.
-//           </div>
+//          <div className="bg-indigo-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center gap-2 mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
+//            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+//            </svg>
+//            Express delivery available exclusively in Delhi NCR.
+//          </div>
 
-//           <div className="bg-red-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center gap-2 mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
-//             <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
-//             </svg>
-//             All displayed prices include GST and applicable service charges.
-//           </div>
-          
-//           <button 
-//   onClick={handleSubmit} 
-//   disabled={isSubmitting || !isFormComplete || !deliveryMethod}
-//   className={`w-full relative overflow-hidden py-2.5 rounded-md text-sm font-semibold transition-all duration-300 
-//     ${isFormComplete && deliveryMethod && !isSubmitting
-//       ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-102" 
-//       : "bg-gray-300 cursor-not-allowed text-gray-500"}`}
-// >
-//   {isSubmitting ? (
-//     <div className="flex items-center justify-center">
-//       <div className="animate-spin -ml-1 mr-2 h-4 w-4 text-white rounded-full border-2 border-white border-t-transparent"></div>
-//       Processing...
-//     </div>
-//   ) : (
-//     <>
-//       <span className="relative z-10">Pay Now</span>
-//       {isFormComplete && deliveryMethod && (
-//         <span className="absolute inset-0 rounded-md overflow-hidden">
-//           <span className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-700 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-//         </span>
-//       )}
-//     </>
-//   )}
-// </button>
+//          <div className="bg-red-50 p-2.5 rounded-lg text-xs text-gray-600 flex items-center gap-2 mb-2 border border-gray-100 transition-all duration-300 hover:bg-gray-100">
+//            <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+//            </svg>
+//            All displayed prices include GST and applicable service charges.
+//          </div>
+         
+//          <button 
+//            onClick={handleSubmit} 
+//            disabled={isSubmitting || !isFormComplete || !deliveryMethod}
+//            className={`w-full relative overflow-hidden py-2.5 rounded-md text-sm font-semibold transition-all duration-300 
+//              ${isFormComplete && deliveryMethod && !isSubmitting
+//                ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-102" 
+//                : "bg-gray-300 cursor-not-allowed text-gray-500"}`}
+//          >
+//            {isSubmitting ? (
+//              <div className="flex items-center justify-center">
+//                <div className="animate-spin -ml-1 mr-2 h-4 w-4 text-white rounded-full border-2 border-white border-t-transparent"></div>
+//                Processing...
+//              </div>
+//            ) : (
+//              <>
+//                <span className="relative z-10">Pay Now</span>
+//                {isFormComplete && deliveryMethod && (
+//                  <span className="absolute inset-0 rounded-md overflow-hidden">
+//                    <span className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-700 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+//                  </span>
+//                )}
+//              </>
+//            )}
+//          </button>
+         
+//          {!isFormComplete && (
+//            <p className="text-xs text-center mt-2 text-red-500">Please complete shipping information first</p>
+//          )}
+         
+//          {isFormComplete && !deliveryMethod && (
+//            <p className="text-xs text-center mt-2 text-red-500">Please select a delivery method</p>
+//          )}
 
-          
-//           {!isFormComplete && (
-//             <p className="text-xs text-center mt-2 text-red-500">Please complete shipping information first</p>
-//           )}
-          
-//           {isFormComplete && !deliveryMethod && (
-//             <p className="text-xs text-center mt-2 text-red-500">Please select a delivery method</p>
-//           )}
-
-//           {/* Added Policy Links */}
-//           <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-//             <p className="text-xs text-gray-500 mb-2">By proceeding with the purchase, you agree to our policies</p>
-//             <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs">
-//               <a 
-//                 href="/refund-policy" 
-//                 target="_blank"
-//                 className="text-green-600 hover:text-green-800 hover:underline transition-all duration-200 flex items-center gap-1"
-//               >
-//                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-//                 </svg>
-//                 Refund Policy
-//               </a>
-//               <a 
-//                 href="/shipping-policy" 
-//                 target="_blank"
-//                 className="text-green-600 hover:text-green-800 hover:underline transition-all duration-200 flex items-center gap-1"
-//               >
-//                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8" />
-//                 </svg>
-//                 Shipping Policy
-//               </a>
-//               <a 
-//                 href="/privacy-policy" 
-//                 target="_blank"
-//                 className="text-green-600 hover:text-green-800 hover:underline transition-all duration-200 flex items-center gap-1"
-//               >
-//                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-//                 </svg>
-//                 Privacy Policy
-//               </a>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-      
-//       {/* Add custom scrollbar styles */}
-//       <style jsx>{`
-//         .custom-scrollbar::-webkit-scrollbar {
-//           width: 4px;
-//         }
-//         .custom-scrollbar::-webkit-scrollbar-track {
-//           background: #f1f1f1;
-//           border-radius: 10px;
-//         }
-//         .custom-scrollbar::-webkit-scrollbar-thumb {
-//           background: #c1e1c1;
-//           border-radius: 10px;
-//         }
-//         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-//           background: #4ade80;
-//         }
-//         @keyframes pulse {
-//           0%, 100% {
-//             opacity: 0.6;
-//           }
-//           50% {
-//             opacity: 0.4;
-//           }
-//         }
-//         .scale-102 {
-//           scale: 1.02;
-//         }
-//       `}</style>
-//     </div>
-//   );
+//          {/* Added Policy Links */}
+//          <div className="mt-6 pt-4 border-t border-gray-100 text-center">
+//            <p className="text-xs text-gray-500 mb-2">By proceeding with the purchase, you agree to our policies</p>
+//            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs">
+//              <a 
+//                href="/refund-policy" 
+//                target="_blank"
+//                className="text-green-600 hover:text-green-800 hover:underline transition-all duration-200 flex items-center gap-1"
+//              >
+//                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+//                </svg>
+//                Refund Policy
+//              </a>
+//              <a 
+//                href="/shipping-policy" 
+//                target="_blank"
+//                className="text-green-600 hover:text-green-800 hover:underline transition-all duration-200 flex items-center gap-1"
+//              >
+//                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8" />
+//                </svg>
+//                Shipping Policy
+//              </a>
+//              <a 
+//                href="/privacy-policy" 
+//                target="_blank"
+//                className="text-green-600 hover:text-green-800 hover:underline transition-all duration-200 flex items-center gap-1"
+//              >
+//                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+//                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+//                </svg>
+//                Privacy Policy
+//              </a>
+//            </div>
+//          </div>
+//        </div>
+//      </div>
+     
+//      {/* Add custom scrollbar styles */}
+//      <style jsx>{`
+//        .custom-scrollbar::-webkit-scrollbar {
+//          width: 4px;
+//        }
+//        .custom-scrollbar::-webkit-scrollbar-track {
+//          background: #f1f1f1;
+//          border-radius: 10px;
+//        }
+//        .custom-scrollbar::-webkit-scrollbar-thumb {
+//          background: #c1e1c1;
+//          border-radius: 10px;
+//        }
+//        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+//          background: #4ade80;
+//        }
+//        @keyframes pulse {
+//          0%, 100% {
+//            opacity: 0.6;
+//          }
+//          50% {
+//            opacity: 0.4;
+//          }
+//        }
+//        .scale-102 {
+//          scale: 1.02;
+//        }
+//      `}</style>
+//    </div>
+//  );
 // };
 
 // export default Checkout;
 
 
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -848,10 +827,12 @@ import visa from "../assets/images/visa_logo.png";
 import paytm from "../assets/images/paytm_logo.png";
 import phonepe from "../assets/images/phonepe_logo.png";
 import razorpay from "../assets/images/razorpay_logo.png";
-import { initiateRazorpayPayment } from "./RazorpayPayment"; // Import the new function
+import { initiateRazorpayPayment } from "./RazorpayPayment"; 
+import { mergeCart } from "../redux/cartSlice"; // Import the action to clear cart
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const [formData, setFormData] = useState({
     fullName: "", 
@@ -874,6 +855,10 @@ const Checkout = () => {
   const [shippingMessage, setShippingMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [checkoutError, setCheckoutError] = useState('');
+  const [orderId, setOrderId] = useState(null);
+  
+  // Use a ref to keep track of the component's mounted state
+  const isMounted = useRef(true);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   
@@ -888,9 +873,34 @@ const Checkout = () => {
   const shippingCost = getShippingCost();
   const totalCost = subtotal + shippingCost;
 
+  // Track when component unmounts
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   // Check if pincode is filled
   const isPincodeAvailable = () => {
     return formData.postalCode && formData.postalCode.trim() !== "";
+  };
+
+  // Reset checkout state completely - FIXED VERSION
+  const resetCheckoutState = () => {
+    // Only update states if the component is still mounted
+    if (isMounted.current) {
+      // Force async update to avoid state batching issues
+      setTimeout(() => {
+        // Reset submission state first
+        setIsSubmitting(false);
+        
+        // Then reset other states
+        setCheckoutError('');
+        setOrderId(null);
+        
+        console.log("Checkout state reset completed");
+      }, 0);
+    }
   };
 
   // Fetch shipping options based on pincode and cart total
@@ -923,37 +933,45 @@ const Checkout = () => {
       );
       
       if (response.data && response.data.shipping_options) {
-        setShippingOptions(response.data.shipping_options);
-        
-        // Set default delivery method to the first option
-        if (response.data.shipping_options.length > 0 && !deliveryMethod) {
-          setDeliveryMethod(response.data.shipping_options[0].name);
-        }
-        
-        // Set custom message based on available options
-        if (response.data.shipping_options.length > 1) {
-          setShippingMessage("🎉 Great news! Express delivery is available for your location. Get your order faster!");
-        } else if (response.data.shipping_options.length === 1) {
-          const option = response.data.shipping_options[0];
-          if (option.name.toLowerCase() === "standard") {
-            setShippingMessage("Standard delivery is available for your location.");
-          } else if (option.name.toLowerCase() === "express") {
-            setShippingMessage("Express delivery is available for your location!");
+        if (isMounted.current) {
+          setShippingOptions(response.data.shipping_options);
+          
+          // Set default delivery method to the first option
+          if (response.data.shipping_options.length > 0 && !deliveryMethod) {
+            setDeliveryMethod(response.data.shipping_options[0].name);
           }
-        } else {
+          
+          // Set custom message based on available options
+          if (response.data.shipping_options.length > 1) {
+            setShippingMessage("🎉 Great news! Express delivery is available for your location. Get your order faster!");
+          } else if (response.data.shipping_options.length === 1) {
+            const option = response.data.shipping_options[0];
+            if (option.name.toLowerCase() === "standard") {
+              setShippingMessage("Standard delivery is available for your location.");
+            } else if (option.name.toLowerCase() === "express") {
+              setShippingMessage("Express delivery is available for your location!");
+            }
+          } else {
+            setShippingError("No shipping options available for this location");
+            toast.error("No shipping options available for this location");
+          }
+        }
+      } else {
+        if (isMounted.current) {
           setShippingError("No shipping options available for this location");
           toast.error("No shipping options available for this location");
         }
-      } else {
-        setShippingError("No shipping options available for this location");
-        toast.error("No shipping options available for this location");
       }
     } catch (err) {
-      setShippingError(err.response?.data?.message || "Failed to fetch shipping options");
-      toast.error(err.response?.data?.message || "Failed to fetch shipping options");
-      console.error("Error fetching shipping options:", err);
+      if (isMounted.current) {
+        setShippingError(err.response?.data?.message || "Failed to fetch shipping options");
+        toast.error(err.response?.data?.message || "Failed to fetch shipping options");
+        console.error("Error fetching shipping options:", err);
+      }
     } finally {
-      setCheckingShipping(false);
+      if (isMounted.current) {
+        setCheckingShipping(false);
+      }
     }
   };
 
@@ -980,9 +998,11 @@ const Checkout = () => {
         );
         
         if (!authCheckResponse.data.is_logged_in) {
-          setProfileError("Please login to continue");
-          toast.error("Please login to continue");
-          setLoading(false);
+          if (isMounted.current) {
+            setProfileError("Please login to continue");
+            toast.error("Please login to continue");
+            setLoading(false);
+          }
           return;
         }
         
@@ -1020,23 +1040,29 @@ const Checkout = () => {
         };
         
         // Map user profile data to form fields
-        setFormData({
-          fullName: userProfile.name || userProfile.full_name || getFullName(),
-          email: userProfile.email || '',
-          phone: userProfile.phone || userProfile.mobile || '',
-          address: formattedAddress || '',
-          city: userProfile.address?.city || userProfile.city || '',
-          country: userProfile.address?.country || userProfile.country || 'India',
-          postalCode: userProfile.address?.pincode || userProfile.pincode || userProfile.zip_code || '',
-        });
-        
-        setProfileError('');
+        if (isMounted.current) {
+          setFormData({
+            fullName: userProfile.name || userProfile.full_name || getFullName(),
+            email: userProfile.email || '',
+            phone: userProfile.phone || userProfile.mobile || '',
+            address: formattedAddress || '',
+            city: userProfile.address?.city || userProfile.city || '',
+            country: userProfile.address?.country || userProfile.country || 'India',
+            postalCode: userProfile.address?.pincode || userProfile.pincode || userProfile.zip_code || '',
+          });
+          
+          setProfileError('');
+        }
       } catch (err) {
-        setProfileError(err.response?.data?.message || 'Failed to fetch user profile');
-        toast.error(err.response?.data?.message || 'Failed to fetch user profile');
-        console.error('Error fetching profile:', err);
+        if (isMounted.current) {
+          setProfileError(err.response?.data?.message || 'Failed to fetch user profile');
+          toast.error(err.response?.data?.message || 'Failed to fetch user profile');
+          console.error('Error fetching profile:', err);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted.current) {
+          setLoading(false);
+        }
       }
     };
     
@@ -1058,6 +1084,7 @@ const Checkout = () => {
   };
 
   const submitOrder = async () => {
+    // Make sure isSubmitting is explicitly set to true at the start
     setIsSubmitting(true);
     setCheckoutError('');
     
@@ -1068,55 +1095,43 @@ const Checkout = () => {
       console.log("No access token found");
       setCheckoutError("Please login to continue");
       toast.error("Please login to continue");
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Reset submission state immediately on error
       return;
     }
     
     try {
-      // Find the shipping method ID based on the selected delivery method name
-      const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
-      const shippingMethodId = selectedShippingOption ? selectedShippingOption.id : 0;
+      let currentOrderId = orderId;
       
-      // Split the address into lines if needed
-      const addressLines = formData.address.split(',');
-      const line1 = addressLines[0] || '';
-      const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
-      
-      // Prepare the API request payload
-      const checkoutPayload = {
-        shipping_method_id: shippingMethodId,
-        delivery_pincode: formData.postalCode,
-        delivery_address_line1: line1,
-        delivery_address_line2: line2,
-        delivery_city: formData.city,
-        delivery_state: "", // This needs to be added to your form if required
-        contact_phone: formData.phone,
-        contact_email: formData.email,
-        delivery_instructions: "" // This could be added to your form if needed
-      };
-      
-      console.log("Making checkout API call");
-      // Make the API call to create the order
-      const response = await axios.post(
-        "https://partydecorhub.com/api/cart/checkout",
-        checkoutPayload,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
-      
-      console.log("Checkout API response:", response.data);
-      
-      // Handle successful response - initiate Razorpay payment
-      if (response.data && response.data.order_id) {
-        console.log("Getting Razorpay order details");
-        // Get Razorpay order details from the API
-        const razorpayResponse = await axios.post(
-          "https://partydecorhub.com/api/payments/razorpay/create",
-          { order_id: response.data.order_id },
+      // Only create a new order if we don't have an existing order ID
+      // or if we explicitly need a new one
+      if (!currentOrderId) {
+        // Find the shipping method ID based on the selected delivery method name
+        const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
+        const shippingMethodId = selectedShippingOption ? selectedShippingOption.id : 0;
+        
+        // Split the address into lines if needed
+        const addressLines = formData.address.split(',');
+        const line1 = addressLines[0] || '';
+        const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
+        
+        // Prepare the API request payload
+        const checkoutPayload = {
+          shipping_method_id: shippingMethodId,
+          delivery_pincode: formData.postalCode,
+          delivery_address_line1: line1,
+          delivery_address_line2: line2,
+          delivery_city: formData.city,
+          delivery_state: "", // This needs to be added to your form if required
+          contact_phone: formData.phone,
+          contact_email: formData.email,
+          delivery_instructions: "" // This could be added to your form if needed
+        };
+        
+        console.log("Making checkout API call");
+        // Make the API call to create the order
+        const response = await axios.post(
+          "https://partydecorhub.com/api/cart/checkout",
+          checkoutPayload,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -1125,10 +1140,38 @@ const Checkout = () => {
           }
         );
         
-        console.log("Razorpay API response:", razorpayResponse.data);
+        console.log("Checkout API response:", response.data);
         
-        if (razorpayResponse.data && razorpayResponse.data.razorpay_order_id) {
-          console.log("Initiating Razorpay payment");
+        // Handle successful response
+        if (response.data && response.data.order_id) {
+          currentOrderId = response.data.order_id;
+          if (isMounted.current) {
+            setOrderId(currentOrderId); // Store the order ID for potential retries
+          }
+        } else {
+          throw new Error("No data received from checkout API");
+        }
+      }
+      
+      console.log("Getting Razorpay order details");
+      // Get Razorpay order details from the API
+      const razorpayResponse = await axios.post(
+        "https://partydecorhub.com/api/payments/razorpay/create",
+        { order_id: currentOrderId },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      
+      console.log("Razorpay API response:", razorpayResponse.data);
+      
+      if (razorpayResponse.data && razorpayResponse.data.razorpay_order_id) {
+        console.log("Initiating Razorpay payment");
+        
+        try {
           // Initiate Razorpay payment with customer details
           const paymentResult = await initiateRazorpayPayment({
             key: process.env.REACT_APP_RAZORPAY_KEY,
@@ -1138,22 +1181,37 @@ const Checkout = () => {
             customerName: formData.fullName,
             customerEmail: formData.email,
             customerPhone: formData.phone,
-            orderDetails: response.data,
+            orderDetails: { order_id: currentOrderId }, // Simplified order details
             orderTotal: totalCost
           });
           
           console.log("Payment result:", paymentResult);
           
-          // CRITICAL FIX: Set isSubmitting to false BEFORE any navigation or further processing
-          setIsSubmitting(false);
+          // Reset isSubmitting regardless of payment result
+          if (isMounted.current) {
+            setIsSubmitting(false);
+          }
           
           if (paymentResult.success) {
-            // If payment verification succeeded, fetch the final order details
-            // Get updated order details with payment status
+            console.log("Payment successful, preparing to navigate");
+            // If payment succeeded, create order details and navigate
+            // Find the shipping method details
+            const selectedShippingOption = shippingOptions.find(option => option.name === deliveryMethod);
+            
+            // Split the address into lines if needed
+            const addressLines = formData.address.split(',');
+            const line1 = addressLines[0] || '';
+            const line2 = addressLines.length > 1 ? addressLines.slice(1).join(', ') : '';
+            
+            // ONLY clear the cart if payment was successful
+            // IMPORTANT FIX: Only clear cart on successful payment
+            dispatch(mergeCart([]));
+            
+            // Create order details for confirmation page
             const completeOrderDetails = {
-              ...response.data,
-              payment_status: "completed", // Assuming payment was successful
-              order_status: "confirmed",   // Setting initial order status
+              order_id: currentOrderId,
+              payment_status: "completed",
+              order_status: "confirmed",
               created_at: new Date().toISOString(),
               shipping_details: {
                 name: formData.fullName,
@@ -1190,7 +1248,8 @@ const Checkout = () => {
                 total: totalCost
               }
             };
-            // Then navigate...
+            
+            // Navigate to confirmation page
             navigate("/order-confirmation", { 
               state: { 
                 orderDetails: completeOrderDetails,
@@ -1199,44 +1258,62 @@ const Checkout = () => {
               } 
             });
           } else {
+            // If payment failed or was cancelled
             console.log("Payment failed or cancelled:", paymentResult.error);
-            setCheckoutError(paymentResult.error || "Payment failed or was cancelled");
-            toast.error(paymentResult.error || "Payment failed or was cancelled");
+            if (isMounted.current) {
+              setCheckoutError(paymentResult.error || "Payment failed or was cancelled");
+              toast.error(paymentResult.error || "Payment failed or was cancelled");
+              
+              // Don't clear cart on payment failure!
+              
+              // Force reset the checkout state immediately
+              resetCheckoutState();
+            }
           }
-        } else {
-          throw new Error("Failed to create Razorpay order");
+        } catch (err) {
+          console.error("Error during payment process:", err);
+          if (isMounted.current) {
+            setIsSubmitting(false);
+            setCheckoutError("Payment process failed. Please try again.");
+            toast.error("Payment process failed. Please try again.");
+          }
         }
       } else {
-        throw new Error("No data received from checkout API");
+        throw new Error("Failed to create Razorpay order");
       }
     } catch (err) {
       console.error("Checkout error:", err);
-      const errorMessage = err.response?.data?.message || err.message || "Failed to process your order";
-      setCheckoutError(errorMessage);
-      toast.error(errorMessage);
-      
-      // Always make sure to reset isSubmitting on error
-      setIsSubmitting(false);
+      if (isMounted.current) {
+        const errorMessage = err.response?.data?.message || err.message || "Failed to process your order";
+        setCheckoutError(errorMessage);
+        toast.error(errorMessage);
+        
+        // Always make sure to reset isSubmitting on error
+        setIsSubmitting(false);
+      }
     }
   };
 
-  // useEffect(() => {
-  //   let timeoutId;
+  // Safety timeout to reset the submitting state if it gets stuck
+  useEffect(() => {
+    let timeoutId;
     
-  //   if (isSubmitting) {
-  //     // After 30 seconds, force reset the submitting state if it's still true
-  //     timeoutId = setTimeout(() => {
-  //       console.log("Safety timeout: Forcing reset of submitting state after timeout");
-  //       setIsSubmitting(false);
-  //       setCheckoutError("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
-  //       toast.error("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
-  //     }, 60000); // 30 seconds timeout
-  //   }
+    if (isSubmitting) {
+      // After 60 seconds, force reset the submitting state if it's still true
+      timeoutId = setTimeout(() => {
+        console.log("Safety timeout: Forcing reset of submitting state after timeout");
+        if (isMounted.current) {
+          resetCheckoutState();
+          setCheckoutError("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
+          toast.error("The payment process is taking longer than expected. If you completed payment, please check your email for order confirmation or contact customer support.");
+        }
+      }, 30000); // 60 seconds timeout
+    }
     
-  //   return () => {
-  //     if (timeoutId) clearTimeout(timeoutId);
-  //   };
-  // }, [isSubmitting]);
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isSubmitting]);
 
   // Updated handleSubmit function
   const handleSubmit = (e) => {
@@ -1259,10 +1336,15 @@ const Checkout = () => {
     submitOrder();
   };
 
+  // Debug useEffect to log when isSubmitting changes
+  useEffect(() => {
+    console.log("isSubmitting state changed to:", isSubmitting);
+  }, [isSubmitting]);
+
   // Show loading state
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto  px-2 py-2 min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="max-w-6xl mx-auto px-2 py-2 min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full border-green-500 border-t-transparent" role="status">
             <span className="visually-hidden">Loading...</span>
@@ -1279,6 +1361,42 @@ const Checkout = () => {
         Checkout
         <span className="block w-16 h-1 bg-green-500 mx-auto mt-2 rounded-full"></span>
       </h1>
+
+      {/* Show checkout error message if any */}
+      {checkoutError && (
+        <div className="max-w-6xl mx-auto mb-4 items-center">
+          <div className="bg-red-50 border-l-4 border-red-500 rounded items-center p-3">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3 flex items-center">
+                <div className="text-sm text-red-700">{checkoutError}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Show profile error message if any */}
+      {profileError && (
+        <div className="max-w-6xl mx-auto mb-4 items-center">
+          <div className="bg-red-50 border-l-4 border-red-500 rounded items-center p-3">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3 flex items-center">
+                <div className="text-sm text-red-700">{profileError}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row gap-6">
         {/* Shipping Form */}
@@ -1393,6 +1511,10 @@ const Checkout = () => {
               </button>
             </div>
           </div>
+          
+          {shippingError && (
+            <div className="text-xs text-red-500 mt-1 bg-red-50 p-2 rounded-md">{shippingError}</div>
+          )}
           
           {shippingMessage && (
             <div className="text-xs text-green-600 font-medium mt-2 bg-green-50 p-2 rounded-md border border-green-200 flex items-center">
@@ -1545,29 +1667,29 @@ const Checkout = () => {
          </div>
          
          <button 
-           onClick={handleSubmit} 
-           disabled={isSubmitting || !isFormComplete || !deliveryMethod}
-           className={`w-full relative overflow-hidden py-2.5 rounded-md text-sm font-semibold transition-all duration-300 
-             ${isFormComplete && deliveryMethod && !isSubmitting
-               ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-102" 
-               : "bg-gray-300 cursor-not-allowed text-gray-500"}`}
-         >
-           {isSubmitting ? (
-             <div className="flex items-center justify-center">
-               <div className="animate-spin -ml-1 mr-2 h-4 w-4 text-white rounded-full border-2 border-white border-t-transparent"></div>
-               Processing...
-             </div>
-           ) : (
-             <>
-               <span className="relative z-10">Pay Now</span>
-               {isFormComplete && deliveryMethod && (
-                 <span className="absolute inset-0 rounded-md overflow-hidden">
-                   <span className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-700 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                 </span>
-               )}
-             </>
-           )}
-         </button>
+            onClick={handleSubmit} 
+            disabled={isSubmitting || !isFormComplete || !deliveryMethod}
+            className={`w-full relative overflow-hidden py-2.5 rounded-md text-sm font-semibold transition-all duration-300 
+              ${isFormComplete && deliveryMethod && !isSubmitting
+                ? "bg-green-600 hover:bg-green-700 text-white transform hover:scale-102" 
+                : "bg-gray-300 cursor-not-allowed text-gray-500"}`}
+          >
+            {isSubmitting ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin -ml-1 mr-2 h-4 w-4 text-white rounded-full border-2 border-white border-t-transparent"></div>
+                Processing...
+              </div>
+            ) : (
+              <>
+                <span className="relative z-10">Pay Now</span>
+                {isFormComplete && deliveryMethod && (
+                  <span className="absolute inset-0 rounded-md overflow-hidden">
+                    <span className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-700 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  </span>
+                )}
+              </>
+            )}
+          </button>
          
          {!isFormComplete && (
            <p className="text-xs text-center mt-2 text-red-500">Please complete shipping information first</p>

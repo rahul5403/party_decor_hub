@@ -15,7 +15,6 @@ import Login from "../Pages/Login";
 import SignUp from "../Pages/SignUp";
 import NotFound from "../Pages/Notfound";
 import Profile from "../Pages/Profile";
-import Orders from "../Pages/Orders";
 import DecorBook from "../components/DecorBook";
 import PrivacyPolicy from "../Pages/PrivacyPolicy";
 import RefundReturnPolicy from "../Pages/RefundReturnPolicy";
@@ -62,7 +61,6 @@ const Router = () => {
         <Route path="/about" element={<About />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/profile" element={<Profile />} />
-        <Route path="/orders" element={<Orders />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/track-order/:orderId" element={<TrackOrder />} />
         <Route path="/my-orders" element={<MyOrders />} />

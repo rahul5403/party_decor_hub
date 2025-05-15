@@ -78,7 +78,7 @@ export const initiateRazorpayPayment = async (options) => {
         name: "Party Decor Hub",
         description: `Order #${options.orderDetails.order_id || ''}`,
         order_id: options.orderId,
-        image: "https://partydecorhub.com/logo.png", // Replace with your actual logo URL
+        image: "https://partydecorhub.com/static/media/logo.cfd8e6a0e344e789c74d.png", // Replace with your actual logo URL
         prefill: {
           name: options.customerName,
           email: options.customerEmail,
@@ -268,6 +268,7 @@ export const initiateRazorpayPayment = async (options) => {
         console.log("Razorpay modal closed by user");
         // Only resolve if payment wasn't already handled
         if (!paymentHandled) {
+          paymentHandled = true;
           resolve({
             success: false,
             error: "Payment cancelled by user",
