@@ -1,64 +1,23 @@
-// useUpdateQuantity.js
-import { useDispatch, useSelector } from "react-redux";
-import { updateQuantity } from "../../redux/cartSlice";
-import useSetCartItems from "./useSetCartItems";
-import useRemoveItem from "./useRemoveItem";
+import { useDispatch } from "react-redux";
+import { updateQuantity as updateQuantityAction } from "../../redux/cartSlice";
 
 const useUpdateQuantity = () => {
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const addItemToCart = useSetCartItems();
-  const removeItemFunc = useRemoveItem();
-  
-  const updateItemQuantity = async (itemId, newQuantity) => {
-    // Find the item in cart
-    const item = cartItems.find(cartItem => cartItem.id === itemId);
-    if (!item) {
-      console.error("Item not found in cart with ID:", itemId);
-      return;
-    }
+  const accessToken = localStorage.getItem("accessToken");
 
-    const currentQuantity = item.quantity;
-    const difference = newQuantity - currentQuantity;
-    
-    if (difference === 0) return; // No change needed
+  const updateQuantity = async (id, quantity) => {
+    // Update local state via Redux
+    dispatch(updateQuantityAction({ id, quantity }));
 
-    // Update local Redux state using updateQuantity action
-    dispatch(updateQuantity({ id: itemId, quantity: newQuantity }));
-
-    // Only make API calls if user is logged in
-    const accessToken = localStorage.getItem("accessToken");
+    // If user is not logged in, we're done
     if (!accessToken) return;
 
-    try {
-      if (difference > 0) {
-        // Increment - wrap data in an array
-        const incrementData = [{
-          product_id: item.product_id,
-          quantity: Math.abs(difference),
-          color: item.color || null,
-          size: item.size || null
-        }];
-        
-        await addItemToCart(incrementData);
-      } else {
-        // Decrement - use existing removeItem hook
-        const tempItem = {
-          ...item,
-          product_id: item.product_id,
-          quantity: Math.abs(difference)
-        };
-        
-        await removeItemFunc(tempItem);
-      }
-    } catch (error) {
-      console.error("API error during quantity update:", error);
-      // Revert local state if API call fails
-      dispatch(updateQuantity({ id: itemId, quantity: currentQuantity }));
-    }
+    // For API calls, we don't need to do anything here as the 
+    // increment/decrement is now handled directly in Cart.jsx
+    // through useSetCartItems and useRemoveItem hooks
   };
 
-  return updateItemQuantity;
+  return updateQuantity;
 };
 
 export default useUpdateQuantity;

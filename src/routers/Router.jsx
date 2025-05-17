@@ -25,6 +25,7 @@ import OrderConfirmation from "../Pages/OrderConfirmation";
 import TrackOrder from '../Pages/TrackOrder';
 import MyOrders from "../Pages/MyOrders";
 import OrderDetails from "../Pages/OrderDetails";
+import PrivateRoute from "../Pages/PrivateRoute";
 
 const Router = () => {
   const location = useLocation();
@@ -44,32 +45,24 @@ const Router = () => {
         <Route path="/" element={<Home />}></Route>
         <Route path="/home" element={<Home />}></Route>
         <Route path="/party" element={<DecorPage/>}></Route>
-        <Route
-          path="/decoration"
-          element={<ServicePage/>}
-        ></Route>
-        <Route
-          path="/disposable"
-          element={<DisposePage/>}
-        ></Route>
-        <Route
-          path="/products/:product_id"
-          element={<ProductDetails />}
-        ></Route>
+        <Route path="/decoration" element={<ServicePage/>}></Route>
+        <Route path="/disposable" element={<DisposePage/>}></Route>
+        <Route path="/about" element={<About />}></Route>
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />}></Route>
-        <Route path="/about" element={<About />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>}/>
+        {/* <Route path="/profile" element={<Profile />} /> */}
+        <Route path="/products/:product_id" element={<ProductDetails />}></Route>
+        <Route path="/services/:product_id" element={<DecorBook />} />
+        <Route path="/my-orders" element={<PrivateRoute><MyOrders /></PrivateRoute>}/>
+        {/* <Route path="/my-orders" element={<MyOrders />} /> */}
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
-        <Route path="/track-order/:orderId" element={<TrackOrder />} />
-        <Route path="/my-orders" element={<MyOrders />} />
         <Route path="/order/:orderId" element={<OrderDetails />} />
+        <Route path="/track-order/:orderId" element={<TrackOrder />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundReturnPolicy />} />
         <Route path="/shipping-policy" element={<ShippingPolicy />} />
         <Route path="/terms" element={<TermsAndConditions />} />
-        <Route path="/services/:product_id" element={<DecorBook />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 

@@ -1,21 +1,33 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart, updateQuantity } from "../redux/cartSlice";
 import useGetCartItems from "../hooks/cart/useGetCartItems.js";
 import useRemoveItem from "../hooks/cart/useRemoveItem.js";
-import useUpdateQuantity from "../hooks/cart/useUpdateCartItems.js";
+import useSetCartItems from "../hooks/cart/useSetCartItems.js";
+import { updateQuantity, mergeCart } from "../redux/cartSlice.js";
+import axios from "axios";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const removeItem = useRemoveItem();
-  const updateQuantity = useUpdateQuantity();
+  const addItemToCart = useSetCartItems();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Check if user is logged in
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!accessToken);
+  }, []);
 
   // Fetch cart items once on component mount
   useGetCartItems();
+
+  // Debug function - log cart items to console 
+  useEffect(() => {
+    console.log("Current cart items:", cartItems);
+  }, [cartItems]);
 
   // Memoize calculations
   const { subTotal, total, totalItems } = useMemo(() => {
@@ -23,7 +35,6 @@ const Cart = () => {
       (total, item) => total + item.price * item.quantity,
       0
     );
-    // const tax = 2;
     const total = subTotal;
     const totalItems = cartItems.reduce(
       (total, item) => total + item.quantity,
@@ -36,25 +47,80 @@ const Cart = () => {
     navigate("/checkout");
   }, [navigate]);
 
-  const handleQuantityChange = useCallback(
-    async (itemId, newQuantity) => {
-      if (newQuantity > 0) {
-        const result = await updateQuantity(itemId, newQuantity);
-        
-        // Check if we need to handle a decrement
-        if (result && result.shouldDecrement) {
-          await removeItem(result.decrementData);
-        }
-      } else {
-        // Remove the entire item if quantity is 0 or negative
-        const itemToRemove = cartItems.find(item => item.id === itemId);
-        if (itemToRemove) {
-          await removeItem(itemToRemove);
-        }
+  // Function to handle increment
+  const handleIncrement = useCallback(async (item) => {
+    console.log("Incrementing item:", item);
+    
+    // First update local state
+    const updatedItems = cartItems.map(cartItem => {
+      if (cartItem.product_id === item.product_id) {
+        return { ...cartItem, quantity: cartItem.quantity + 1 };
       }
-    },
-    [cartItems, removeItem, updateQuantity]
-  );
+      return cartItem;
+    });
+    
+    dispatch(mergeCart(updatedItems));
+    
+    // Then call API if logged in
+    if (isLoggedIn) {
+      try {
+        await addItemToCart([{
+          product_id: item.product_id,
+          quantity: 1,
+          size: item.size || null,
+          color: item.color || null
+        }]);
+      } catch (error) {
+        console.error("Error incrementing item:", error);
+        // Revert on error
+        dispatch(mergeCart(cartItems));
+      }
+    }
+  }, [cartItems, isLoggedIn, dispatch, addItemToCart]);
+
+  // Function to handle decrement
+  const handleDecrement = useCallback(async (item) => {
+    console.log("Decrementing item:", item);
+    
+    if (item.quantity <= 1) {
+      // If quantity is 1 or less, remove the item
+      await removeItem(item);
+      return;
+    }
+    
+    // First update local state
+    const updatedItems = cartItems.map(cartItem => {
+      if (cartItem.product_id === item.product_id) {
+        return { ...cartItem, quantity: cartItem.quantity - 1 };
+      }
+      return cartItem;
+    });
+    
+    dispatch(mergeCart(updatedItems));
+    
+    // Then call API if logged in
+    if (isLoggedIn) {
+      const accessToken = localStorage.getItem("accessToken");
+      try {
+        await axios.post(
+          "https://partydecorhub.com/api/cart/remove",
+          {
+            product_id: item.product_id,
+            quantity: 1,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Error decrementing item:", error);
+        // Revert on error
+        dispatch(mergeCart(cartItems));
+      }
+    }
+  }, [cartItems, isLoggedIn, dispatch, removeItem]);
 
   if (cartItems.length === 0) {
     return (
@@ -100,7 +166,7 @@ const Cart = () => {
                       <img
                         className="h-16 w-16 object-cover rounded border border-gray-200"
                         src={item.thumbnail}
-                        alt={item.name}
+                        alt={item.name || "Product"}
                       />
                     </td>
                     <td className="py-3 px-4 font-medium text-gray-800 text-left">
@@ -118,8 +184,7 @@ const Cart = () => {
                       <div className="flex items-center justify-center space-x-3">
                         <button
                           className="w-8 h-8 flex items-center justify-center border border-gray-300 text-red-500 hover:text-gray-700 rounded-full transition-colors duration-200"
-                          onClick={() =>
-                            handleQuantityChange(item.id, item.quantity - 1)}
+                          onClick={() => handleDecrement(item)}
                         >
                           <span className="text-lg font-bold">-</span>
                         </button>
@@ -128,8 +193,7 @@ const Cart = () => {
                         </span>
                         <button
                           className="w-8 h-8 m-0 flex items-center justify-center border border-gray-300 text-green-500 hover:text-green-700 rounded-full transition-colors duration-200"
-                          onClick={() =>
-                            handleQuantityChange(item.id, item.quantity + 1)}
+                          onClick={() => handleIncrement(item)}
                         >
                           <span className="text-lg font-bold">+</span>
                         </button>
