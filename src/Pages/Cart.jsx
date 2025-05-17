@@ -18,18 +18,18 @@ const Cart = () => {
   useGetCartItems();
 
   // Memoize calculations
-  const { subTotal, tax, total, totalItems } = useMemo(() => {
+  const { subTotal, total, totalItems } = useMemo(() => {
     const subTotal = cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
-    const tax = 2;
-    const total = subTotal + tax;
+    // const tax = 2;
+    const total = subTotal;
     const totalItems = cartItems.reduce(
       (total, item) => total + item.quantity,
       0
     );
-    return { subTotal, tax, total, totalItems };
+    return { subTotal, total, totalItems };
   }, [cartItems]);
 
   const onCheckout = useCallback(() => {
