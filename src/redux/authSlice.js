@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -36,7 +35,8 @@ export const checkAuthStatus = createAsyncThunk(
 );
 
 const initialState = {
-  isAuthenticated: !!localStorage.getItem("accessToken"),
+  // We'll set this to false by default and only set to true after backend verification
+  isAuthenticated: false,
   user: null,
   status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
   error: null
@@ -67,13 +67,13 @@ const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(checkAuthStatus.fulfilled, (state, action) => {
-  state.isAuthenticated = true;
-  // Optional: remove is_logged_in key if not needed in state
-  const { is_logged_in, ...userData } = action.payload;
-  state.user = userData;
-  state.status = "succeeded";
-  state.error = null;
-})
+        state.isAuthenticated = true;
+        // Optional: remove is_logged_in key if not needed in state
+        const { is_logged_in, ...userData } = action.payload;
+        state.user = userData;
+        state.status = "succeeded";
+        state.error = null;
+      })
       .addCase(checkAuthStatus.rejected, (state, action) => {
         state.isAuthenticated = false;
         state.user = null;

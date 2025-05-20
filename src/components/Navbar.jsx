@@ -26,8 +26,8 @@ const NavLink = ({ to, children, onClick, mobile }) => (
 
 const NavBar = ({ onLoginClick }) => {
   const cartCount = useSelector((state) => state.cart.cartCount);
-  const cartItems = useSelector((state) => state.cart.items);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const cartItems = useSelector((state) => state.cart.items);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);

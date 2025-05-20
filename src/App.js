@@ -5,22 +5,20 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Router from "./routers/Router";
-// import { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, Slide } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuthStatus } from "./redux/authSlice";
 
 function App() {
-
   const dispatch = useDispatch();
-  const { isAuthenticated, user, status } = useSelector((state) => state.auth);
+  const {user, status } = useSelector((state) => state.auth);
+  
   useEffect(() => {
-    if (localStorage.getItem("accessToken") && !user) {
+    if (localStorage.getItem("accessToken") && !user && status !== "loading") {
       dispatch(checkAuthStatus());
     }
-  }, [dispatch, user]);
-
+  }, [dispatch, user, status]);
 
   return (
     <div className="App">
@@ -28,7 +26,6 @@ function App() {
         <Routes>
           <Route path="/*" element={<Router />} />
         </Routes>
-        {/* <Toaster position="top-center" reverseOrder={false} /> */}
         <ToastContainer
           position="top-right"
           autoClose={5000}

@@ -335,7 +335,6 @@ const ProductDetails = () => {
               </div>
             </div>
 
-            {/* Add to Cart Button */}
             <button
               onClick={handleAddToCart}
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg transition-all duration-300 

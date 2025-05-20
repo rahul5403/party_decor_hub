@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { FaFilter, FaSortAmountDown, FaTimes, FaRupeeSign, FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, mergeCart } from "../redux/cartSlice";
 import useSetCartItems from "../hooks/cart/useSetCartItems";
+import useRemoveItem from "../hooks/cart/useRemoveItem";
 
 const BASE_IMAGE_URL = "https://partydecorhub.com";
 
@@ -19,6 +20,11 @@ const DisposePage = () => {
   const accessToken = localStorage.getItem("accessToken");
   const dispatch = useDispatch();
   const addItemToCart = useSetCartItems();
+  const removeItem = useRemoveItem();
+  
+  // Get cart items and auth state from Redux store
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchDisposableItems = async () => {
@@ -38,6 +44,9 @@ const DisposePage = () => {
             name: product.name,
             price: product.price,
             image: BASE_IMAGE_URL + product.thumbnail,
+            images: [BASE_IMAGE_URL + product.thumbnail],
+            colors: product.colors || [],
+            sizes: product.sizes || [],
           }));
 
         if (sortOrder === "low-high") {
@@ -55,25 +64,23 @@ const DisposePage = () => {
     fetchDisposableItems();
   }, [selectedFilters, sortOrder]);
 
-  
-    useEffect(() => {
-      const fetchFilters = async () => {
-        try {
-          const response = await fetch("https://partydecorhub.com/api/filters");
-          const data = await response.json();
-  
-          // Extract filters for "Party Decor"
-          const partyDecorFilters = data.find(category => category.category === "Disposable Items")?.filters || [];
-  
-          setFilters(partyDecorFilters);
-        } catch (error) {
-          console.error("Error fetching filters:", error);
-        }
-      };
-  
-      fetchFilters();
-    }, []);
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const response = await fetch("https://partydecorhub.com/api/filters");
+        const data = await response.json();
 
+        // Extract filters for "Disposable Items"
+        const disposableFilters = data.find(category => category.category === "Disposable Items")?.filters || [];
+
+        setFilters(disposableFilters);
+      } catch (error) {
+        console.error("Error fetching filters:", error);
+      }
+    };
+
+    fetchFilters();
+  }, []);
 
   const handleFilterChange = (filterName) => {
     setSelectedFilters((prevFilters) =>
@@ -96,15 +103,12 @@ const DisposePage = () => {
     setShowSortOptions(false);
   };
 
-  const handleAddToCart = (product, e) => {
-    if (e) {
-      e.stopPropagation();
-    }
-    
-    const item = {
+  // Function to create a cart item object
+  const createCartItem = (product, qty = 1) => {
+    return {
       id: String(product.id),
       product_id: String(product.id),
-      quantity: 1,
+      quantity: qty,
       color: Array.isArray(product.colors) && product.colors.length > 0
         ? product.colors[0]
         : null,
@@ -116,14 +120,114 @@ const DisposePage = () => {
       thumbnail: product.image,
       images: product.images || [product.image],
     };
+  };
 
-    if (!accessToken) {
+  const handleAddToCart = (product, e) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    
+    const item = createCartItem(product);
+
+    if (!isAuthenticated) {
       dispatch(addToCart(item));
     } else {
       addItemToCart([item]);
       dispatch(addToCart(item));
     }
   };
+
+  // Function to check if product is in cart
+  const isProductInCart = (productId) => {
+    return cartItems.some(item => item.product_id === String(productId));
+  };
+
+  // Function to get quantity of product in cart
+  const getProductQuantity = (productId) => {
+    const item = cartItems.find(item => item.product_id === String(productId));
+    return item ? item.quantity : 0;
+  };
+
+  // Function to handle increment
+  const handleIncrement = useCallback(async (product) => {
+    const productId = String(product.id);
+    const existingItem = cartItems.find(item => item.product_id === productId);
+    const newQuantity = existingItem ? existingItem.quantity + 1 : 1;
+    
+    // First update local state
+    const updatedItems = cartItems.map(cartItem => {
+      if (cartItem.product_id === productId) {
+        return { ...cartItem, quantity: newQuantity };
+      }
+      return cartItem;
+    });
+    
+    if (updatedItems.length === cartItems.length) {
+      dispatch(mergeCart(updatedItems));
+    } else {
+      const newItem = createCartItem(product, newQuantity);
+      dispatch(addToCart(newItem));
+    }
+    
+    // Then call API if logged in
+    if (isAuthenticated) {
+      try {
+        await addItemToCart([{
+          product_id: productId,
+          quantity: 1,
+          size: product.sizes && product.sizes.length > 0 ? product.sizes[0] : null,
+          color: product.colors && product.colors.length > 0 ? product.colors[0] : null
+        }]);
+      } catch (error) {
+        console.error("Error incrementing item:", error);
+      }
+    }
+  }, [cartItems, isAuthenticated, dispatch, addItemToCart]);
+
+  // Function to handle decrement
+  const handleDecrement = useCallback(async (product) => {
+    const productId = String(product.id);
+    const existingItem = cartItems.find(item => item.product_id === productId);
+    
+    if (!existingItem) return;
+    
+    if (existingItem.quantity <= 1) {
+      // If quantity is 1, remove the item
+      await removeItem(existingItem);
+      return;
+    }
+    
+    // First update local state
+    const updatedItems = cartItems.map(cartItem => {
+      if (cartItem.product_id === productId) {
+        return { ...cartItem, quantity: cartItem.quantity - 1 };
+      }
+      return cartItem;
+    });
+    
+    dispatch(mergeCart(updatedItems));
+    
+    // Then call API if logged in
+    if (isAuthenticated) {
+      const accessToken = localStorage.getItem("accessToken");
+      try {
+        await axios.post(
+          "https://partydecorhub.com/api/cart/remove",
+          {
+            product_id: productId,
+            quantity: 1,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Error decrementing item:", error);
+      }
+    }
+  }, [cartItems, isAuthenticated, dispatch, removeItem]);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-14 lg:pb-0">
@@ -221,23 +325,14 @@ const DisposePage = () => {
                   className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105"
                   onClick={() => handleProductClick(product)}
                 >
-                  {/* <div className="relative overflow-hidden h-64 min-h-[300px]">
+                  <div className="relative aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
                     <img 
                       src={product.image} 
                       alt={product.name} 
-                      className="absolute h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 hover:scale-105"
                       loading="lazy"
                     />
-                  </div> */}
-
-<div className="relative aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
-  <img 
-    src={product.image} 
-    alt={product.name} 
-    className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 hover:scale-105"
-    loading="lazy"
-  />
-</div>
+                  </div>
 
                   <div className="p-2.5">
                     <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1 transition-colors duration-200">
@@ -251,14 +346,45 @@ const DisposePage = () => {
                       </span>
                     </div>
 
-                    <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
-                    className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]">
-                      Add to cart
-                    </button>
+                    {/* Add to Cart or Quantity Controls */}
+                    {isProductInCart(product.id) ? (
+                      <div 
+                        className="flex items-center justify-center space-x-3 py-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          className="w-8 h-8 flex items-center justify-center border border-gray-300 text-red-500 hover:text-gray-700 rounded-full transition-colors duration-200"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDecrement(product);
+                          }}
+                        >
+                          <span className="text-lg font-bold">-</span>
+                        </button>
+                        <span className="w-8 text-center font-medium">
+                          {getProductQuantity(product.id)}
+                        </span>
+                        <button
+                          className="w-8 h-8 flex items-center justify-center border border-gray-300 text-green-500 hover:text-green-700 rounded-full transition-colors duration-200"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleIncrement(product);
+                          }}
+                        >
+                          <span className="text-lg font-bold">+</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(product);
+                        }}
+                        className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]"
+                      >
+                        Add to cart
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
