@@ -28,7 +28,6 @@
     font-size: 2rem;
     color: #01634f;
     padding: 0.5rem 0;
-    
 }
 
 .decoration-title-similar {
@@ -44,19 +43,19 @@
     gap: 1rem;
     overflow-x: auto;
     scroll-behavior: smooth;
-    scrollbar-width:thin;
+    scrollbar-width: thin;
     scrollbar-color: #0041345c transparent;
     white-space: nowrap;
     padding: 1.5rem 0rem;
 }
 
 .decoration-scroll::-webkit-scrollbar {
-    height: 1px; 
+    height: 8px; 
 }
 
 .decoration-scroll::-webkit-scrollbar-thumb {
     background-color: #01634f;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 
 .decoration-scroll::-webkit-scrollbar-track {
@@ -99,7 +98,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: clip; 
-    width: 100%; /* Adjust width as needed */
+    width: 100%;
 }
 
 .decoration-description {
@@ -109,7 +108,6 @@
 
 .bulk-order-button {
     background-color: #00362b;
-    /* background: linear-gradient(to right, #27ae60, #2c3e50); */
     color: #fff;
     border: none;
     padding: 0.8rem 1.5rem;
@@ -126,129 +124,245 @@
     transform: scale(1.05);
 }
 
-@media (max-width: 1024px) {
-    .decoration-card {
-        flex: 0 0 220px;
-        width: 95%;
-        
-    }
-    .decoration-scroll {
-        gap: 0.8rem;
-    }
-
-}
-
-@media (max-width: 860px) {
-
-    .decoration-section {
-        padding: 0.8rem;
-        margin-top: 2rem;
-    }
-
-    .decoration-card {
-        flex: 0 0 204px;
-        width: 80%;
-    }
-    .decoration-scroll {
-        gap: 0.3rem;
-    }
-    .decoration-image {
-        height: 250px;
-    }
-}
-
 .slick-prev, .slick-next {
     display: none !important;
-}
-
-
-@media (max-width: 860px) {
-    .bulk-order-button {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .bulk-order-button {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
-    }
-    .decoration-card {
-        flex: 0 0 170px;
-    }
-    .decoration-image {
-        height: 200px;
-    }
-    
 }
 
 .vw {
     padding: 0.5rem 1.2rem;
     background-color: #00362b;
-
 }
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+    .decoration-card {
+        flex: 0 0 220px;
+        width: 95%;
+    }
+    .decoration-scroll {
+        gap: 0.8rem;
+    }
+}
+
+/* Medium Mobile Styles */
 @media (max-width: 860px) {
-    .vw {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .vw {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
-    }
     .decoration-section {
-        padding: 0.5rem;
-        margin-top: 1.5rem;
+        padding: 0.2rem;
+        margin: 0.2rem 0.05rem;
+    }
+
+    .decoration-title {
+        font-size: 16px;
+        color: #333;
+        padding: 0.15rem 0;
+    }
+
+    .decoration-card {
+        flex: 0 0 115px; /* Much smaller width */
+        width: 115px;
+        padding: 4px 2px;
+        min-width: 115px;
+        max-width: 115px;
+    }
+    
+    .decoration-scroll {
+        gap: 0.3rem; /* Very small gap */
+        scrollbar-width: none;
+        padding: 0.4rem 0;
+    }
+    
+    .decoration-scroll::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .decoration-image {
+        height: 90px; /* Much smaller height */
+        margin-bottom: 3px;
+    }
+
+    .decoration-card-title {
+        font-size: 0.6rem;
+        margin-bottom: 0.15rem;
+        line-height: 1.0;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .decoration-description {
+        font-size: 0.55rem;
+        margin-bottom: 0.2rem;
+        line-height: 1.0;
+    }
+
+    .bulk-order-button {
+        padding: 0.25rem 0.3rem;
+        font-size: 0.55rem;
+    }
+
+    .vw {
+        padding: 0.25rem 0.3rem;
+        font-size: 0.55rem;
     }
 }
 
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+    .decoration-section {
+        padding: 0.15rem 0.02rem;
+        margin: 0.15rem 0.02rem;
+    }
 
+    .decoration-card {
+        flex: 0 0 100px; /* Even smaller */
+        width: 100px;
+        padding: 3px 1px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+    
+    .decoration-scroll {
+        gap: 0.25rem;
+        padding: 0.3rem 0;
+    }
+    
+    .decoration-image {
+        height: 75px;
+        margin-bottom: 2px;
+    }
 
-.decoration-section {
-    margin:1rem 2rem;
+    .decoration-card-title {
+        font-size: 0.55rem;
+        margin-bottom: 0.1rem;
+        -webkit-line-clamp: 2;
+    }
+
+    .decoration-description {
+        font-size: 0.5rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .bulk-order-button {
+        padding: 0.2rem 0.25rem;
+        font-size: 0.5rem;
+    }
+
+    .vw {
+        padding: 0.2rem 0.25rem;
+        font-size: 0.5rem;
+    }
 }
 
-.decoration-title {
-    font-size: 24px;
-    color: #333;
+/* Extra Small Mobile Styles */
+@media (max-width: 360px) {
+    .decoration-section {
+        padding: 0.1rem 0.01rem;
+        margin: 0.1rem 0.01rem;
+    }
+
+    .decoration-card {
+        flex: 0 0 85px; /* Very compact */
+        width: 85px;
+        padding: 2px 1px;
+        min-width: 85px;
+        max-width: 85px;
+    }
+    
+    .decoration-scroll {
+        gap: 0.2rem;
+        padding: 0.25rem 0;
+    }
+    
+    .decoration-image {
+        height: 65px;
+        margin-bottom: 1px;
+    }
+
+    .decoration-card-title {
+        font-size: 0.5rem;
+        margin-bottom: 0.05rem;
+    }
+
+    .decoration-description {
+        font-size: 0.45rem;
+        margin-bottom: 0.1rem;
+    }
+
+    .bulk-order-button {
+        padding: 0.15rem 0.2rem;
+        font-size: 0.45rem;
+    }
+
+    .vw {
+        padding: 0.15rem 0.2rem;
+        font-size: 0.45rem;
+    }
 }
 
-.decoration-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 20px;
-    padding-bottom: 20px;
-    scrollbar-width: none;
+/* Ultra Small Mobile Styles */
+@media (max-width: 320px) {
+    .decoration-card {
+        flex: 0 0 75px; /* Ultra compact */
+        width: 75px;
+        min-width: 75px;
+        max-width: 75px;
+        padding: 2px 0.5px;
+    }
+    
+    .decoration-scroll {
+        gap: 0.15rem;
+    }
+    
+    .decoration-image {
+        height: 55px;
+    }
+
+    .decoration-card-title {
+        font-size: 0.45rem;
+    }
+
+    .decoration-description {
+        font-size: 0.4rem;
+    }
+
+    .bulk-order-button {
+        padding: 0.1rem 0.15rem;
+        font-size: 0.4rem;
+    }
 }
 
-.decoration-scroll::-webkit-scrollbar {
-    display: none;
-}
+/* Extra Ultra Small Mobile Styles */
+@media (max-width: 280px) {
+    .decoration-card {
+        flex: 0 0 65px; /* Extremely compact */
+        width: 65px;
+        min-width: 65px;
+        max-width: 65px;
+        padding: 1px 0.5px;
+    }
+    
+    .decoration-scroll {
+        gap: 0.1rem;
+    }
+    
+    .decoration-image {
+        height: 50px;
+    }
 
-.decoration-scroll {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    scroll-behavior: smooth;
-    scrollbar-width: thin; /* For Firefox: thin scrollbar */
-    scrollbar-color: #01634f transparent; /* For Firefox: scrollbar color */
-    white-space: nowrap;
-    padding: 1.5rem 0rem;
-}
+    .decoration-card-title {
+        font-size: 0.4rem;
+    }
 
-.decoration-scroll::-webkit-scrollbar {
-    height: 8px; 
-}
+    .decoration-description {
+        font-size: 0.35rem;
+    }
 
-.decoration-scroll::-webkit-scrollbar-thumb {
-    background-color: #01634f; 
-    border-radius: 4px; 
-}
-
-.decoration-scroll::-webkit-scrollbar-track {
-    background-color: transparent; 
+    .bulk-order-button {
+        padding: 0.08rem 0.12rem;
+        font-size: 0.35rem;
+    }
 }

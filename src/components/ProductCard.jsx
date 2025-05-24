@@ -187,9 +187,7 @@ const ProductCard = ({ product, section }) => {
 
   return (
     <div 
-      className="flex flex-col items-center w-full max-w-[250px] h-[420px] bg-white shadow-md rounded-lg p-4 transition-transform hover:scale-105"
-      onClick={handleNavigation}
-    >
+className="flex flex-col items-center w-full max-w-[190px] sm:max-w-[250px] h-[300px] sm:h-[420px] bg-white shadow-md rounded-lg p-2 sm:p-4 transition-transform hover:scale-105"    >
       {/* Image Covering 75% of Card */}
       <div className="w-full h-[85%] aspect-[4/3] overflow-hidden rounded-lg">
         <img
@@ -200,12 +198,12 @@ const ProductCard = ({ product, section }) => {
       </div>
 
       {/* Title with Fixed Height */}
-      <h3 className="mt-2 text-sm font-semibold text-center w-full h-[40px] overflow-hidden text-ellipsis whitespace-nowrap">
+      <h3 className="mt-1 mb-0 text-sm font-semibold text-center w-full h-[35px] overflow-hidden text-ellipsis whitespace-nowrap">
         {product.title || product.name}
       </h3>
 
       {/* Price Section */}
-      <p className="text-gray-600 text-sm w-full text-center">
+      <p className="text-gray-600 m-0.5 text-sm w-full text-center">
         {product.discounted_price ? (
           <>
             ₹{product.discounted_price}

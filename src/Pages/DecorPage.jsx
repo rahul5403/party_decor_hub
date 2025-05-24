@@ -509,60 +509,76 @@ const DecorPage = () => {
               </span>
             </div>
 
-            {/* Products Grid with Transitions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+            {/* Products Grid with Mobile-Specific Sizing */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-5">
               {partyData.map((product) => (
                 <div 
                   key={product.id} 
-                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105"
+                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer sm:transform sm:hover:-translate-y-1 sm:hover:scale-105"
                   onClick={() => handleProductClick(product)}
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
+                  {/* Mobile-specific image container with smaller aspect ratio */}
+                  <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
                     <img 
                       src={product.image} 
                       alt={product.name} 
-                      className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 hover:scale-105"
+                      className="absolute inset-0 w-full h-full object-contain p-1 sm:p-2 transition-transform duration-500 hover:scale-105"
                       loading="lazy"
                     />
                   </div>
-                  <div className="p-2.5">
-                    <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1 transition-colors duration-200">
+                  {/* Mobile-specific content with reduced padding and tighter spacing */}
+                  <div className="p-1.5 sm:p-2.5">
+                    {/* Compact title with ellipsis - reduced height and margin */}
+                    <h3 
+                      className="text-xs sm:text-sm font-medium text-gray-900 transition-colors duration-200 line-clamp-1 overflow-hidden mb-1"
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        lineHeight: '1.2',
+                        maxHeight: '1.2em'
+                      }}
+                      title={product.name} // Show full name on hover
+                    >
                       {product.name}
                     </h3>
                     
-                    <div className="flex items-center justify-center text-gray-800 mb-2 transition-colors duration-200">
+                    {/* Price with reduced margin */}
+                    <div className="flex items-center justify-center text-gray-800 mb-1.5 sm:mb-2 transition-colors duration-200">
                       <FaRupeeSign className="mr-0.5 text-xs text-gray-500 transition-colors duration-200" />
                       <span className="text-xs">
                         {product.price || "Price not available"}
                       </span>
                     </div>
 
-                    {/* Add to Cart or Quantity Controls */}
+                    {/* Add to Cart or Quantity Controls - Mobile optimized */}
                     {isProductInCart(product.id) ? (
                       <div 
-                        className="flex items-center justify-center space-x-3 py-2"
+                        className="flex items-center justify-center space-x-2 sm:space-x-3 py-1 sm:py-2"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button
-                          className="w-8 h-8 flex items-center justify-center border border-gray-300 text-red-500 hover:text-gray-700 rounded-full transition-colors duration-200"
+                          className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border border-gray-300 text-red-500 hover:text-gray-700 rounded-full transition-colors duration-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDecrement(product);
                           }}
                         >
-                          <span className="text-lg font-bold">-</span>
+                          <span className="text-sm sm:text-lg font-bold">-</span>
                         </button>
-                        <span className="w-8 text-center font-medium">
+                        <span className="w-6 sm:w-8 text-center font-medium text-xs sm:text-sm">
                           {getProductQuantity(product.id)}
                         </span>
                         <button
-                          className="w-8 h-8 flex items-center justify-center border border-gray-300 text-green-500 hover:text-green-700 rounded-full transition-colors duration-200"
+                          className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border border-gray-300 text-green-500 hover:text-green-700 rounded-full transition-colors duration-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleIncrement(product);
                           }}
                         >
-                          <span className="text-lg font-bold">+</span>
+                          <span className="text-sm sm:text-lg font-bold">+</span>
                         </button>
                       </div>
                     ) : (
@@ -571,7 +587,7 @@ const DecorPage = () => {
                           e.stopPropagation();
                           handleAddToCart(product);
                         }}
-                        className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]"
+                        className="w-full sm:w-[85%] bg-green-800 hover:bg-green-700 text-white py-1.5 sm:py-2 px-2 sm:px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]"
                       >
                         Add to Cart
                       </button>
@@ -651,133 +667,133 @@ const DecorPage = () => {
                         checked={selectedFilters.includes(item.name)}
                         onChange={() => handleFilterChange(item.name)}
                       />
-                      <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
-                        {selectedFilters.includes(item.name) && (
-                          <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
-                        )}
-                      </div>
-                      <span 
-                        className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
-                      >
-                        {item.name}
-                      </span>
-                    </label>
-                  ))}
+                     <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
+                       {selectedFilters.includes(item.name) && (
+                         <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+                       )}
+                     </div>
+                     <span 
+                       className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
+                     >
+                       {item.name}
+                     </span>
+                   </label>
+                 ))}
+               </div>
+             </div>
+             
+             {/* Regular filters for mobile */}
+             {regularFilters.map((item) => (
+               <label 
+                 key={item.id} 
+                 className={`flex items-center p-2 rounded transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}
+                onClick={(e) => handleRegularFilterChange(e, item.name)}
+              >
+                <input
+                  type="checkbox"
+                  id={`mobile-${item.id}`}
+                  className="h-4 w-4 cursor-pointer opacity-0 absolute"
+                  checked={selectedFilters.includes(item.name)}
+                  onChange={() => handleFilterChange(item.name)}
+                />
+                <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
+                  {selectedFilters.includes(item.name) && (
+                    <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+                  )}
                 </div>
-              </div>
-              
-              {/* Regular filters for mobile */}
-              {regularFilters.map((item) => (
-                <label 
-                  key={item.id} 
-                  className={`flex items-center p-2 rounded transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}
-                 onClick={(e) => handleRegularFilterChange(e, item.name)}
-               >
-                 <input
-                   type="checkbox"
-                   id={`mobile-${item.id}`}
-                   className="h-4 w-4 cursor-pointer opacity-0 absolute"
-                   checked={selectedFilters.includes(item.name)}
-                   onChange={() => handleFilterChange(item.name)}
-                 />
-                 <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
-                   {selectedFilters.includes(item.name) && (
-                     <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
-                   )}
-                 </div>
-                 <span 
-                   className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
-                 >
-                   {item.name}
-                 </span>
-               </label>
-             ))}
-           </div>
-           <div className="sticky bottom-0 bg-white p-2 border-t border-gray-200 flex justify-between">
-             <button
-               onClick={clearAllFilters}
-               className="px-4 py-2 bg-gray-100 text-gray-800 rounded text-sm hover:bg-gray-200 transition-colors duration-200"
-             >
-               Clear All
-             </button>
-             <button
-               onClick={() => setShowFilters(false)}
-               className="px-4 py-2 bg-green-700 text-white rounded text-sm hover:bg-green-800 transition-colors duration-200"
-             >
-               Apply
-             </button>
-           </div>
-         </div>
-       </div>
-     )}
+                <span 
+                  className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
+                >
+                  {item.name}
+                </span>
+              </label>
+            ))}
+          </div>
+          <div className="sticky bottom-0 bg-white p-2 border-t border-gray-200 flex justify-between">
+            <button
+              onClick={clearAllFilters}
+              className="px-4 py-2 bg-gray-100 text-gray-800 rounded text-sm hover:bg-gray-200 transition-colors duration-200"
+            >
+              Clear All
+            </button>
+            <button
+              onClick={() => setShowFilters(false)}
+              className="px-4 py-2 bg-green-700 text-white rounded text-sm hover:bg-green-800 transition-colors duration-200"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
 
-     {/* Mobile Sort Panel with Smooth Transitions */}
-     {showSortOptions && (
-       <div className="fixed inset-0 z-50">
-         <div 
-           className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out" 
-           onClick={() => setShowSortOptions(false)}
-         />
-         <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg max-h-[50vh] overflow-y-auto transform transition-transform duration-300 ease-out animate-slide-up">
-           <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center">
-             <h3 className="text-lg font-semibold transition-colors duration-200">Sort By</h3>
-             <button 
-               onClick={() => setShowSortOptions(false)}
-               className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
-             >
-               <FaTimes className="h-5 w-5" />
-             </button>
-           </div>
-           
-           <div className="p-2">
-             <button
-               onClick={() => handleMobileSort("low-high")}
-               className={`w-full text-left p-2 rounded flex items-center transition-all duration-200 ${sortOrder === "low-high" ? "bg-green-50 text-green-800 font-medium" : "hover:bg-gray-100"}`}
-             >
-               <FaSortAmountDown className={`mr-2 transition-colors duration-200 ${sortOrder === "low-high" ? "text-green-700" : "text-gray-500"}`} />
-               Price: Low to High
-               {sortOrder === "low-high" && <FaCheck className="ml-auto text-green-700 transition-opacity duration-200" />}
-             </button>
-             <button
-               onClick={() => handleMobileSort("high-low")}
-               className={`w-full text-left p-2 rounded flex items-center transition-all duration-200 ${sortOrder === "high-low" ? "bg-green-50 text-green-800 font-medium" : "hover:bg-gray-100"}`}
-             >
-               <FaSortAmountDown className={`mr-2 transform rotate-180 transition-colors duration-200 ${sortOrder === "high-low" ? "text-green-700" : "text-gray-500"}`} />
-               Price: High to Low
-               {sortOrder === "high-low" && <FaCheck className="ml-auto text-green-700 transition-opacity duration-200" />}
-             </button>
-           </div>
-         </div>
-       </div>
-     )}
+    {/* Mobile Sort Panel with Smooth Transitions */}
+    {showSortOptions && (
+      <div className="fixed inset-0 z-50">
+        <div 
+          className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out" 
+          onClick={() => setShowSortOptions(false)}
+        />
+        <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-lg max-h-[50vh] overflow-y-auto transform transition-transform duration-300 ease-out animate-slide-up">
+          <div className="sticky top-0 bg-white p-3 border-b border-gray-200 flex justify-between items-center">
+            <h3 className="text-lg font-semibold transition-colors duration-200">Sort By</h3>
+            <button 
+              onClick={() => setShowSortOptions(false)}
+              className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
+            >
+              <FaTimes className="h-5 w-5" />
+            </button>
+          </div>
+          
+          <div className="p-2">
+            <button
+              onClick={() => handleMobileSort("low-high")}
+              className={`w-full text-left p-2 rounded flex items-center transition-all duration-200 ${sortOrder === "low-high" ? "bg-green-50 text-green-800 font-medium" : "hover:bg-gray-100"}`}
+            >
+              <FaSortAmountDown className={`mr-2 transition-colors duration-200 ${sortOrder === "low-high" ? "text-green-700" : "text-gray-500"}`} />
+              Price: Low to High
+              {sortOrder === "low-high" && <FaCheck className="ml-auto text-green-700 transition-opacity duration-200" />}
+            </button>
+            <button
+              onClick={() => handleMobileSort("high-low")}
+              className={`w-full text-left p-2 rounded flex items-center transition-all duration-200 ${sortOrder === "high-low" ? "bg-green-50 text-green-800 font-medium" : "hover:bg-gray-100"}`}
+            >
+              <FaSortAmountDown className={`mr-2 transform rotate-180 transition-colors duration-200 ${sortOrder === "high-low" ? "text-green-700" : "text-gray-500"}`} />
+              Price: High to Low
+              {sortOrder === "high-low" && <FaCheck className="ml-auto text-green-700 transition-opacity duration-200" />}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
 
-     {/* Mobile Bottom Navigation with Transitions */}
-     <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-sm p-2 flex justify-between z-40 gap-4">
-       <button
-         className="flex-1 flex items-center justify-center gap-1 bg-green-700 text-white py-2 px-2 rounded text-sm transition-all duration-200 hover:bg-green-800 transform hover:scale-[1.02]"
-         onClick={() => setShowFilters(true)}
-       >
-         <FaFilter className="text-xs transition-transform duration-200" /> 
-         <span className="transition-colors duration-200">Filters</span>
-         {selectedFilters.length > 0 && (
-           <span className="ml-0.5 bg-white text-green-700 rounded-full h-4 w-4 flex items-center justify-center text-xs transition-all duration-200">
-             {selectedFilters.length}
-           </span>
-         )}
-       </button>
-       <button 
-         className="flex-1 flex items-center justify-center gap-1 bg-white text-green-700 border border-green-700 py-2 px-2 rounded text-sm transition-all duration-200 hover:border-green-800 hover:text-green-800 transform hover:scale-[1.02]"
-         onClick={() => setShowSortOptions(true)}
-       >
-         <FaSortAmountDown className="text-xs transition-transform duration-200" /> 
-         <span className="transition-colors duration-200">
-           {sortOrder === "low-high" ? "Low-High" : 
-            sortOrder === "high-low" ? "High-Low" : "Sort"}
-         </span>
-       </button>
-     </div>
-   </div>
- );
+    {/* Mobile Bottom Navigation with Transitions */}
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-sm p-2 flex justify-between z-40 gap-4">
+      <button
+        className="flex-1 flex items-center justify-center gap-1 bg-green-700 text-white py-2 px-2 rounded text-sm transition-all duration-200 hover:bg-green-800 transform hover:scale-[1.02]"
+        onClick={() => setShowFilters(true)}
+      >
+        <FaFilter className="text-xs transition-transform duration-200" /> 
+        <span className="transition-colors duration-200">Filters</span>
+        {selectedFilters.length > 0 && (
+          <span className="ml-0.5 bg-white text-green-700 rounded-full h-4 w-4 flex items-center justify-center text-xs transition-all duration-200">
+            {selectedFilters.length}
+          </span>
+        )}
+      </button>
+      <button 
+        className="flex-1 flex items-center justify-center gap-1 bg-white text-green-700 border border-green-700 py-2 px-2 rounded text-sm transition-all duration-200 hover:border-green-800 hover:text-green-800 transform hover:scale-[1.02]"
+        onClick={() => setShowSortOptions(true)}
+      >
+        <FaSortAmountDown className="text-xs transition-transform duration-200" /> 
+        <span className="transition-colors duration-200">
+          {sortOrder === "low-high" ? "Low-High" : 
+           sortOrder === "high-low" ? "High-Low" : "Sort"}
+        </span>
+      </button>
+    </div>
+  </div>
+);
 };
 
 export default DecorPage;

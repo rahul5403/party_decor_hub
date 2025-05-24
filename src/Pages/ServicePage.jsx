@@ -48,7 +48,6 @@ const ServicePage = () => {
     fetchDecorationServices();
   }, [selectedFilters, sortOrder]);
 
-
   useEffect(() => {
     const fetchFilters = async () => {
       try {
@@ -65,7 +64,6 @@ const ServicePage = () => {
 
     fetchFilters();
   }, []);
-
 
   const handleFilterChange = (filterName) => {
     setSelectedFilters((prevFilters) =>
@@ -94,25 +92,10 @@ const ServicePage = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4 w-full">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Compact Desktop Filter Panel with Transitions */}
-          <div className="hidden lg:block w-65 flex-shrink-0">
-          <div
-  className="bg-white rounded-lg shadow-sm p-3 sticky top-2 border border-gray-100 transition-all duration-200 hover:shadow-md"
-  style={{
-    maxHeight: 'calc(100vh - 2rem)', // Ensures the panel height fits within the viewport
-    overflowY: 'auto', // Enables scrolling for overflowing content
-    scrollbarWidth: 'none', // Hides scrollbar in Firefox
-    msOverflowStyle: 'none', // Hides scrollbar in IE and Edge
-  }}
->
-  <style>
-    {`
-      ::-webkit-scrollbar {
-        display: none; /* Hides scrollbar in Chrome, Safari, and Edge */
-      }
-    `}
-  </style>
+          <div className="hidden lg:block w-70 flex-shrink-0">
+            <div className="bg-white rounded-lg shadow-sm p-3 sticky top-2 border border-gray-100 transition-all duration-200 hover:shadow-md">
               <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
-                <h3 className="text-lg pl-3 font-semibold text-gray-800 transition-colors duration-200">Filters</h3>
+                <h3 className="text-lg font-semibold text-gray-800 transition-colors duration-200">Filters</h3>
                 {selectedFilters.length > 0 && (
                   <button 
                     onClick={clearAllFilters}
@@ -191,53 +174,58 @@ const ServicePage = () => {
               </span>
             </div>
 
-            {/* Products Grid with Transitions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-  {decorationServices.map((product) => (
-    <div 
-      key={product.id} 
-      className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105"
-      onClick={() => handleProductClick(product)}
-    >
-      <div className="relative overflow-hidden h-64 min-h-[300px]">
-        <img 
-          src={product.image} 
-          alt={product.name} 
-          className="absolute h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-          loading="lazy"
-        />
-      </div>
+            {/* Products Grid with Mobile-Specific Sizing */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-5">
+              {decorationServices.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer sm:transform sm:hover:-translate-y-1 sm:hover:scale-105"
+                  onClick={() => handleProductClick(product)}
+                >
+                  {/* Mobile-specific image container with square aspect ratio */}
+                  <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className="absolute inset-0 w-full h-full object-cover p-1 sm:p-2 transition-transform duration-500 hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
 
-{/* <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 rounded-t-lg">
-  <img 
-    src={product.image} 
-    alt={product.name} 
-    className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 hover:scale-105"
-    loading="lazy"
-  />
-</div> */}
+                  {/* Mobile-specific content with reduced padding and tighter spacing */}
+                  <div className="p-1.5 sm:p-2.5">
+                    {/* Compact title with ellipsis - reduced margin */}
+                    <h3 
+                      className="text-xs sm:text-sm font-medium text-gray-900 transition-colors duration-200 line-clamp-1 overflow-hidden mb-1"
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        lineHeight: '1.2',
+                        maxHeight: '1.2em'
+                      }}
+                      title={product.name} // Show full name on hover
+                    >
+                      {product.name}
+                    </h3>
+                    
+                    {/* Price with reduced margin */}
+                    <div className="flex items-center justify-center text-gray-800 mb-1.5 sm:mb-2 transition-colors duration-200">
+                      <FaRupeeSign className="mr-0.5 text-xs text-gray-500 transition-colors duration-200" />
+                      <span className="text-xs">
+                        {product.price || "Price not available"}
+                      </span>
+                    </div>
 
-
-      <div className="p-2.5">
-        <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1 transition-colors duration-200">
-          {product.name}
-        </h3>
-        
-        <div className="flex items-center justify-center text-gray-800 mb-2 transition-colors duration-200">
-          <FaRupeeSign className="mr-0.5 text-xs text-gray-500 transition-colors duration-200" />
-          <span className="text-xs">
-            {product.price || "Price not available"}
-          </span>
-        </div>
-
-        <button className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]">
-          Enquire Now
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
-
+                    <button className="w-full sm:w-[85%] bg-green-800 hover:bg-green-700 text-white py-1.5 sm:py-2 px-2 sm:px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]">
+                      Enquire Now
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             {decorationServices.length === 0 && (
               <div className="text-center py-8 transition-opacity duration-200">
@@ -273,30 +261,30 @@ const ServicePage = () => {
             </div>
             
             <div className="p-3 space-y-1">
-                {filters.map((item) => (
-                  <label 
-                    key={item.id} 
-                    className={`flex items-center p-2 rounded transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}
+              {filters.map((item) => (
+                <label 
+                  key={item.id} 
+                  className={`flex items-center p-2 rounded transition-all duration-200 cursor-pointer ${selectedFilters.includes(item.name) ? 'bg-green-50 border border-green-100' : 'hover:bg-gray-100'}`}
+                >
+                  <input
+                    type="checkbox"
+                    id={`mobile-${item.id}`}
+                    className="opacity-0 absolute h-4 w-4 cursor-pointer"
+                    checked={selectedFilters.includes(item.name)}
+                    onChange={() => handleFilterChange(item.name)}
+                  />
+                  <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
+                    {selectedFilters.includes(item.name) && (
+                      <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
+                    )}
+                  </div>
+                  <span 
+                    className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
                   >
-                    <input
-                      type="checkbox"
-                      id={`mobile-${item.id}`}
-                      className="opacity-0 absolute h-4 w-4 cursor-pointer"
-                      checked={selectedFilters.includes(item.name)}
-                      onChange={() => handleFilterChange(item.name)}
-                    />
-                    <div className={`flex items-center justify-center h-4 w-4 rounded border transition-all duration-200 ${selectedFilters.includes(item.name) ? 'bg-green-600 border-green-600' : 'border-gray-300'}`}>
-                      {selectedFilters.includes(item.name) && (
-                        <FaCheck className="h-2.5 w-2.5 text-white transition-transform duration-200" />
-                      )}
-                    </div>
-                    <span 
-                      className={`ml-2 text-sm transition-all duration-200 ${selectedFilters.includes(item.name) ? 'font-medium text-green-800' : 'text-gray-700 hover:text-gray-900'}`}
-                    >
-                      {item.name}
-                    </span>
-                  </label>
-                ))}
+                    {item.name}
+                  </span>
+                </label>
+              ))}
             </div>
             <div className="sticky bottom-0 bg-white p-2 border-t border-gray-200 flex justify-between">
               <button
@@ -365,7 +353,7 @@ const ServicePage = () => {
           <FaFilter className="text-xs transition-transform duration-200" /> 
           <span className="transition-colors duration-200">Filters</span>
           {selectedFilters.length > 0 && (
-            <span className="ml-0.5 bg-white text-green-700 rounded-full h-4 w-4 flex items-center justify-center text-2xs transition-all duration-200">
+            <span className="ml-0.5 bg-white text-green-700 rounded-full h-4 w-4 flex items-center justify-center text-xs transition-all duration-200">
               {selectedFilters.length}
             </span>
           )}

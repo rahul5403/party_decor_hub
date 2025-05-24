@@ -317,61 +317,77 @@ const DisposePage = () => {
               </span>
             </div>
 
-            {/* Products Grid with Transitions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+            {/* Products Grid with Mobile-Specific Sizing */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-5">
               {disposableItems.map((product) => (
                 <div 
                   key={product.id} 
-                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:scale-105"
+                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer sm:transform sm:hover:-translate-y-1 sm:hover:scale-105"
                   onClick={() => handleProductClick(product)}
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
+                  {/* Mobile-specific image container with smaller aspect ratio */}
+                  <div className="relative aspect-square sm:aspect-[4/3] overflow-hidden border-b border-gray-100 rounded-t-lg">
                     <img 
                       src={product.image} 
                       alt={product.name} 
-                      className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-500 hover:scale-105"
+                      className="absolute inset-0 w-full h-full object-contain p-1 sm:p-2 transition-transform duration-500 hover:scale-105"
                       loading="lazy"
                     />
                   </div>
 
-                  <div className="p-2.5">
-                    <h3 className="text-sm font-medium text-gray-900 mb-1 line-clamp-1 transition-colors duration-200">
+                  {/* Mobile-specific content with reduced padding and tighter spacing */}
+                  <div className="p-1.5 sm:p-2.5">
+                    {/* Compact title with ellipsis - reduced margin */}
+                    <h3 
+                      className="text-xs sm:text-sm font-medium text-gray-900 transition-colors duration-200 line-clamp-1 overflow-hidden mb-1"
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        lineHeight: '1.2',
+                        maxHeight: '1.2em'
+                      }}
+                      title={product.name} // Show full name on hover
+                    >
                       {product.name}
                     </h3>
                     
-                    <div className="flex items-center justify-center text-gray-800 mb-2 transition-colors duration-200">
+                    {/* Price with reduced margin */}
+                    <div className="flex items-center justify-center text-gray-800 mb-1.5 sm:mb-2 transition-colors duration-200">
                       <FaRupeeSign className="mr-0.5 text-xs text-gray-500 transition-colors duration-200" />
                       <span className="text-xs">
                         {product.price || "Price not available"}
                       </span>
                     </div>
 
-                    {/* Add to Cart or Quantity Controls */}
+                    {/* Add to Cart or Quantity Controls - Mobile optimized */}
                     {isProductInCart(product.id) ? (
                       <div 
-                        className="flex items-center justify-center space-x-3 py-2"
+                        className="flex items-center justify-center space-x-2 sm:space-x-3 py-1 sm:py-2"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button
-                          className="w-8 h-8 flex items-center justify-center border border-gray-300 text-red-500 hover:text-gray-700 rounded-full transition-colors duration-200"
+                          className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border border-gray-300 text-red-500 hover:text-gray-700 rounded-full transition-colors duration-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDecrement(product);
                           }}
                         >
-                          <span className="text-lg font-bold">-</span>
+                          <span className="text-sm sm:text-lg font-bold">-</span>
                         </button>
-                        <span className="w-8 text-center font-medium">
+                        <span className="w-6 sm:w-8 text-center font-medium text-xs sm:text-sm">
                           {getProductQuantity(product.id)}
                         </span>
                         <button
-                          className="w-8 h-8 flex items-center justify-center border border-gray-300 text-green-500 hover:text-green-700 rounded-full transition-colors duration-200"
+                          className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border border-gray-300 text-green-500 hover:text-green-700 rounded-full transition-colors duration-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleIncrement(product);
                           }}
                         >
-                          <span className="text-lg font-bold">+</span>
+                          <span className="text-sm sm:text-lg font-bold">+</span>
                         </button>
                       </div>
                     ) : (
@@ -380,9 +396,9 @@ const DisposePage = () => {
                           e.stopPropagation();
                           handleAddToCart(product);
                         }}
-                        className="w-[85%] bg-green-800 hover:bg-green-700 text-white py-2 px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]"
+                        className="w-full sm:w-[85%] bg-green-800 hover:bg-green-700 text-white py-1.5 sm:py-2 px-2 sm:px-3 rounded text-xs font-medium transition-all duration-200 transform hover:scale-[1.02]"
                       >
-                        Add to cart
+                        Add to Cart
                       </button>
                     )}
                   </div>
@@ -516,7 +532,7 @@ const DisposePage = () => {
           <FaFilter className="text-xs transition-transform duration-200" /> 
           <span className="transition-colors duration-200">Filters</span>
           {selectedFilters.length > 0 && (
-            <span className="ml-0.5 bg-white text-green-700 rounded-full h-4 w-4 flex items-center justify-center text-2xs transition-all duration-200">
+            <span className="ml-0.5 bg-white text-green-700 rounded-full h-4 w-4 flex items-center justify-center text-xs transition-all duration-200">
               {selectedFilters.length}
             </span>
           )}
