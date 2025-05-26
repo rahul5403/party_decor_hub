@@ -249,7 +249,7 @@ const NavBar = ({ onLoginClick }) => {
                       My Profile
                     </Link>
                     <Link
-                      to="/orders"
+                      to="/my-orders"
                       className="flex items-center gap-3 px-5 py-2 text-sm text-gray-700 font-medium hover:bg-gray-100 transition-all duration-200 no-underline"
                       onClick={() => setShowUserDropdown(false)}
                     >
