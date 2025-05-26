@@ -35,7 +35,7 @@ const useRemoveItem = () => {
     if (accessToken) {
       try {
         const res = await axios.post(
-          "https://partydecorhub.com/api/cart/remove",
+          `${process.env.REACT_APP_BASE_URL}/api/cart/remove`,
           data,
           {
             headers: {

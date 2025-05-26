@@ -33,7 +33,7 @@ const ProfilePage = () => {
 
       try {
         const authCheckResponse = await axios.get(
-          "https://partydecorhub.com/api/check-auth",
+          `${process.env.REACT_APP_BASE_URL}/api/check-auth`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -41,7 +41,7 @@ const ProfilePage = () => {
 
         if (authCheckResponse.data.is_logged_in) {
           const profileResponse = await axios.get(
-            "https://partydecorhub.com/api/profile",
+            `${process.env.REACT_APP_BASE_URL}/api/profile`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
@@ -106,7 +106,7 @@ const ProfilePage = () => {
     }
 
     try {
-      await axios.put("https://partydecorhub.com/api/profile", formData, {
+      await axios.put(`${process.env.REACT_APP_BASE_URL}/api/profile`, formData, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 

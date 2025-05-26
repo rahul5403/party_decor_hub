@@ -78,7 +78,7 @@ export const initiateRazorpayPayment = async (options) => {
         name: "Party Decor Hub",
         description: `Order #${options.orderDetails.order_id || ''}`,
         order_id: options.orderId,
-        image: "https://partydecorhub.com/static/media/logo.cfd8e6a0e344e789c74d.png", // Replace with your actual logo URL
+        image: `${process.env.REACT_APP_BASE_URL}/static/media/logo.cfd8e6a0e344e789c74d.png`, // Replace with your actual logo URL
         prefill: {
           name: options.customerName,
           email: options.customerEmail,
@@ -127,7 +127,7 @@ export const initiateRazorpayPayment = async (options) => {
             
             console.log("Verifying payment with backend...");
             const verificationResponse = await axios.post(
-              "https://partydecorhub.com/api/payments/razorpay/verify",
+              `${process.env.REACT_APP_BASE_URL}/api/payments/razorpay/verify`,
               verificationData,
               {
                 headers: {
@@ -216,7 +216,7 @@ export const initiateRazorpayPayment = async (options) => {
           // Verify payment with backend
           console.log("Verifying payment with backend (from event)...");
           const verificationResponse = await axios.post(
-            "https://partydecorhub.com/api/payments/razorpay/verify",
+            `${process.env.REACT_APP_BASE_URL}/api/payments/razorpay/verify`,
             verificationData,
             {
               headers: {

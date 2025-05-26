@@ -6,7 +6,7 @@ const useSetCartItems = () => {
   const addItemToCart = async (data) => {
     try {
       const res = await axios.post(
-        "https://partydecorhub.com/api/cart/add",
+        `${process.env.REACT_APP_BASE_URL}/api/cart/add`,
         data,
         {
           headers: {

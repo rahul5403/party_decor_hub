@@ -8,7 +8,7 @@ const useProductDetails = (product_id) => {
         const fetchProduct = async () => {
           try {
             const response = await axios.get(
-              `https://partydecorhub.com/api/products/${product_id}`
+              `${process.env.REACT_APP_BASE_URL}/api/products/${product_id}`
             );
             const productData = response.data;
     
@@ -26,7 +26,7 @@ const useProductDetails = (product_id) => {
             setSelectedSize(updatedProduct.size || updatedProduct.available_sizes?.[0] || "");
     
             const allProductsResponse = await axios.get(
-              "https://partydecorhub.com/api/products"
+              `${process.env.REACT_APP_BASE_URL}/api/products`
             );
             const filteredSimilarProducts = allProductsResponse.data
               .filter(

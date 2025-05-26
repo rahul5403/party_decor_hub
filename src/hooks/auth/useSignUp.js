@@ -24,7 +24,7 @@ const useSignUp = () => {
     setLoading(true);
 
     try {
-      await axios.post("https://partydecorhub.com/api/signup", {
+      await axios.post(`${process.env.REACT_APP_BASE_URL}/api/signup`, {
         username,
         email,
         password,

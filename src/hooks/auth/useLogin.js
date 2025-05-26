@@ -20,12 +20,13 @@ export const useLogin = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://partydecorhub.com/api/login`,
+        `${process.env.REACT_APP_BASE_URL}/api/login`,
         null,
         {
           params: { email, password },
         }
       );
+      console.log("Login response aa rha hai :", response.data);
     
       const { access, refresh } = response.data;
 
@@ -33,7 +34,7 @@ export const useLogin = () => {
       document.cookie = `refreshToken=${refresh}; path=/; secure; HttpOnly`;
 
       const authCheckResponse = await axios.get(
-        "https://partydecorhub.com/api/check-auth",
+        `${process.env.REACT_APP_BASE_URL}/api/check-auth`,
         {
           headers: { Authorization: `Bearer ${access}` },
         }
@@ -47,7 +48,7 @@ export const useLogin = () => {
       }));
 
       await axios.post(
-        `https://partydecorhub.com/api/cart/add`,
+        `${process.env.REACT_APP_BASE_URL}/api/cart/add`,
         formattedCartItems,
         {
           headers: {

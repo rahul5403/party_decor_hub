@@ -32,7 +32,7 @@ const useHandleBooking = (service, startDate, startTime, customerName, address, 
     };
 
     try {
-      const response = await axios.post("https://partydecorhub.com/api/bookings", bookingData, {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/bookings`, bookingData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -40,7 +40,7 @@ const useHandleBooking = (service, startDate, startTime, customerName, address, 
 
       if (response.status === 201) {
         toast.success(`Booking confirmed for ${service.name} from ${startDate} at ${startTime}`);
-        const productUrl = `https://partydecorhub.com/services/${service.id}`;
+        const productUrl = `${process.env.REACT_APP_BASE_URL}/services/${service.id}`;
         const whatsappMessage = `*New Booking Details*\n\n` +
           `➤  *Service:* ${service.name}\n` +
           `➤  *Customer Name:* ${customerName}\n` +

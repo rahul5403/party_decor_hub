@@ -11,8 +11,7 @@ const MyOrders = () => {
   const ordersPerPage = 5;
   
   const navigate = useNavigate();
-  const API_BASE_URL = "https://partydecorhub.com/api";
-  const API_BASE_URL_IMAGE = "https://partydecorhub.com";
+  const API_BASE_URL = process.env.REACT_APP_BASE_URL
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -20,7 +19,7 @@ const MyOrders = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${API_BASE_URL}/user/orders?limit=${ordersPerPage}&offset=${(currentPage - 1) * ordersPerPage}`,
+          `${API_BASE_URL}/api/user/orders?limit=${ordersPerPage}&offset=${(currentPage - 1) * ordersPerPage}`,
           {
             headers: { Authorization: `Bearer ${Token}` },
           }
@@ -230,7 +229,7 @@ const MyOrders = () => {
                         >
                           <div className="relative overflow-hidden rounded-lg w-16 h-16">
                             <img
-                              src={`${API_BASE_URL_IMAGE}${item.image_url}`}
+                              src={`${API_BASE_URL}${item.image_url}`}
                               alt={item.product_name}
                               className="w-full h-full object-cover border border-gray-200 transition-transform duration-300 group-hover:scale-105"
                             />

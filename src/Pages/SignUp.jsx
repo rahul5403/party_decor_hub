@@ -33,7 +33,7 @@ const SignUp = ({ onClose, onLoginClick }) => {
     try {
       console.log("Google ID Token:", id_token); // Debugging line
       const res = await axios.post(
-        "https://partydecorhub.com/api/google-auth",
+        `${process.env.REACT_APP_BASE_URL}/api/google-auth`,
         { token:id_token },
         { withCredentials: true } // So refresh cookie is stored
       );

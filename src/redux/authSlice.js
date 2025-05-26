@@ -13,7 +13,7 @@ export const checkAuthStatus = createAsyncThunk(
       }
 
       const response = await axios.get(
-        "https://partydecorhub.com/api/check-auth",
+        `${process.env.REACT_APP_BASE_URL}/api/check-auth`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

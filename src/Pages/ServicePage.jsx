@@ -3,7 +3,7 @@ import axios from "axios";
 import { FaFilter, FaSortAmountDown, FaTimes, FaRupeeSign, FaCheck } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-const BASE_IMAGE_URL = "https://partydecorhub.com";
+const BASE_IMAGE_URL =   process.env.REACT_APP_BASE_URL
 
 const ServicePage = () => {
   const [showFilters, setShowFilters] = useState(false);
@@ -27,7 +27,7 @@ const ServicePage = () => {
           params.append("filters", selectedFilters.join(","));
         }
 
-        const apiUrl = `https://partydecorhub.com/api/services?${params.toString()}`;
+        const apiUrl = `${process.env.REACT_APP_BASE_URL}/api/services?${params.toString()}`;
         console.log("API URL:", apiUrl); // Debug log
         
         const response = await axios.get(apiUrl);
@@ -61,7 +61,7 @@ const ServicePage = () => {
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const response = await fetch("https://partydecorhub.com/api/filters");
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/filters`);
         const data = await response.json();
         console.log("Filters response:", data); // Debug log
 

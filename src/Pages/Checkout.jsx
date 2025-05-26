@@ -99,7 +99,7 @@ const Checkout = () => {
     
     try {
       const response = await axios.get(
-        `https://partydecorhub.com/api/shipping-options?pincode=${formData.postalCode}&cart_total=${subtotal}`,
+        `${process.env.REACT_APP_BASE_URL}/api/shipping-options?pincode=${formData.postalCode}&cart_total=${subtotal}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
@@ -160,7 +160,7 @@ const Checkout = () => {
         
         // First check if user is logged in
         const authCheckResponse = await axios.get(
-          "https://partydecorhub.com/api/check-auth",
+          `${process.env.REACT_APP_BASE_URL}/api/check-auth`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -176,7 +176,7 @@ const Checkout = () => {
         
         // If logged in, fetch profile data
         const profileResponse = await axios.get(
-          "https://partydecorhub.com/api/profile",
+          `${process.env.REACT_APP_BASE_URL}/api/profile`,
           {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
@@ -291,7 +291,7 @@ const Checkout = () => {
         console.log("Making checkout API call");
         // Make the API call to create the order
         const response = await axios.post(
-          "https://partydecorhub.com/api/cart/checkout",
+          `${process.env.REACT_APP_BASE_URL}/api/cart/checkout`,
           checkoutPayload,
           {
             headers: {
@@ -317,7 +317,7 @@ const Checkout = () => {
       console.log("Getting Razorpay order details");
       // Get Razorpay order details from the API
       const razorpayResponse = await axios.post(
-        "https://partydecorhub.com/api/payments/razorpay/create",
+        `${process.env.REACT_APP_BASE_URL}/api/payments/razorpay/create`,
         { order_id: currentOrderId },
         {
           headers: {

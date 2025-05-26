@@ -9,7 +9,7 @@ const OrderDetails = () => {
   const [error, setError] = useState(null);
   
   const navigate = useNavigate();
-  const API_BASE_URL_IMAGE = "https://partydecorhub.com";
+  const API_BASE_URL_IMAGE = process.env.REACT_APP_BASE_URL ;
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -17,7 +17,7 @@ const OrderDetails = () => {
         setLoading(true);
         const token = localStorage.getItem("accessToken");
         // API call to fetch specific order details
-        const response = await axios.get(`https://partydecorhub.com/api/orders/${orderId}`,{
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/orders/${orderId}`,{
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },

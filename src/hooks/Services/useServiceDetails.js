@@ -5,13 +5,12 @@ import { toast } from "react-toastify";
 const useServiceDetails = (service_id) => {
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
-  const BASE_IMAGE_URL = "https://partydecorhub.com";
-
+  const BASE_IMAGE_URL = process.env.REACT_APP_BASE_URL  ;
   useEffect(() => {
     const fetchServiceDetails = async () => {
       try {
         const response = await axios.get(
-          `https://partydecorhub.com/api/services/${service_id}`
+          `${process.env.REACT_APP_BASE_URL}/api/services/${service_id}`
         );
         const serviceData = response.data;
         serviceData.images = serviceData.images.map((img) => ({

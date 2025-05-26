@@ -34,7 +34,7 @@ const   SearchBar = ({ mobile }) => {
 
       try {
         const response = await axios.get(
-          `https://partydecorhub.com/api/search?query=${query}`
+          `${process.env.REACT_APP_BASE_URL}/api/search?query=${query}`
         );
         setResults({
           products: response.data.products || [],
@@ -178,7 +178,7 @@ const   SearchBar = ({ mobile }) => {
               className="flex items-center px-4 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer"
             >
               <img
-                src={`https://partydecorhub.com${product.image_url}`}
+                src={`${process.env.REACT_APP_BASE_URL}${product.image_url}`}
                 alt={product.name}
                 className="w-12 h-12 object-cover rounded-lg border border-gray-200"
               />
@@ -208,7 +208,7 @@ const   SearchBar = ({ mobile }) => {
               className="flex items-center px-4 py-2 text-gray-800 border-b last:border-none border-gray-200 hover:bg-green-50 transition-all cursor-pointer"
             >
               <img
-                src={`https://partydecorhub.com${service.image_url}`}
+                src={`${process.env.REACT_APP_BASE_URL}${service.image_url}`}
                 alt={service.name}
                 className="w-12 h-12 object-cover rounded-lg border border-gray-200"
               />

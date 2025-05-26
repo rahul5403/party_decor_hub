@@ -20,7 +20,7 @@ import useFetchData from "../hooks/Home/useFetchData";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
-const BASE_IMAGE_URL = "https://partydecorhub.com";
+const BASE_IMAGE_URL = process.env.REACT_APP_BASE_URL ;
 
 const ProductDetails = () => {
   const { product_id } = useParams();
@@ -51,7 +51,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `https://partydecorhub.com/api/products/${product_id}`
+          `${process.env.REACT_APP_BASE_URL}/api/products/${product_id}`
         );
         const productData = response.data;
 

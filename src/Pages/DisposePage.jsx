@@ -7,7 +7,7 @@ import { addToCart, mergeCart } from "../redux/cartSlice";
 import useSetCartItems from "../hooks/cart/useSetCartItems";
 import useRemoveItem from "../hooks/cart/useRemoveItem";
 
-const BASE_IMAGE_URL = "https://partydecorhub.com";
+const BASE_IMAGE_URL = process.env.REACT_APP_BASE_URL  ;
 
 const DisposePage = () => {
   const [showFilters, setShowFilters] = useState(false);
@@ -35,7 +35,7 @@ const DisposePage = () => {
         }
 
         const response = await axios.get(
-          `https://partydecorhub.com/api/products?${params.toString()}`
+          `${process.env.REACT_APP_BASE_URL}/api/products?${params.toString()}`
         );
         let products = response.data
           .filter(product => product.category === "Disposable Items")
@@ -67,7 +67,7 @@ const DisposePage = () => {
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const response = await fetch("https://partydecorhub.com/api/filters");
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/filters`);
         const data = await response.json();
 
         // Extract filters for "Disposable Items"
@@ -212,7 +212,7 @@ const DisposePage = () => {
       const accessToken = localStorage.getItem("accessToken");
       try {
         await axios.post(
-          "https://partydecorhub.com/api/cart/remove",
+          `${process.env.REACT_APP_BASE_URL}/api/cart/remove`,
           {
             product_id: productId,
             quantity: 1,

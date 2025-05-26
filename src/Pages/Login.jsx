@@ -27,7 +27,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
     
     // First, authenticate with Google
     const res = await axios.post(
-      "https://partydecorhub.com/api/google-auth",
+      `${process.env.REACT_APP_BASE_URL}/api/google-auth`,
       { token: id_token },
       { withCredentials: true } // So refresh cookie is stored
     );
@@ -38,7 +38,7 @@ const handleGoogleSuccess = async (credentialResponse) => {
     
     // Now call the check-auth API to get user data
     const checkAuthRes = await axios.get(
-      "https://partydecorhub.com/api/check-auth",
+      `${process.env.REACT_APP_BASE_URL}/api/check-auth`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useSetCartItems from "../hooks/cart/useSetCartItems.js";
 import useRemoveItem from "../hooks/cart/useRemoveItem.js";
 
-const BASE_IMAGE_URL = "https://partydecorhub.com";
+const BASE_IMAGE_URL = process.env.REACT_APP_BASE_URL  ;
 
 const DecorPage = () => {
   const [showFilters, setShowFilters] = useState(false);
@@ -43,7 +43,7 @@ const DecorPage = () => {
         }
 
         const response = await axios.get(
-          `https://partydecorhub.com/api/products?${params.toString()}`
+          `${process.env.REACT_APP_BASE_URL}/api/products?${params.toString()}`
         );
         let products = response.data.map((product) => ({
           id: product.product_id || product.id,
@@ -81,7 +81,7 @@ const DecorPage = () => {
   useEffect(() => {
     const fetchFilters = async () => {
       try {
-        const response = await fetch("https://partydecorhub.com/api/filters");
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/filters`);
         const data = await response.json();
 
         const partyDecorFilters = data.find(category => category.category === "Party Decor")?.filters || [];
@@ -260,7 +260,7 @@ const DecorPage = () => {
       const accessToken = localStorage.getItem("accessToken");
       try {
         await axios.post(
-          "https://partydecorhub.com/api/cart/remove",
+          `${process.env.REACT_APP_BASE_URL}/api/cart/remove`,
           {
             product_id: productId,
             quantity: 1,

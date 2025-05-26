@@ -156,7 +156,7 @@ const ProductCard = ({ product, section }) => {
       const accessToken = localStorage.getItem("accessToken");
       try {
         await axios.post(
-          "https://partydecorhub.com/api/cart/remove",
+          `${process.env.REACT_APP_BASE_URL}/api/cart/remove`,
           {
             product_id: String(product.id),
             quantity: 1,

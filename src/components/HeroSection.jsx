@@ -11,10 +11,10 @@ const HeroSection = () => {
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const response = await axios.get("https://partydecorhub.com/api/carousel");
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/carousel`);
         const formattedSlides = response.data.map((slide) => ({
           ...slide,
-          image: `https://partydecorhub.com/media/${slide.image}`,
+          image: `${process.env.REACT_APP_BASE_URL}/media/${slide.image}`,
         }));
         setSlides(formattedSlides);
       } catch (error) {

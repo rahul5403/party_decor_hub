@@ -21,7 +21,7 @@ const TrackOrder = () => {
         
         // Updated API endpoint for tracking data
         const response = await axios.get(
-          `https://partydecorhub.com/api/orders/${orderId}/tracking`,
+          `${process.env.REACT_APP_BASE_URL}/api/orders/${orderId}/tracking`,
           {
             headers: {
               "Content-Type": "application/json",

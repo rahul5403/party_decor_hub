@@ -11,14 +11,14 @@ const useGetCartItems = () => {
     if (!accessToken) return;
 
     try {
-      const res = await axios.get("https://partydecorhub.com/api/cart", {
+      const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
       const fullItems = res.data.items.map(item => ({
         ...item,
-        thumbnail: `https://partydecorhub.com${item.thumbnail}`,
+        thumbnail: `${process.env.REACT_APP_BASE_URL}${item.thumbnail}`,
       }));
       dispatch(mergeCart(fullItems));
     } catch (error) {

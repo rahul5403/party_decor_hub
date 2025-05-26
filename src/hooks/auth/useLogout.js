@@ -10,7 +10,7 @@ const useLogout = () => {
     try {
       if (token) {
         await axios.post(
-          "https://partydecorhub.com/api/logout",
+          `${process.env.REACT_APP_BASE_URL}/api/logout`,
           {},
           {
             headers: { Authorization: `Bearer ${token}` },

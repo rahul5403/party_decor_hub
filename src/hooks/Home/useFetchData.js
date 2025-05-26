@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const BASE_IMAGE_URL = "https://partydecorhub.com";
+const BASE_IMAGE_URL = process.env.REACT_APP_BASE_URL ;
 
 // Helper function to get random items from an array
 const getRandomItems = (array, count) => {
@@ -27,8 +27,8 @@ export default function useFetchData() {
         const fetchData = async () => {
             try {
                 const [productsRes, servicesRes] = await Promise.all([
-                    axios.get("https://partydecorhub.com/api/products"),
-                    axios.get("https://partydecorhub.com/api/services")
+                    axios.get(`${process.env.REACT_APP_BASE_URL}/api/products`),
+                    axios.get(-`${process.env.REACT_APP_BASE_URL}/api/services`)
                 ]);
 
                 const products = productsRes.data.map(product => ({
