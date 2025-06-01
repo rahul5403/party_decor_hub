@@ -14,8 +14,8 @@ const Footer = () => {
         
         {/* Company Info */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
-  <h2 className="text-3xl md:text-4xl font-extrabold text-red-600">
-    PARTY <span className="text-green-900">DECOR</span> HUB
+  <h2 className="text-3xl md:text-4xl font-extrabold text-pink-600">
+    PARTY <span className="text-yellow-400">DECOR</span> <span className="text-sky-500">HUB</span>
   </h2>
   <div className="flex flex-col space-y-2 mt-2">
     <p className="flex justify-center md:justify-start m-0 md:items-start">
